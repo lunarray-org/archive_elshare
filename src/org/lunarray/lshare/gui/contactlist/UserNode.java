@@ -16,7 +16,7 @@ public class UserNode implements TreeNode {
 		user = u;
 	}
 	
-	protected User getUser() {
+	public User getUser() {
 		return user;
 	}
 

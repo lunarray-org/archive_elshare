@@ -2,10 +2,13 @@ package org.lunarray.lshare.gui;
 
 import javax.swing.JComponent;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.contactlist.Model;
+import org.lunarray.lshare.gui.contactlist.Selecter;
 
 public class ContactList {
 	
@@ -23,6 +26,12 @@ public class ContactList {
 			Object[] p = {model.getRoot(), model.getRoot().getChildAt(i)};
 			panel.expandPath(new TreePath(p));
 		}
+		
+		panel.setSelectionModel(new DefaultTreeSelectionModel());
+		panel.getSelectionModel().setSelectionMode(TreeSelectionModel.
+				SINGLE_TREE_SELECTION);
+		panel.getSelectionModel().addTreeSelectionListener(new Selecter(panel, 
+				model));
 	}
 	
 	public String getTitle() {

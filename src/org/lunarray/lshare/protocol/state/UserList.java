@@ -81,9 +81,11 @@ public class UserList implements ExternalUserList {
 		User u = null;
 		search: {
 			for (User w: userlist) {
-				if (w.getAddress().equals(a)) {
-					u = w;
-					break search;
+				if (w.getAddress() != null) {
+					if (w.getAddress().equals(a)) {
+						u = w;
+						break search;
+					}
 				}
 			}
 		}

@@ -6,7 +6,6 @@ import java.util.Enumeration;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.lunarray.lshare.LShare;
@@ -97,15 +96,21 @@ public class Model implements TreeModel,UserListener {
 	public void signoff(UserEvent e) {
 		if (e.getUser().isBuddy()) {
 			fireInsert(root.getChildAt(2).addUser(e.getUser()));
-			fireRemove(root.getChildAt(0).removeUser(e.getUser()));
+			int i = root.getChildAt(0).getIndex(root.getChildAt(2).findUser(e.
+					getUser()));
+			fireRemove(root.getChildAt(0).removeUser(e.getUser()), i);
 		} else {
-			fireRemove(root.getChildAt(1).removeUser(e.getUser()));
+			int i = root.getChildAt(1).getIndex(root.getChildAt(2).findUser(e.
+					getUser()));
+			fireRemove(root.getChildAt(1).removeUser(e.getUser()), i);
 		}
 	}
 	
 	public void signon(UserEvent e) {
 		if (e.getUser().isBuddy()) {
-			fireRemove(root.getChildAt(2).removeUser(e.getUser()));
+			int i = root.getChildAt(2).getIndex(root.getChildAt(2).findUser(e.
+					getUser()));
+			fireRemove(root.getChildAt(2).removeUser(e.getUser()), i);
 			fireInsert(root.getChildAt(0).addUser(e.getUser()));
 		} else {
 			fireInsert(root.getChildAt(1).addUser(e.getUser()));
@@ -125,7 +130,7 @@ public class Model implements TreeModel,UserListener {
 	}
 	
 	private void fireUpdate(UserNode n) {
-		TreeModelEvent e = genEvent(n);
+		TreeModelEvent e = genEvent(n, n.getParent().getIndex(n));
 		
 		for (TreeModelListener l: listener) {
 			l.treeStructureChanged(e);
@@ -133,35 +138,50 @@ public class Model implements TreeModel,UserListener {
 	}
 	
 	private void fireInsert(UserNode n) {
-		TreeModelEvent e = genEvent(n);
+		TreeModelEvent e = genEvent(n, n.getParent().getIndex(n));
 		
 		for (TreeModelListener l: listener) {
 			l.treeNodesInserted(e);
 		}
 	}
 	
-	private void fireRemove(UserNode n) {		
-		TreeModelEvent e = genEvent(n);
+	private void fireRemove(UserNode n, int i) {
+		int[] j = {i};
+		Object[] children = {n};
+		Object[] p = {root, n.getParent()};
+		
+		TreeModelEvent e =  new TreeModelEvent(n.getParent(), p, j, children);		
 		
 		for (TreeModelListener l: listener) {
 			l.treeNodesRemoved(e);
 		}
 	}
 	
-	private TreeModelEvent genEvent(UserNode n) {
-		int[] j = {n.getParent().getIndex(n)};
+	private TreeModelEvent genEvent(UserNode n, int i) {
+		int[] j = {i};
 		Object[] children = {n};
 		Object[] p = {root, n.getParent()};
 		
 		return new TreeModelEvent(n.getParent(), p, j, children);		
 	}
 
-	public TreePath getTreePath(UserNode n) {
-		TreeNode[] pl = new TreeNode[3];
-		pl[2] = n;
-		pl[1] = n.getParent();
-		pl[0] = root;
-		TreePath p = new TreePath(pl);
-		return p;
+	public void toggleBuddy(UserNode u) {
+		if (u.getUser().isBuddy()) {
+			 
+			if (u.getUser().isOnline()) {
+				int i = root.getChildAt(0).getIndex(u);	
+				fireRemove(root.getChildAt(0).removeUser(u.getUser()), i);
+				fireInsert(root.getChildAt(1).addUser(u.getUser()));
+			} else {
+				int i = root.getChildAt(2).getIndex(u);
+				fireRemove(root.getChildAt(2).removeUser(u.getUser()), i);
+			}
+			u.getUser().unsetBuddy();
+		} else {
+			int i = root.getChildAt(1).getIndex(u);
+			fireRemove(root.getChildAt(1).removeUser(u.getUser()), i);
+			fireInsert(root.getChildAt(0).addUser(u.getUser()));
+			u.getUser().setBuddy();
+		}
 	}
 }

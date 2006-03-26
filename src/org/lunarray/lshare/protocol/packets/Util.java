@@ -81,7 +81,16 @@ public final class Util {
 			Controls.getLogger().fine("packets.Util: error decoding " +
 					"string (" + cce.getMessage() + ")");
 		}
-		return bytes.array();
+		byte[] dat = bytes.array();
+		int retlen = dat.length;
+		if (dat[dat.length - 1] == 0x00) {
+			 retlen = dat.length - 1;
+		}
+		byte[] ret = new byte[retlen];
+		for (int i = 0; i < ret.length; i ++) {
+			ret[i] = dat[i]; 
+		}
+		return ret;
 	}
 		
 	/**

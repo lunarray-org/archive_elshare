@@ -9,6 +9,8 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.lunarray.lshare.protocol.packets.SignOffOut;
+
 public class Controls {
 	public static int UDP_PORT = 7400;
 	public static int TCP_PORT = 7400;
@@ -57,6 +59,11 @@ public class Controls {
 	
 	public void stop() {
 		getTasks().stop();
+		// Send logout
+		SignOffOut soo = new SignOffOut();
+		getUDPTransport().send(soo.getPacket());
+		
+		
 		getUDPTransport().close();
 		getState().commit();
 		//controls.getSettings().commit();

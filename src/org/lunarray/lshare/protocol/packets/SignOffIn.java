@@ -1,12 +1,14 @@
 package org.lunarray.lshare.protocol.packets;
 
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 
 import org.lunarray.lshare.protocol.Controls;
 
 public class SignOffIn extends PacketIn {
 	
 	private DatagramPacket packet;
+	private InetAddress address;
 	
 	public static byte getType() {
 		return (byte)0x01;
@@ -22,10 +24,10 @@ public class SignOffIn extends PacketIn {
 
 	@Override
 	public void parse() {
-		packet.getData();
+		address = packet.getAddress(); 
 	}
 
 	public void runTask(Controls c) {
-		// TODO
+		c.getState().getUserList().signoffUser(address);
 	}
 }

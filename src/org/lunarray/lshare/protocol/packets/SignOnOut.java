@@ -21,9 +21,6 @@ import org.lunarray.lshare.protocol.Controls;
 public class SignOnOut extends PacketOut {
 	
 	public SignOnOut(Controls c) {
-		
-		
-		
 		String username = c.getSettings().getUsername();
 		byte[] un = Util.encode(username);
 		int unlen = Math.min(un.length, 255);
