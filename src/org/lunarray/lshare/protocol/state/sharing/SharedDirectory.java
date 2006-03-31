@@ -223,8 +223,7 @@ public class SharedDirectory {
 				if (settings.getAccessDate(f.getPath()) < f.lastModified()) {
 					// Update hash
 					byte[] h = SharedFile.hash(f);
-					settings.setHash(f.getPath(), h);
-					settings.setAccessDate(f.getPath(), f.lastModified());
+					settings.setData(f.getPath(), h, f.lastModified());
 				}
 			}
 		}

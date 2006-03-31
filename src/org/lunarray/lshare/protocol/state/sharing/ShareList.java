@@ -30,26 +30,26 @@ public class ShareList implements ExternalShareList {
 		}
 	}
 	
-	public synchronized void addShare(String name, File location) {
+	public void addShare(String name, File location) {
 		pathmap.put(name, new SharedDirectory(location, name, settings.getShareSettings()));
 		if (location.isDirectory() && location.exists()) {
 			settings.getShareSettings().setSharePath(name, location.getAbsolutePath());
 		}
 	}
 	
-	public synchronized Set<String> getShareNames() {
+	public Set<String> getShareNames() {
 		return pathmap.keySet();
 	}
 
-	public synchronized SharedDirectory getShareByName(String name) {
+	public SharedDirectory getShareByName(String name) {
 		return pathmap.get(name);
 	}
 	
-	public synchronized Collection<SharedDirectory> getShares() {
+	public Collection<SharedDirectory> getShares() {
 		return pathmap.values();
 	}
 	
-	public synchronized void removeShare(String name) {
+	public void removeShare(String name) {
 		pathmap.remove(name);
 		settings.getShareSettings().removeSharePath(name);
 	}
