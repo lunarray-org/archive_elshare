@@ -1,14 +1,11 @@
 package org.lunarray.lshare.gui.contactlist;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.tree.TreeNode;
-
 import org.lunarray.lshare.LShare;
-import org.lunarray.lshare.protocol.state.User;
+import org.lunarray.lshare.protocol.state.userlist.User;
 
-public class Root implements TreeNode {
+public class Root {
 		
 	private Group buddies;
 	private Group online;
@@ -18,9 +15,9 @@ public class Root implements TreeNode {
 	
 	public Root(LShare ls) {
 		lshare = ls;
-		buddies = new Group(this, "Online Buddies");
-		online = new Group(this, "Online Users");
-		offline = new Group(this, "Offline Buddies");
+		buddies = new Group("Online Buddies");
+		online = new Group("Online Users");
+		offline = new Group("Offline Buddies");
 		items = new Vector<Group>();
 		items.add(buddies);
 		items.add(online);
@@ -45,46 +42,32 @@ public class Root implements TreeNode {
 	}
 
 	public Group getChildAt(int arg0) {
-		if (arg0 >= 0 && arg0 < items.size()) {
-			return items.get(arg0);
+		switch (arg0) {
+		case 0:
+			return buddies;
+		case 1:
+			return online;
+		case 2:
+			return offline;
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	public int getChildCount() {
 		return 3;
 	}
 
-	public TreeNode getParent() {
-		return null;
-	}
-
-	public int getIndex(TreeNode arg0) {
-		if (items.contains(arg0)) {
-			return items.indexOf(arg0);
-		} else {
-			return -1;
-		}
-	}
-
 	public int getIndex(Object arg0) {
-		if (items.contains(arg0)) {
-			return items.indexOf(arg0);
+		if (buddies == arg0) {
+			return 0;
+		} else if (online == arg0) {
+			return 1;
+		} else if (offline == arg0) {
+			return 2;
 		} else {
 			return -1;
 		}
-	}
-
-	public boolean getAllowsChildren() {
-		return true;
-	}
-
-	public boolean isLeaf() {
-		return false;
-	}
-
-	public Enumeration<Group> children() {
-		return items.elements();
 	}
 
 	public String toString() {

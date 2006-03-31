@@ -2,7 +2,7 @@ package org.lunarray.lshare;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.ExternalSettings;
-import org.lunarray.lshare.protocol.state.ExternalUserList;
+import org.lunarray.lshare.protocol.state.userlist.ExternalUserList;
 
 public class LShare {
 	

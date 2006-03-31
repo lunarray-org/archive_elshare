@@ -1,11 +1,11 @@
 package org.lunarray.lshare.gui.contactlist;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.lunarray.lshare.LShare;
@@ -33,15 +33,11 @@ public class Model implements TreeModel,UserListener {
 		if (arg0 == root) {
 			return root.getChildAt(arg1);
 		}
-		
-		Enumeration<Group> ge = root.children();
-		while (ge.hasMoreElements()) {
-			Group g = ge.nextElement();
-			if (g == arg0) {
-				return g.getChildAt(arg1);
+		for (int i = 0; i < root.getChildCount(); i++) {
+			if (root.getChildAt(i) == arg0) {
+				return root.getChildAt(i).getChildAt(arg1);
 			}
 		}
-		
 		return null;
 	}
 
@@ -75,7 +71,11 @@ public class Model implements TreeModel,UserListener {
 
 	public int getIndexOfChild(Object arg0, Object arg1) {
 		if (arg0 == root) {
-			return root.getIndex(arg1);
+			if (arg1.getClass().equals(TreeNode.class)) {
+				return root.getIndex((TreeNode)arg1);
+			} else {
+				return -1;
+			}
 		}
 		for (int i = 0; i < root.getChildCount(); i++) {
 			if (arg0 == root.getChildAt(i)) {

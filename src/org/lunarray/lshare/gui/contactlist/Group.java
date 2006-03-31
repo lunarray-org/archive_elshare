@@ -1,57 +1,51 @@
 package org.lunarray.lshare.gui.contactlist;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
 
-import javax.swing.tree.TreeNode;
+import org.lunarray.lshare.protocol.state.userlist.User;
 
-import org.lunarray.lshare.protocol.state.User;
-
-public class Group implements TreeNode {
+public class Group {
 	
-	private Root root;
 	private String name;
-	private Vector<UserNode> ulist;
+	private ArrayList<UserNode> ulist;
 	
-	public Group(Root r, String n) {
-		root = r;
+	public Group(String n) {
 		name = n;
-		ulist = new Vector<UserNode>();
+		ulist = new ArrayList<UserNode>();
 	}
 	
 	protected UserNode addUser(User u) {
 		UserNode n = new UserNode(this, u);
-		ulist.add(n);
+		int i = Collections.binarySearch(ulist, u) + 1;
+		ulist.add(i, n);
 		return n;
 	}
 	
 	protected UserNode removeUser(User u) {
-		UserNode torem = null;
-		search: {
-			for (UserNode un: ulist) {
-				if (un.getUser() == u) {
-					torem = un;
-					break search;
-				}
+		UserNode toret = null;
+		int i = Collections.binarySearch(ulist, u);
+		if (0 <= i && i < ulist.size()) {
+			if (ulist.get(i).compareTo(u) == 0) {
+				toret = ulist.get(i);
+				ulist.remove(i);
 			}
 		}
-		if (torem != null) {
-			ulist.remove(torem);
-		}
-		return torem;
+		return toret;
 	}
 	
 	protected UserNode findUser(User u) {
-		for (UserNode un: ulist) {
-			if (un.getUser() == u) {
-				return un;
+		int i = Collections.binarySearch(ulist, u);
+		if (0 <= i && i < ulist.size()) {
+			if (ulist.get(i).compareTo(u) == 0) {
+				return ulist.get(i);
 			}
 		}
 		return null;
 	}
 
 	public UserNode getChildAt(int arg0) {
-		if (arg0 >= 0 && arg0 < ulist.size()) {
+		if (0 <= arg0 && arg0 < ulist.size()) {
 			return ulist.get(arg0);
 		} else {
 			return null;
@@ -62,36 +56,12 @@ public class Group implements TreeNode {
 		return ulist.size();
 	}
 
-	public Root getParent() {
-		return root;
-	}
-
-	public int getIndex(TreeNode arg0) {
-		if (ulist.contains(arg0)) {
-			return ulist.indexOf(arg0);
-		} else {
-			return -1;
-		}
-	}
-
 	public int getIndex(Object arg0) {
 		if (ulist.contains(arg0)) {
 			return ulist.indexOf(arg0);
 		} else {
 			return -1;
 		}
-	}
-
-	public boolean getAllowsChildren() {
-		return true;
-	}
-
-	public boolean isLeaf() {
-		return false;
-	}
-
-	public Enumeration<UserNode> children() {
-		return ulist.elements();
 	}
 
 	public String toString() {
