@@ -11,7 +11,6 @@ import javax.swing.tree.TreePath;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.protocol.events.UserEvent;
 import org.lunarray.lshare.protocol.events.UserListener;
-import org.lunarray.lshare.protocol.filelist.FilelistEntry;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 public class Model implements TreeModel,UserListener {
