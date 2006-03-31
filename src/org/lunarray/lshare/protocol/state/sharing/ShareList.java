@@ -12,10 +12,12 @@ public class ShareList implements ExternalShareList {
 	
 	private TreeMap<String, SharedDirectory> pathmap;
 	private Settings settings;
+	private boolean ishashing;
 	
 	public ShareList(Controls c) {
 		pathmap = new TreeMap<String, SharedDirectory>();
 		settings = c.getSettings();
+		ishashing = false;
 		init();
 	}
 	
@@ -64,6 +66,10 @@ public class ShareList implements ExternalShareList {
 	}
 	
 	protected synchronized void hash(ShareSettings sset) {
+		if (ishashing) {
+			return ;
+		}
+		ishashing = true;
 		// Cleanup
 		for (String s: sset.getFilesInPath()) {
 			File n = new File(s);
@@ -74,6 +80,7 @@ public class ShareList implements ExternalShareList {
 		for (SharedDirectory s: getShares()) {
 			s.hash();
 		}
+		ishashing = false;
 	}
 	
 }

@@ -37,6 +37,7 @@ public class MainGUI {
 		desktop = new JDesktopPane();
 		
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setTitle("eLShare");
 		
 		lshare = l;
 		frame.addWindowListener(new WindowListener() {
