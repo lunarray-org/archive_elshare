@@ -32,12 +32,12 @@ public class SignOnIn extends PacketIn {
 		int unlen = data[1];
 		byte[] unb = Util.getByteArrayFromByteArray(data, unlen, 2);
 		String uns = Util.decode(unb);
-		username = uns;
+		username = uns.trim();
 		
 		int uclen = data[unlen + 2];
 		byte[] ucb = Util.getByteArrayFromByteArray(data, uclen, unlen + 3);
 		String ucs = Util.decode(ucb);
-		challenge = ucs;
+		challenge = ucs.trim();
 
 		Controls.getLogger().finer("SignOn from: " + source.getHostName() +
 				" (" + source.getHostAddress() + "); Name: " + username + 

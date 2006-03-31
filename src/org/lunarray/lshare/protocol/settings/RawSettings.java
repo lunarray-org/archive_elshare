@@ -214,4 +214,13 @@ public class RawSettings {
 			"settings");
 		}
 	}
+	
+	public String[] getChildren(String loc) {
+		Preferences n = prefs.node(loc);
+		try {
+			return n.childrenNames();
+		} catch (BackingStoreException bse) {
+			return new String[0];
+		}
+	}
 }

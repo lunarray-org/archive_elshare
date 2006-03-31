@@ -1,7 +1,7 @@
 package org.lunarray.lshare.protocol.events;
 
-import org.lunarray.lshare.protocol.state.User;
-import org.lunarray.lshare.protocol.state.UserList;
+import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.state.userlist.UserList;
 
 public class UserEvent {
 	

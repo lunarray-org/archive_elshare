@@ -2,9 +2,11 @@ package org.lunarray.lshare.protocol;
 
 import java.util.Timer;
 
-import org.lunarray.lshare.protocol.state.UserListTask;
+import org.lunarray.lshare.protocol.state.sharing.HashTask;
+import org.lunarray.lshare.protocol.state.userlist.UserListTask;
 import org.lunarray.lshare.tasks.RunnableTask;
 import org.lunarray.lshare.tasks.SignOnTimer;
+import org.lunarray.lshare.tasks.TaskThread;
 import org.lunarray.lshare.tasks.TimedRunnableTask;
 
 public class Tasks {
@@ -13,9 +15,12 @@ public class Tasks {
 	private Controls controls;
 	// A standard timer for multi tasks
 	private Timer timer;
+	// The group of threads of multi tasks
+	private ThreadGroup tgroup;
 	
 	public Tasks(Controls c) {
 		controls = c;
+		tgroup = new ThreadGroup("LShareTasks");
 		timer = new Timer();
 	}
 	
@@ -32,6 +37,8 @@ public class Tasks {
 		enqueueMultiTask(new SignOnTimer());
 		// Userlist timeouts
 		enqueueMultiTask(new UserListTask());
+		// File hashing
+		enqueueMultiTask(new HashTask());
 	}
 	
 	public void enqueueSingleTask(RunnableTask r) {
@@ -41,5 +48,10 @@ public class Tasks {
 	public void enqueueMultiTask(TimedRunnableTask r) {
 		r.setControls(controls);
 		timer.schedule(r, 0, r.getDelay());
+	}
+	
+	public void backgroundTask(RunnableTask r) {
+		TaskThread t = new TaskThread(tgroup, r, controls);
+		t.start();
 	}
 }

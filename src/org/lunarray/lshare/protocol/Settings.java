@@ -2,11 +2,12 @@ package org.lunarray.lshare.protocol;
 
 import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.settings.RawSettings;
+import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
+import org.lunarray.lshare.protocol.state.userlist.UserSettings;
 
 public class Settings implements ExternalSettings {
 	
 	public static String DEFAULT_LOC = "/lshare";
-	public static String BUDDY_LOC = "/buddies";
 	
 	public static String USERNAME_KEY = "username";
 	public static String USERNAME_UNSET = "anonymous";
@@ -14,12 +15,17 @@ public class Settings implements ExternalSettings {
 	public static String CHALLENGE_KEY = "challenge";
 	public static String CHALLENGE_UNSET = "";
 	
+	
 	private RawSettings rsettings;
 	private String username;
 	private String challenge;
+	private UserSettings usettings;
+	private ShareSettings ssettings;
 
 	public Settings(Controls c) {
 		rsettings = new RawSettings();
+		usettings = new UserSettings(rsettings);
+		ssettings = new ShareSettings(rsettings);
 		initSettings();
 	}
 	
@@ -56,26 +62,16 @@ public class Settings implements ExternalSettings {
 		}
 	}
 	
-	public void saveBuddy(String un, String ch) {
-		Controls.getLogger().finer("Settings: Buddy added: " + un);
-		rsettings.setString(DEFAULT_LOC + BUDDY_LOC, ch, un);
+	public UserSettings getUserSettings() {
+		return usettings;
 	}
 	
-	public void removeBuddy(String ch) {
-		Controls.getLogger().finer("Settings: Buddy removed: " + rsettings.
-				getString(DEFAULT_LOC + BUDDY_LOC, ch, USERNAME_UNSET));
-		rsettings.remove(DEFAULT_LOC + BUDDY_LOC, ch);
-	}
-
-	public String getSavedName(String su) {
-		return rsettings.getString(DEFAULT_LOC, su, CHALLENGE_UNSET);
-	}	
-	
-	public String[] getChallenges() {
-		return rsettings.getKeys(DEFAULT_LOC + BUDDY_LOC);
+	public ShareSettings getShareSettings() {
+		return ssettings;
 	}
 	
 	public GUISettings getSettingsForGUI() {
 		return new GUISettings(rsettings);
 	}
+
 }
