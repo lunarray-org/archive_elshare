@@ -6,8 +6,10 @@ import org.lunarray.lshare.protocol.events.UserListener;
 
 public interface ExternalUserList {
 	
-	void addListener(UserListener lis);
-	void removeListener(UserListener lis);
-	List<User> getUserList();
+	public List<User> getUserList();
+
+	public void addListener(UserListener lis);
+	
+	public void removeListener(UserListener lis);
 	
 }
