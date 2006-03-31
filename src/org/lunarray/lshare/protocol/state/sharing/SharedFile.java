@@ -43,6 +43,18 @@ public class SharedFile {
 			return rebuilt;
 		}		
 	}
+	
+	public long getLastModified() {
+		if (file.isFile()) {
+			if (file.exists()) {
+				return file.lastModified();
+			} else {
+				return 0;
+			}
+		} else {
+			return -1;
+		}
+	}
 
 	public long getSize() {
 		if (file.isFile()) {

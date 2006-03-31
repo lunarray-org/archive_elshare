@@ -51,7 +51,7 @@ public class User implements Comparable<User> {
 		address = a;
 	}
 	
-	protected InetAddress getAddress() {
+	public InetAddress getAddress() {
 		return address;
 	}
 

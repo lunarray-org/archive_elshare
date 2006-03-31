@@ -47,7 +47,15 @@ public class Selecter implements TreeSelectionListener {
 					}
 				});
 				m.add(ab);
-				// TODO add: Show Users Filelist
+				JMenuItem gfl = new JMenuItem("Get File list");
+				gfl.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						if (selected != null) {
+							model.showUserList(selected.getUser());
+						}
+					}
+				});
+				m.add(gfl);
 				panel.setComponentPopupMenu(m);
 			}
 		} else {

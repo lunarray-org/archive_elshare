@@ -8,6 +8,8 @@ import java.util.List;
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.events.UserEvent;
 import org.lunarray.lshare.protocol.events.UserListener;
+import org.lunarray.lshare.protocol.filelist.FilelistEntry;
+import org.lunarray.lshare.protocol.filelist.FilelistReceiver;
 
 public class UserList implements ExternalUserList {
 	
@@ -167,5 +169,10 @@ public class UserList implements ExternalUserList {
 	
 	public synchronized void removeListener(UserListener lis) {
 		listeners.remove(lis);
+	}
+	
+	public FilelistEntry getFilelist(User u) {
+		FilelistReceiver flr = new FilelistReceiver(u);
+		return flr.getRoot();
 	}
 }

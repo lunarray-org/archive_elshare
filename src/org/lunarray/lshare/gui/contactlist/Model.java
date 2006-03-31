@@ -11,6 +11,8 @@ import javax.swing.tree.TreePath;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.protocol.events.UserEvent;
 import org.lunarray.lshare.protocol.events.UserListener;
+import org.lunarray.lshare.protocol.filelist.FilelistEntry;
+import org.lunarray.lshare.protocol.state.userlist.User;
 
 public class Model implements TreeModel,UserListener {
 	
@@ -183,5 +185,10 @@ public class Model implements TreeModel,UserListener {
 			fireInsert(root.getChildAt(0).addUser(u.getUser()));
 			u.getUser().setBuddy();
 		}
+	}
+	
+	protected void showUserList(User u) {
+		//TODO
+		//lshare.getUserList().getFilelist(u).getEntries();
 	}
 }

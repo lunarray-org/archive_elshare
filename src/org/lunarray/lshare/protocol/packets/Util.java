@@ -96,6 +96,36 @@ public final class Util {
 		array[offset + 1] = (byte) value;
 	}
 
+    public static void shortUToByteArray(int value, byte[] array, int
+    		offset) {
+		array[offset] = (byte) (value >>> 8);
+		array[offset + 1] = (byte) value;
+	}
+    
+    public static void longToByteArray(long value, byte[] array, int
+    		offset) {
+    	array[offset] = (byte) (value >>> 56);
+    	array[offset + 1] = (byte) (value >>> 48);
+    	array[offset + 2] = (byte) (value >>> 40);
+    	array[offset + 3] = (byte) (value >>> 32);
+    	array[offset + 4] = (byte) (value >>> 24);
+    	array[offset + 5] = (byte) (value >>> 16);
+		array[offset + 6] = (byte) (value >>> 8);
+		array[offset + 7] = (byte) value;
+	}
+    
+    public static long byteArrayToLong(byte[] array, int offset) {
+    	return (
+    	(long) ((array[offset] & 0xFF) << 56) +
+    	(long) ((array[offset + 1] & 0xFF) << 48) +
+    	(long) ((array[offset + 2] & 0xFF) << 40) +
+    	(long) ((array[offset + 3] & 0xFF) << 32) +
+    	(long) ((array[offset + 4] & 0xFF) << 24) +
+    	(long) ((array[offset + 5] & 0xFF) << 16) +
+    	(long) ((array[offset + 6] & 0xFF) << 8) +
+			(array[offset + 7] & 0xFF));
+    }
+
     
     /**
      * Get a short from a byte array.
@@ -104,6 +134,11 @@ public final class Util {
      * @return The short that comes from the array. 
      */
     public static short byteArrayToShort(byte[] array, int offset) {
+    	return (short) (((array[offset] & 0xFF) << 8) +
+			(array[offset + 1] & 0xFF));
+    }
+    
+    public static short byteArrayToShortU(byte[] array, int offset) {
     	return (short) (((array[offset] & 0xFF) << 8) +
 			(array[offset + 1] & 0xFF));
     }
