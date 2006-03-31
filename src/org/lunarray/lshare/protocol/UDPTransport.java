@@ -10,6 +10,7 @@ import java.util.concurrent.Semaphore;
 import org.lunarray.lshare.protocol.packets.InvalidPacket;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
+import org.lunarray.lshare.protocol.packets.PacketOut;
 import org.lunarray.lshare.protocol.packets.SignOffIn;
 import org.lunarray.lshare.protocol.packets.SignOnIn;
 
@@ -32,6 +33,7 @@ public class UDPTransport extends Thread {
 
 
 	public UDPTransport(Controls c) {
+		super(c.getThreadGroup(), "udptransport");
 		sendlist = new LinkedBlockingQueue<DatagramPacket>();
 		shutdownsem = new Semaphore(1);
 		run = false;
@@ -44,13 +46,14 @@ public class UDPTransport extends Thread {
 			socket.setSoTimeout(LISTEN_TO);
 		} catch (SocketException se) {
 			// Something has gone awefully wrong
-			Controls.getLogger().severe("UDPTransport: cannot bind to " +
+			Controls.getLogger().severe("Cannot bind to " +
 					"socket on port: " + Integer.valueOf(Controls.UDP_PORT).
 					toString() + " (" + se.getMessage() + ")");
 		}
 		// Start running
 		run = true;
 		start();
+		Controls.getLogger().fine("Started UDP transport");
 	}
 	
 	public void run() {
@@ -58,7 +61,7 @@ public class UDPTransport extends Thread {
 			try {
 				shutdownsem.acquire();
 			} catch (InterruptedException ie) {
-				Controls.getLogger().severe("UDPTransport: shutdown " +
+				Controls.getLogger().severe("Shutdown " +
 						"initiated before run!");
 				break run;
 			}		
@@ -102,15 +105,13 @@ public class UDPTransport extends Thread {
 							try {
 								send = sendlist.take();
 								socket.send(send);
-								Controls.getLogger().fine("UDPTransport: " +
-										"send packet to " + send.getAddress().
+								Controls.getLogger().fine("Send packet to " + send.getAddress().
 										getHostAddress() + " on " + Integer.
 										valueOf(send.getPort()).toString());
 							} catch (InterruptedException ie) {
 								// This isn't going to happen
 							} catch (IOException ie) {
-								Controls.getLogger().severe(
-										"UDPTransport: unable to send " +
+								Controls.getLogger().severe("Unable to send " +
 										"packet to: " + send.getAddress().
 										getHostAddress());
 							}
@@ -130,19 +131,20 @@ public class UDPTransport extends Thread {
 		try {
 			shutdownsem.acquire();
 		} catch (InterruptedException ie) {
-			Controls.getLogger().severe("UDPTransport: Shutdown " +
+			Controls.getLogger().severe("Shutdown " +
 					"interrupted!");
 		}
 		if (socket != null) {
 			socket.close();
 		}
+		Controls.getLogger().fine("Stopped UDP transport");
 	}
 	
-	public void send(DatagramPacket p) {
+	public void send(PacketOut p) {
 		try {
-			sendlist.put(p);
+			sendlist.put(p.getPacket());
 		} catch (InterruptedException ie) {
-			Controls.getLogger().fine("UDPTransport: sendlist put " +
+			Controls.getLogger().fine("Sendlist put " +
 					"timeout! (" + ie.getMessage() + ")");
 		}
 	}

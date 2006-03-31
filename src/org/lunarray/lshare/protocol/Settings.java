@@ -42,7 +42,7 @@ public class Settings implements ExternalSettings {
 	
 	public void setUsername(String un) {
 		if (un.length() > 0) {
-			Controls.getLogger().finer("Settings: Set username: " + un);
+			Controls.getLogger().finer("Set username: " + un);
 			
 			username = un;
 			rsettings.setString(DEFAULT_LOC, USERNAME_KEY, username);
@@ -55,7 +55,7 @@ public class Settings implements ExternalSettings {
 	
 	public void setChallenge(String c) {
 		if (c.length() > 0) {
-			Controls.getLogger().finer("Settings: Set challenge: " + c);
+			Controls.getLogger().finer("Set challenge: " + c);
 		
 			challenge = c;
 			rsettings.setString(DEFAULT_LOC, CHALLENGE_KEY, challenge);

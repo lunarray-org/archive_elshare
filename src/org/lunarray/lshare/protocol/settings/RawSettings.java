@@ -23,7 +23,7 @@ public class RawSettings {
 		try {
 			prefs.flush();
 		} catch (BackingStoreException bse) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 					"settings");
 		}
 	}
@@ -47,7 +47,7 @@ public class RawSettings {
 		try {
 			n.removeNode();
 		} catch (BackingStoreException bse) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 			"settings");
 		}
 	}
@@ -64,7 +64,7 @@ public class RawSettings {
 				return n.keys();
 			}
 		} catch (BackingStoreException bse) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 			"settings");
 		}
 		return new String[0];
@@ -94,7 +94,7 @@ public class RawSettings {
 		try {
 			n.sync();
 		} catch (Exception e) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 			"settings");
 		}
 	}
@@ -123,7 +123,7 @@ public class RawSettings {
 		try {
 			n.sync();
 		} catch (Exception e) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 			"settings");
 		}
 	}
@@ -152,7 +152,7 @@ public class RawSettings {
 		try {
 			n.sync();
 		} catch (Exception e) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 			"settings");
 		}
 	}
@@ -181,7 +181,7 @@ public class RawSettings {
 		try {
 			n.sync();
 		} catch (Exception e) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 			"settings");
 		}
 	}
@@ -210,7 +210,7 @@ public class RawSettings {
 		try {
 			n.sync();
 		} catch (Exception e) {
-			Controls.getLogger().warning("RawSettings: could not save " +
+			Controls.getLogger().warning("Could not save " +
 			"settings");
 		}
 	}

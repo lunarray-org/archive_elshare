@@ -35,12 +35,12 @@ public class ShareSettings {
 	
 	public void removeSharePath(String sharename) {
 		rsettings.remove(Settings.DEFAULT_LOC + SHARE_LOC, sharename);
-		Controls.getLogger().finer("ShareSettings: removed share: \"" + sharename + "\"");
+		Controls.getLogger().finer("Removed share: \"" + sharename + "\"");
 	}
 	
 	public void setSharePath(String sharename, String sharepath) {
 		rsettings.setString(Settings.DEFAULT_LOC + SHARE_LOC, sharename, sharepath);
-		Controls.getLogger().finer("ShareSettings: added share: \"" + sharename + "\" at " + sharepath);
+		Controls.getLogger().finer("Added share: \"" + sharename + "\" at " + sharepath);
 	}
 
 	public String[] getFilesInPath() {
@@ -58,16 +58,16 @@ public class ShareSettings {
 	public void removePath(String loc) {
 		rsettings.remove(Settings.DEFAULT_LOC + HASH_LOC, loc);
 		rsettings.remove(Settings.DEFAULT_LOC + ACCESSDATE_LOC, loc);		
-		Controls.getLogger().finer("ShareSettings: removed file \"" + loc + "\"");
+		Controls.getLogger().finer("Removed file \"" + loc + "\"");
 	}
 	
 	public void setHash(String loc, byte[] h) {
 		rsettings.setByteArray(Settings.DEFAULT_LOC + HASH_LOC, loc, h);
-		Controls.getLogger().finer("ShareSettings: set hash \"" + loc + "\"");
+		Controls.getLogger().finer("Set hash \"" + loc + "\"");
 	}
 	
 	public void setAccessDate(String loc, long i) {
 		rsettings.setLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC, loc, i);
-		Controls.getLogger().finer("ShareSettings: set accessdate \"" + loc + "\"");
+		Controls.getLogger().finer("Set accessdate \"" + loc + "\"");
 	}
 }

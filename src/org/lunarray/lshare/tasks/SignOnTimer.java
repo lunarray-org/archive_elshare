@@ -13,7 +13,7 @@ public class SignOnTimer extends TimedRunnableTask {
 	
 	public void runTask(Controls c) {
 		SignOnOut soo = new SignOnOut(c);
-		c.getUDPTransport().send(soo.getPacket());
+		c.getUDPTransport().send(soo);
 	}
 
 }

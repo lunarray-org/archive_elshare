@@ -2,8 +2,11 @@ package org.lunarray.lshare.gui;
 
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -17,13 +20,17 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.lunarray.lshare.LShare;
+import org.lunarray.lshare.gui.main.ShowFrameMenu;
 
 public class MainGUI {
+	
+	public static int FRAME_PAD = 30;
 	
 	private LShare lshare;
 	private JFrame frame;
 	private JMenuBar menu;
 	private JDesktopPane desktop;
+	private JMenu winmenu;
 
 	public MainGUI(LShare l) {
 		frame = new JFrame();
@@ -48,12 +55,61 @@ public class MainGUI {
 		frame.setJMenuBar(menu);
 		frame.setContentPane(desktop);
 		
+		desktop.setMinimumSize(new Dimension(340, 240));
 		frame.setMinimumSize(new Dimension(340, 240));
 		frame.setPreferredSize(new Dimension(640, 480));
 		GraphicsEnvironment ge = GraphicsEnvironment.
 				getLocalGraphicsEnvironment();
 		frame.setMaximumSize(ge.getMaximumWindowBounds().getSize());
 		frame.pack();
+		
+		frame.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent arg0) {
+				Dimension n = arg0.getComponent().getSize();
+				Dimension f = frame.getMinimumSize();
+				Dimension fd = new Dimension(n.width, n.height);
+				if (n.height < f.height) {
+					fd.height = f.height;
+				}
+				if (n.width < f.width) {
+					fd.width = f.width;
+				}
+				frame.setSize(fd);
+				
+				updateDesktop(fd);
+				
+				super.componentResized(arg0);
+			}
+		});
+	}
+	
+	private synchronized void updateDesktop(Dimension framedim) {
+		// Check all frames
+		for (JInternalFrame i: desktop.getAllFrames()) {
+			Dimension d = i.getSize();
+			Point p = i.getLocation();
+			if (p.x > framedim.width - FRAME_PAD) {
+				p.x = 0;
+			} else if (p.x + d.width < 0 + FRAME_PAD) {
+				p.x = 0;
+			}
+			
+			if (p.y > framedim.height - FRAME_PAD) {
+				p.y = 0;
+			} else if (p.y < 0) {
+				p.y = 0;
+			}
+			
+			i.setLocation(p);
+		}
+	}
+	
+	private synchronized void updateMenu() {
+		winmenu.removeAll();
+		for (JInternalFrame i: desktop.getAllFrames()) {
+			winmenu.add(new ShowFrameMenu(i, desktop));
+		}
 	}
 	
 	private synchronized void addFrame(JComponent p, String t) {
@@ -120,6 +176,7 @@ public class MainGUI {
 			public void actionPerformed(ActionEvent arg0) {
 				ContactList cl = new ContactList(lshare);
 				addFrame(cl.getPanel(), cl.getTitle());
+				updateMenu();
 			}
 		});
 		windowm.add(windowmcontacts);
@@ -128,10 +185,14 @@ public class MainGUI {
 			public void actionPerformed(ActionEvent arg0) {
 				ShareList sl = new ShareList(lshare);
 				addFrame(sl.getPanel(), sl.getTitle());
+				updateMenu();
 			}
 		});
 		windowm.add(windowmsharel);
-		menu.add(windowm);		
+		menu.add(windowm);
+		// Winlist
+		winmenu = new JMenu("View");
+		menu.add(winmenu);
 	}
 	
 	

@@ -38,7 +38,7 @@ public class UserListTask extends TimedRunnableTask {
 			c.getState().getUserList().signoffUser(u.getAddress());
 		}
 		
-		Controls.getLogger().finer("UserListTask: checked timeouts at " + 
+		Controls.getLogger().finer("Checked timeouts at " + 
 				Long.valueOf(curtime).toString());
 	}
 }

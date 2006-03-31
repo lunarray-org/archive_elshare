@@ -57,7 +57,7 @@ public final class Util {
 		try {
 			cb = decoder.decode(bytes);
 		} catch (CharacterCodingException cce) {
-			Controls.getLogger().fine("packets.Util: error encoding " +
+			Controls.getLogger().fine("Error encoding " +
 					"string (" + cce.getMessage() + ")");
 		}
 		return cb.toString();
@@ -78,7 +78,7 @@ public final class Util {
 		try {
 			bytes = encoder.encode(cb);
 		} catch (CharacterCodingException cce) {
-			Controls.getLogger().fine("packets.Util: error decoding " +
+			Controls.getLogger().fine("Error decoding " +
 					"string (" + cce.getMessage() + ")");
 		}
 		return bytes.array();

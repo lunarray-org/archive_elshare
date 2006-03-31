@@ -30,7 +30,7 @@ public class User implements Comparable<User> {
 	}
 	
 	protected void bump() {
-		Controls.getLogger().finer("User: " + getName() + " bumped time " +
+		Controls.getLogger().finer(getName() + " bumped time " +
 				"from " + Long.valueOf(time).toString());
 		time = 0;
 	}

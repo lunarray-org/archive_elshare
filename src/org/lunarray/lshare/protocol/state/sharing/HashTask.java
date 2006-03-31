@@ -15,7 +15,7 @@ public class HashTask extends TimedRunnableTask {
 	
 	@Override
 	public void runTask(Controls c) {
-		Controls.getLogger().finer("HashTask: Started file hashing");
+		Controls.getLogger().finer("Started file hashing");
 		c.getTasks().backgroundTask(new Task());
 	}
 	

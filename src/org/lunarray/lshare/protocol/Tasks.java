@@ -20,7 +20,7 @@ public class Tasks {
 	
 	public Tasks(Controls c) {
 		controls = c;
-		tgroup = new ThreadGroup("LShareTasks");
+		tgroup = new ThreadGroup(c.getThreadGroup(), "tasks");
 		timer = new Timer();
 	}
 	

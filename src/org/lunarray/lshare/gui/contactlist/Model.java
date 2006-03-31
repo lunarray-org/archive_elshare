@@ -66,7 +66,7 @@ public class Model implements TreeModel,UserListener {
 	}
 
 	public void valueForPathChanged(TreePath arg0, Object arg1) {
-		// TODO
+		// Ignore
 	}
 
 	public int getIndexOfChild(Object arg0, Object arg1) {

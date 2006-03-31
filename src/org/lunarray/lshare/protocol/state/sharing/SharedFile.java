@@ -8,7 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import edu.tue.compnet.Output;
+import org.lunarray.lshare.protocol.Controls;
 
 public class SharedFile {
 	
@@ -60,6 +60,23 @@ public class SharedFile {
 		return settings.getHash(file.getPath());
 	}
 	
+	public static boolean equals(byte[] h, byte[] j) {
+		if (h.length == j.length) {
+			for (int i = 0; i < h.length; i++) {
+				if (h[i] != j[i]) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean isEmpty(byte[] h) {
+		return equals(h, ShareSettings.HASH_UNSET);
+	}
+	
 	protected static byte[] hash(File f) {
 		byte[] md5 = ShareSettings.HASH_UNSET;
 		try {
@@ -73,11 +90,11 @@ public class SharedFile {
 			}
 			md5 = md.digest();
 		} catch (FileNotFoundException e) {
-			Output.err("File not found!");
+			Controls.getLogger().fine("File not found!");
 		} catch (NoSuchAlgorithmException nse) {
-			Output.err("Hashing not supported!");
+			Controls.getLogger().fine("Hashing not supported!");
 		} catch (IOException ie) {
-			Output.err("File error!");
+			Controls.getLogger().fine("File error!");
 		}
 		return md5;
 	}

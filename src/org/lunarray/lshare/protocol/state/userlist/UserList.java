@@ -42,7 +42,7 @@ public class UserList implements ExternalUserList {
 	}
 	
 	private void signon(UserEvent e) {
-		Controls.getLogger().fine("UserList: user \"" + e.getUser().getName() +
+		Controls.getLogger().fine("User \"" + e.getUser().getName() +
 				"\" logged on " + e.getUser().getHostaddress());
 		
 		for (UserListener l: listeners) {
@@ -51,7 +51,7 @@ public class UserList implements ExternalUserList {
 	}
 	
 	private void signoff(UserEvent e) {
-		Controls.getLogger().fine("UserList: user \"" + e.getUser().getName() +
+		Controls.getLogger().fine("User \"" + e.getUser().getName() +
 				"\" logged off ");
 		
 		for (UserListener l: listeners) {
@@ -60,7 +60,7 @@ public class UserList implements ExternalUserList {
 	}	
 
 	private void update(UserEvent e) {
-		Controls.getLogger().fine("UserList: user \"" + e.getUser().getName() +
+		Controls.getLogger().fine("User \"" + e.getUser().getName() +
 				"\" updated " + e.getUser().getHostaddress());
 		
 		for (UserListener l: listeners) {

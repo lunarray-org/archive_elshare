@@ -17,10 +17,11 @@ public class Controls {
 	public static int UDP_MTU = 1400;
 	
 	private UDPTransport utrans;
+	private TCPSharesTransport tstrans;
 	private State state;
 	private Settings settings;
 	private Tasks tasks;
-
+	private ThreadGroup lsgroup;
 	
 	public Controls() {
 		// Init logger
@@ -44,24 +45,30 @@ public class Controls {
 		ls.setLevel(Level.ALL);
 		ls.addHandler(ha);
 
-		
+		lsgroup = new ThreadGroup("lshare");
 		settings = new Settings(this);
 		state = new State(this);
 		tasks = new Tasks(this);
 		utrans = new UDPTransport(this);
+		tstrans = new TCPSharesTransport(this);
 	}
 	
+	protected ThreadGroup getThreadGroup() {
+		return lsgroup;
+	}	
 	
 	public void start() {
+		tstrans.init();
 		getUDPTransport().init();
 		getTasks().start();
 	}
 	
 	public void stop() {
+		tstrans.close();
 		getTasks().stop();
 		// Send logout
 		SignOffOut soo = new SignOffOut();
-		getUDPTransport().send(soo.getPacket());
+		getUDPTransport().send(soo);
 		
 		
 		getUDPTransport().close();

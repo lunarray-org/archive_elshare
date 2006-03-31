@@ -9,7 +9,6 @@ public class InvalidPacket extends PacketIn {
 	}
 
 	public void runTask(Controls c) {
-		// TODO Auto-generated method stub
-		
+		// Ignore
 	}
 }
