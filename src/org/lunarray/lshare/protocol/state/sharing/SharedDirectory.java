@@ -185,6 +185,10 @@ public class SharedDirectory {
 		return name;
 	}
 	
+	public String getFilePath() {
+		return file.getPath();
+	}
+	
 	private String genPath(List<String> l) {
 		String r = getPath();
 		for (String s: l) {
@@ -205,8 +209,7 @@ public class SharedDirectory {
 		return genPath(name);
 	}
 
-	// TEMP protected void hash(ShareSettings sset) {
-	public void hash() {
+	protected void hash() {
 		hash(file);
 	}
 	

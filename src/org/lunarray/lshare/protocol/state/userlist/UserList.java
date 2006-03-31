@@ -31,10 +31,14 @@ public class UserList implements ExternalUserList {
 	
 	protected void removeBuddy(User u) {
 		controls.getSettings().getUserSettings().removeBuddy(u.getChallenge());
+		
+		update(new UserEvent(u, this));
 	}
 
 	protected void addBuddy(User u) {
 		controls.getSettings().getUserSettings().saveBuddy(u.getName(), u.getChallenge());
+		
+		update(new UserEvent(u, this));
 	}
 	
 	private void signon(UserEvent e) {

@@ -35,14 +35,16 @@ public class ShareSettings {
 	
 	public void removeSharePath(String sharename) {
 		rsettings.remove(Settings.DEFAULT_LOC + SHARE_LOC, sharename);
+		Controls.getLogger().finer("ShareSettings: removed share: \"" + sharename + "\"");
 	}
 	
 	public void setSharePath(String sharename, String sharepath) {
 		rsettings.setString(Settings.DEFAULT_LOC + SHARE_LOC, sharename, sharepath);
+		Controls.getLogger().finer("ShareSettings: added share: \"" + sharename + "\" at " + sharepath);
 	}
 
 	public String[] getFilesInPath() {
-		return rsettings.getChildren(Settings.DEFAULT_LOC + HASH_LOC);
+		return rsettings.getKeys(Settings.DEFAULT_LOC + HASH_LOC);
 	}
 	
 	public byte[] getHash(String loc) {

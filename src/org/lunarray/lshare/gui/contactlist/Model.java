@@ -96,11 +96,11 @@ public class Model implements TreeModel,UserListener {
 	public void signoff(UserEvent e) {
 		if (e.getUser().isBuddy()) {
 			fireInsert(root.getChildAt(2).addUser(e.getUser()));
-			int i = root.getChildAt(0).getIndex(root.getChildAt(2).findUser(e.
+			int i = root.getChildAt(0).getIndex(root.getChildAt(0).findUser(e.
 					getUser()));
 			fireRemove(root.getChildAt(0).removeUser(e.getUser()), i);
 		} else {
-			int i = root.getChildAt(1).getIndex(root.getChildAt(2).findUser(e.
+			int i = root.getChildAt(1).getIndex(root.getChildAt(1).findUser(e.
 					getUser()));
 			fireRemove(root.getChildAt(1).removeUser(e.getUser()), i);
 		}

@@ -8,7 +8,7 @@ import java.util.TreeMap;
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.Settings;
 
-public class ShareList {
+public class ShareList implements ExternalShareList {
 	
 	private TreeMap<String, SharedDirectory> pathmap;
 	private Settings settings;
@@ -54,11 +54,20 @@ public class ShareList {
 		settings.getShareSettings().removeSharePath(name);
 	}
 	
+	private boolean isInShares(File f) {
+		for (SharedDirectory s: getShares()) {
+			if (f.getPath().startsWith(s.getFilePath())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected synchronized void hash(ShareSettings sset) {
 		// Cleanup
 		for (String s: sset.getFilesInPath()) {
 			File n = new File(s);
-			if (!n.exists()) {
+			if (!n.exists() || !isInShares(n)) {
 				sset.removePath(s);
 			}
 		}

@@ -47,7 +47,7 @@ public class Selecter implements TreeSelectionListener {
 					}
 				});
 				m.add(ab);
-				// TODO add userlist
+				// TODO add: Show Users Filelist
 				panel.setComponentPopupMenu(m);
 			}
 		} else {

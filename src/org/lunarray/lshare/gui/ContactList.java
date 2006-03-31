@@ -1,9 +1,9 @@
 package org.lunarray.lshare.gui;
 
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeSelectionModel;
-import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.lunarray.lshare.LShare;
@@ -14,17 +14,20 @@ public class ContactList {
 	
 	private LShare lshare;
 	private JTree panel;
-	//private DefaultTreeModel model;
+	private JScrollPane scroller;
 	private Model model;
 
 	public ContactList(LShare ls) {
 		lshare = ls;
 		model = new Model(lshare);
 		panel = new JTree(model);
+		scroller = new JScrollPane(panel);
+		
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		
 		panel.setRootVisible(false);
-		for (int i = 0; i < model.getRoot().getChildCount(); i++) {
-			Object[] p = {model.getRoot(), model.getRoot().getChildAt(i)};
-			panel.expandPath(new TreePath(p));
+		for (int i = 0; i < panel.getRowCount(); i++) {
+			panel.expandRow(i);
 		}
 		
 		panel.setSelectionModel(new DefaultTreeSelectionModel());
@@ -39,6 +42,6 @@ public class ContactList {
 	}
 
 	public JComponent getPanel() {
-		return panel;
+		return scroller;
 	}
 }
