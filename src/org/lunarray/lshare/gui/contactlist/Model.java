@@ -9,6 +9,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.lunarray.lshare.LShare;
+import org.lunarray.lshare.gui.MainGUI;
 import org.lunarray.lshare.protocol.events.UserEvent;
 import org.lunarray.lshare.protocol.events.UserListener;
 import org.lunarray.lshare.protocol.state.userlist.User;
@@ -18,9 +19,11 @@ public class Model implements TreeModel,UserListener {
 	private LShare lshare;
 	private Root root;
 	private ArrayList<TreeModelListener> listener;
+	private MainGUI gui;
 	
-	public Model(LShare ls) {
+	public Model(LShare ls, MainGUI mg) {
 		lshare = ls;
+		gui = mg;
 		root = new Root(lshare);
 		listener = new ArrayList<TreeModelListener>();
 		lshare.getUserList().addListener(this);
@@ -187,7 +190,6 @@ public class Model implements TreeModel,UserListener {
 	}
 	
 	protected void showUserList(User u) {
-		//TODO
-		//lshare.getUserList().getFilelist(u).getEntries();
+		gui.addFileList(u);
 	}
 }

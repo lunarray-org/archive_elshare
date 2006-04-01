@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.main.ShowFrameMenu;
+import org.lunarray.lshare.protocol.state.userlist.User;
 
 public class MainGUI {
 	
@@ -175,18 +176,14 @@ public class MainGUI {
 		JMenuItem windowmcontacts = new JMenuItem("Show Contactlist");
 		windowmcontacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ContactList cl = new ContactList(lshare);
-				addFrame(cl.getPanel(), cl.getTitle());
-				updateMenu();
+				addContactList();
 			}
 		});
 		windowm.add(windowmcontacts);
 		JMenuItem windowmsharel = new JMenuItem("Show Sharelist");
 		windowmsharel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ShareList sl = new ShareList(lshare);
-				addFrame(sl.getPanel(), sl.getTitle());
-				updateMenu();
+				addShareList();
 			}
 		});
 		windowm.add(windowmsharel);
@@ -196,6 +193,23 @@ public class MainGUI {
 		menu.add(winmenu);
 	}
 	
+	public void addContactList() {
+		ContactList cl = new ContactList(lshare, this);
+		addFrame(cl.getPanel(), cl.getTitle());
+		updateMenu();
+	}
+	
+	public void addShareList() {
+		ShareList sl = new ShareList(lshare);
+		addFrame(sl.getPanel(), sl.getTitle());
+		updateMenu();
+	}
+	
+	public void addFileList(User u) {
+		FileList fl = new FileList(lshare, u);
+		addFrame(fl.getPanel(), fl.getTitle());
+		updateMenu();
+	}
 	
 	public void start() {
 		frame.setVisible(true);

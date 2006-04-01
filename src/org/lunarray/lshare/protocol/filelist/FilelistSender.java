@@ -1,5 +1,6 @@
 package org.lunarray.lshare.protocol.filelist;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,7 +42,7 @@ public class FilelistSender extends Thread {
 						byte[] dlenb = get(2);
 						int dlen = Util.byteArrayToShortU(dlenb, 0);
 						byte[] dstrb = get(dlen);
-						path = Util.decode(dstrb);
+						path = Util.decode(dstrb).trim();
 					} catch (IOException ie) {
 						Controls.getLogger().fine("Could not read!");
 						break run;
@@ -58,7 +59,29 @@ public class FilelistSender extends Thread {
 					}
 				} else {
 					// Get entries
-					SharedDirectory dir = controls.getState().getShareList().getShareByName(path);
+					String name;
+					String rest;
+					if (path.contains(SharedDirectory.SEPARATOR)) {
+						name = path.substring(0, path.indexOf(SharedDirectory.SEPARATOR));
+						rest = path.substring(path.indexOf(SharedDirectory.SEPARATOR) + 1);
+					} else {
+						name = path;
+						rest = "";
+					}
+					
+					SharedDirectory ret = controls.getState().getShareList().getShareByName(name);
+					SharedDirectory dir = ret;
+					
+					if (rest.length() > 0) {
+						try {
+							dir = ret.findDirectory(rest);
+						} catch (FileNotFoundException nfne) {
+							dir = null;
+							Controls.getLogger().finer("Fine not found: " + name + SharedDirectory.SEPARATOR + rest);
+						}
+					}
+					
+					
 					long len = 0;
 					if (dir != null) {
 						len = (long)dir.getDirectories().size() + (long)dir.getFiles().size();
@@ -116,24 +139,26 @@ public class FilelistSender extends Thread {
 	
 	private void send(SharedFile d) throws IOException {
 		byte[] name = Util.encode(d.getName());
-		byte[] nlen = {Integer.valueOf(Math.max(name.length, 255)).byteValue()};
+		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
 		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
 		Util.longToByteArray(d.getLastModified(),data, 0);
 		Util.longToByteArray(d.getSize(), data, 8);
 		Util.injectByteArrayIntoByteArray(d.getHash(), d.getHash().length, data, 16);
 		Util.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
 		Util.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
+		ostream.write(data);
 	}
 	
 	private void send(SharedDirectory d) throws IOException {
 		byte[] name = Util.encode(d.getName());
-		byte[] nlen = {Integer.valueOf(Math.max(name.length, 255)).byteValue()};
+		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
 		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
-		Util.longToByteArray(0,data, 0);
-		Util.longToByteArray(0, data, 8);
+		Util.longToByteArray(0, data, 0);
+		Util.longToByteArray(-1, data, 8);
 		Util.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET, ShareSettings.HASH_UNSET.length, data, 16);
 		Util.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
 		Util.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
+		ostream.write(data);
 	}
 	
 	private byte[] get(int a) throws IOException {

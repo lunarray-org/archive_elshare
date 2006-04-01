@@ -2,6 +2,8 @@ package org.lunarray.lshare.protocol.filelist;
 
 import java.util.List;
 
+import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
+
 public class FilelistEntry {
 
 	private String path;
@@ -25,7 +27,13 @@ public class FilelistEntry {
 	}
 	
 	public List<FilelistEntry> getEntries() {
-		return receiver.getEntries(path);
+		if (path.equals(".")) {
+			return receiver.getEntries(path);
+		} if (path.equals("")) {
+			return receiver.getEntries(name);
+		} else {
+			return receiver.getEntries(path + SharedDirectory.SEPARATOR + name);
+		}
 	}
 
 	public String getPath() {

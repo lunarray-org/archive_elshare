@@ -110,7 +110,7 @@ public class ShareSettings {
 	}
 	
 	private String quadBitToString(int b) {
-		switch (b) {
+		switch (b & 0x0F) {
 		case 0x0:
 			return "0";
 		case 0x1:

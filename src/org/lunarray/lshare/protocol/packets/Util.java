@@ -116,14 +116,14 @@ public final class Util {
     
     public static long byteArrayToLong(byte[] array, int offset) {
     	return (
-    	(long) ((array[offset] & 0xFF) << 56) +
-    	(long) ((array[offset + 1] & 0xFF) << 48) +
-    	(long) ((array[offset + 2] & 0xFF) << 40) +
-    	(long) ((array[offset + 3] & 0xFF) << 32) +
-    	(long) ((array[offset + 4] & 0xFF) << 24) +
-    	(long) ((array[offset + 5] & 0xFF) << 16) +
-    	(long) ((array[offset + 6] & 0xFF) << 8) +
-			(array[offset + 7] & 0xFF));
+    	(long)((array[offset] & 0xFFL) << 56) +
+    	(long)((array[offset + 1] & 0xFFL) << 48) +
+    	(long)((array[offset + 2] & 0xFFL) << 40) +
+    	(long)((array[offset + 3] & 0xFFL) << 32) +
+    	(long)((array[offset + 4] & 0xFFL) << 24) +
+    	(long)((array[offset + 5] & 0xFFL) << 16) +
+    	(long)((array[offset + 6] & 0xFFL) << 8) +
+		(long)(array[offset + 7] & 0xFFL));
     }
 
     

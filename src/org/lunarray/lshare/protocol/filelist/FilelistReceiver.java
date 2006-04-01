@@ -36,6 +36,7 @@ public class FilelistReceiver {
 		run: {
 			try {
 				write: {
+					Controls.getLogger().finer("Requested path: " + path);
 					ostream = socket.getOutputStream();
 					byte[] pdat = Util.encode(path);
 					byte[] data = new byte[pdat.length + 2];
@@ -70,9 +71,13 @@ public class FilelistReceiver {
 		long size = Util.byteArrayToLong(predata, 8);
 		byte[] hash = Util.getByteArrayFromByteArray(predata, ShareSettings.HASH_UNSET.length, 16);
 		int nlen = predata[16 + ShareSettings.HASH_UNSET.length] & 0xFF;
-		String name = Util.decode(get(nlen));
+		String name = Util.decode(get(nlen)).trim();
 		Controls.getLogger().finer("Data for: " + name);
-		return new FilelistEntry(this, p, name, hash, ad, size);
+		if (p.equals(".")) {
+			return new FilelistEntry(this, "", name, hash, ad, size);
+		} else {
+			return new FilelistEntry(this, p, name, hash, ad, size);
+		}		
 	}
 	
 	private byte[] get(int a) throws IOException {

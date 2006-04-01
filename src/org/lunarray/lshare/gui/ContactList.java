@@ -17,9 +17,9 @@ public class ContactList {
 	private JScrollPane scroller;
 	private Model model;
 
-	public ContactList(LShare ls) {
+	public ContactList(LShare ls, MainGUI mg) {
 		lshare = ls;
-		model = new Model(lshare);
+		model = new Model(lshare, mg);
 		panel = new JTree(model);
 		scroller = new JScrollPane(panel);
 		

@@ -153,7 +153,7 @@ public class SharedDirectory {
 		for (String s: path) {
 			File newdir = null;
 			for (File f: dir.listFiles()) {
-				if (f.isDirectory() && !f.isHidden() && f.getName().equals(s)) {
+				if (f.isDirectory() && !f.isHidden() && f.getName().trim().equals(s)) {
 					newdir = f;
 				}
 			}
