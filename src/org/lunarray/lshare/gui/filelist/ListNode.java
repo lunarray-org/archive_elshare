@@ -19,6 +19,10 @@ public class ListNode {
 		return entry.isFile();
 	}
 	
+	protected FilelistEntry getEntry() {
+		return entry;
+	}
+	
 	private void popChildren() {
 		children = new ArrayList<ListNode>();
 		for (FilelistEntry e: entry.getEntries()) {

@@ -88,7 +88,8 @@ public class ShareSettings {
 			String k = hashToString(hashmap.get(loc));
 			rsettings.remove(Settings.DEFAULT_LOC + FILE_LOC, k);
 			rsettings.remove(Settings.DEFAULT_LOC + HASH_LOC, k);
-			rsettings.remove(Settings.DEFAULT_LOC + ACCESSDATE_LOC, k);		
+			rsettings.remove(Settings.DEFAULT_LOC + ACCESSDATE_LOC, k);
+			hashmap.remove(loc);
 			Controls.getLogger().finer("Removed file \"" + loc + "\"");
 		}
 	}
@@ -98,6 +99,7 @@ public class ShareSettings {
 		rsettings.setString(Settings.DEFAULT_LOC + FILE_LOC, k, loc);
 		rsettings.setByteArray(Settings.DEFAULT_LOC + HASH_LOC, k, h);
 		rsettings.setLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC, k, i);
+		hashmap.put(loc, h);
 		Controls.getLogger().finer("Set hash \"" + loc + "\"");
 	}
 	

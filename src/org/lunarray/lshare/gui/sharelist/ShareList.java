@@ -1,4 +1,4 @@
-package org.lunarray.lshare.gui;
+package org.lunarray.lshare.gui.sharelist;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -17,10 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import org.lunarray.lshare.LShare;
-import org.lunarray.lshare.gui.sharelist.ShareListener;
-import org.lunarray.lshare.gui.sharelist.ShareTable;
+import org.lunarray.lshare.gui.GUIFrame;
 
-public class ShareList {
+public class ShareList extends GUIFrame {
 
 	private JPanel panel;
 	private JTextField name;
@@ -125,13 +124,12 @@ public class ShareList {
 		});
 		
 		panel.add(rem, BorderLayout.SOUTH);
+		
+		frame.add(panel);
+		frame.setTitle(getTitle());
 	}
 	
 	public String getTitle() {
 		return "Shared Directories";
-	}
-	
-	public JPanel getPanel() {
-		return panel;
 	}
 }

@@ -10,7 +10,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -20,7 +19,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.lunarray.lshare.LShare;
+import org.lunarray.lshare.gui.contactlist.ContactList;
+import org.lunarray.lshare.gui.filelist.FileList;
 import org.lunarray.lshare.gui.main.ShowFrameMenu;
+import org.lunarray.lshare.gui.sharelist.ShareList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 public class MainGUI {
@@ -114,22 +116,8 @@ public class MainGUI {
 		}
 	}
 	
-	private synchronized void addFrame(JComponent p, String t) {
-		JInternalFrame icl = new JInternalFrame();
-		icl.getContentPane().add(p);
-		icl.setTitle(t);
-		icl.setMinimumSize(new Dimension(320, 240));
-		icl.setPreferredSize(new Dimension(320, 240));
-		icl.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		icl.pack();
-		icl.setLocation(0, 0);
-		icl.setVisible(true);
-		icl.setResizable(true);
-		icl.setClosable(true);
-		icl.setMaximizable(true);
-		icl.setIconifiable(true);
-		
-		desktop.add(icl);
+	private synchronized void addFrame(GUIFrame f) {
+		desktop.add(f.getFrame());
 	}
 	
 	public void initMenu() {
@@ -195,19 +183,19 @@ public class MainGUI {
 	
 	public void addContactList() {
 		ContactList cl = new ContactList(lshare, this);
-		addFrame(cl.getPanel(), cl.getTitle());
+		addFrame(cl);
 		updateMenu();
 	}
 	
 	public void addShareList() {
 		ShareList sl = new ShareList(lshare);
-		addFrame(sl.getPanel(), sl.getTitle());
+		addFrame(sl);
 		updateMenu();
 	}
 	
 	public void addFileList(User u) {
 		FileList fl = new FileList(lshare, u);
-		addFrame(fl.getPanel(), fl.getTitle());
+		addFrame(fl);
 		updateMenu();
 	}
 	

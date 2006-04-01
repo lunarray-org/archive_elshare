@@ -1,16 +1,15 @@
-package org.lunarray.lshare.gui;
+package org.lunarray.lshare.gui.contactlist;
 
-import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.lunarray.lshare.LShare;
-import org.lunarray.lshare.gui.contactlist.Model;
-import org.lunarray.lshare.gui.contactlist.Selecter;
+import org.lunarray.lshare.gui.GUIFrame;
+import org.lunarray.lshare.gui.MainGUI;
 
-public class ContactList {
+public class ContactList extends GUIFrame {
 	
 	private LShare lshare;
 	private JTree panel;
@@ -18,6 +17,10 @@ public class ContactList {
 	private Model model;
 
 	public ContactList(LShare ls, MainGUI mg) {
+		super();
+		
+		frame.setTitle(getTitle());		
+		
 		lshare = ls;
 		model = new Model(lshare, mg);
 		panel = new JTree(model);
@@ -35,13 +38,11 @@ public class ContactList {
 				SINGLE_TREE_SELECTION);
 		panel.getSelectionModel().addTreeSelectionListener(new Selecter(panel, 
 				model));
+		
+		frame.getContentPane().add(scroller);
 	}
 	
 	public String getTitle() {
 		return "Contact List";
-	}
-
-	public JComponent getPanel() {
-		return scroller;
 	}
 }
