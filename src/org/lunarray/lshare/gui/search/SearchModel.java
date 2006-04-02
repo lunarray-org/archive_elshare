@@ -110,7 +110,12 @@ public class SearchModel implements TableModel {
 				return (new Date(events.get(arg1).getEntry().getLastModified())).toString();
 			}
 		case 5:
-			return GUIUtil.hashToString(events.get(arg1).getEntry().getHash());
+			if (events.get(arg1).getEntry().hasHash()) {
+				return GUIUtil.hashToString(events.get(arg1).getEntry().getHash());
+			} else {
+				return "";
+			}
+			
 		case 6:
 			return events.get(arg1).getUser().getName();
 		case 7:

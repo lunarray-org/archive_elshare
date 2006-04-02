@@ -72,7 +72,7 @@ public class SharedFile {
 		return settings.getHash(file.getPath());
 	}
 	
-	public static boolean equals(byte[] h, byte[] j) {
+	private static boolean equals(byte[] h, byte[] j) {
 		if (h.length == j.length) {
 			for (int i = 0; i < h.length; i++) {
 				if (h[i] != j[i]) {

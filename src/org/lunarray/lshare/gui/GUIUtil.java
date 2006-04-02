@@ -1,7 +1,6 @@
 package org.lunarray.lshare.gui;
 
 import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
-import org.lunarray.lshare.protocol.state.sharing.SharedFile;
 
 public class GUIUtil {
 
@@ -17,9 +16,6 @@ public class GUIUtil {
 	
 	public static String hashToString(byte[] dat) {
 		String ret = "";
-		if (SharedFile.isEmpty(dat)) {
-			return ret;
-		}
 		for (byte b: dat) {
 			ret += quadBitToString(b) + quadBitToString(b >> 4);
 		}

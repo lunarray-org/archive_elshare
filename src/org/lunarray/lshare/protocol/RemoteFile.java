@@ -1,5 +1,7 @@
 package org.lunarray.lshare.protocol;
 
+import org.lunarray.lshare.protocol.state.sharing.SharedFile;
+
 public abstract class RemoteFile {
 
 	private String path;
@@ -42,5 +44,13 @@ public abstract class RemoteFile {
 	
 	public boolean isFile() {
 		return size >= 0;
+	}
+	
+	public boolean hasHash() {
+		if (SharedFile.isEmpty(hash)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

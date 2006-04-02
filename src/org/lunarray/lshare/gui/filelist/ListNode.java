@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.lunarray.lshare.gui.GUIUtil;
 import org.lunarray.lshare.protocol.filelist.FilelistEntry;
-import org.lunarray.lshare.protocol.state.sharing.SharedFile;
 
 public class ListNode {
 
@@ -73,10 +72,10 @@ public class ListNode {
 	}
 	
 	public String getHash() {
-		if (SharedFile.isEmpty(entry.getHash())) {
-			return "";
-		} else {
+		if (entry.hasHash()) {
 			return GUIUtil.hashToString(entry.getHash());
+		} else {
+			return "";
 		}
 	}
 	
