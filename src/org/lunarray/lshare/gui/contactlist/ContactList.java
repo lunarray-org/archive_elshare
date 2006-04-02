@@ -1,5 +1,6 @@
 package org.lunarray.lshare.gui.contactlist;
 
+import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeSelectionModel;
@@ -40,6 +41,7 @@ public class ContactList extends GUIFrame {
 				model));
 		
 		frame.getContentPane().add(scroller);
+		frame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 	}
 	
 	public String getTitle() {

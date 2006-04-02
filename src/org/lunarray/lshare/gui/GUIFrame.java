@@ -3,8 +3,10 @@ package org.lunarray.lshare.gui;
 import java.awt.Dimension;
 
 import javax.swing.JInternalFrame;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
-public abstract class GUIFrame {
+public abstract class GUIFrame extends InternalFrameAdapter {
 	
 	protected JInternalFrame frame;
 	
@@ -25,5 +27,11 @@ public abstract class GUIFrame {
 
 	public JInternalFrame getFrame() {
 		return frame;
+	}
+	
+	public void close() {}
+	
+	public void internalFrameClosing(InternalFrameEvent arg0) {
+		close();
 	}
 }

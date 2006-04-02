@@ -7,8 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -28,7 +28,7 @@ import org.lunarray.lshare.gui.search.StringFilter;
 import org.lunarray.lshare.gui.sharelist.ShareList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
-public class MainGUI {
+public class MainGUI implements ActionListener {
 	
 	public static int FRAME_PAD = 30;
 	
@@ -37,6 +37,9 @@ public class MainGUI {
 	private JMenuBar menu;
 	private JDesktopPane desktop;
 	private JMenu winmenu;
+	
+	private ContactList contactlist;
+	private ShareList sharelist;
 
 	public MainGUI(LShare l) {
 		frame = new JFrame();
@@ -46,17 +49,19 @@ public class MainGUI {
 		frame.setTitle("eLShare");
 		
 		lshare = l;
-		frame.addWindowListener(new WindowListener() {
-			public void windowActivated(WindowEvent arg0) {}
-			public void windowClosed(WindowEvent arg0) {}
+		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
 				stop();
 			}
-			public void windowDeactivated(WindowEvent arg0) {}
-			public void windowDeiconified(WindowEvent arg0) {}
-			public void windowIconified(WindowEvent arg0) {}
-			public void windowOpened(WindowEvent arg0) {}
 		});
+		
+		contactlist = new ContactList(lshare, this);
+		contactlist.getFrame().setVisible(false);
+		addFrame(contactlist);
+		
+		sharelist = new ShareList(lshare);
+		sharelist.getFrame().setVisible(false);
+		addFrame(sharelist);
 		
 		initMenu();
 		frame.setJMenuBar(menu);
@@ -115,7 +120,9 @@ public class MainGUI {
 	private synchronized void updateMenu() {
 		winmenu.removeAll();
 		for (JInternalFrame i: desktop.getAllFrames()) {
-			winmenu.add(new ShowFrameMenu(i, desktop));
+			if (i.isVisible()) {
+				winmenu.add(new ShowFrameMenu(i, desktop));
+			}
 		}
 	}
 	
@@ -127,84 +134,70 @@ public class MainGUI {
 		menu = new JMenuBar();
 		// File
 		JMenu filem = new JMenu("File");
-		JMenuItem filemsearch = new JMenuItem("Search");
-		filemsearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String nn = JOptionPane.showInternalInputDialog(desktop,
-						"Enter search query: ", "", JOptionPane.QUESTION_MESSAGE);
-				if (nn != null) {
-					addSearchList(new StringFilter(nn));
-					lshare.getSearchList().searchForString(nn);
-				}
-			}
-		});
-		filem.add(filemsearch);		
-		JMenuItem filemquit = new JMenuItem("Quit");
-		filemquit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				stop();
-			}
-		});
-		filem.add(filemquit);
+		filem.add(addMenuItem("Search", "search"));
+		filem.add(addMenuItem("Quit", "stop"));
 		menu.add(filem);
 		// Settings
 		JMenu settingsm = new JMenu("Settings");
-		JMenuItem settingsmchangenick = new JMenuItem("Change Nickname");
-		settingsmchangenick.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String nn = JOptionPane.showInternalInputDialog(desktop, "Please " +
-						"enter a new nickname: ", lshare.getSettings().
-						getUsername(), JOptionPane.QUESTION_MESSAGE);
-				if (nn != null) {
-					lshare.getSettings().setUsername(nn);
-				}
-			}
-		});
-		settingsm.add(settingsmchangenick);
-		JMenuItem settingsmchangechal = new JMenuItem("Change e-Mail address");
-		settingsmchangechal.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String nn = JOptionPane.showInputDialog(desktop, "Please " +
-						"enter a new e-Mail address: ", lshare.getSettings().
-						getUsername(), JOptionPane.QUESTION_MESSAGE);
-				if (nn != null) {
-					lshare.getSettings().setChallenge(nn);
-				}
-			}
-		});
-		settingsm.add(settingsmchangechal);
+		settingsm.add(addMenuItem("Change Nickname", "nick"));
+		settingsm.add(addMenuItem("Change e-Mail address", "challenge"));
 		menu.add(settingsm);
 		// Window
 		JMenu windowm = new JMenu("Window");
-		JMenuItem windowmcontacts = new JMenuItem("Show Contactlist");
-		windowmcontacts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				addContactList();
-			}
-		});
-		windowm.add(windowmcontacts);
-		JMenuItem windowmsharel = new JMenuItem("Show Sharelist");
-		windowmsharel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				addShareList();
-			}
-		});
-		windowm.add(windowmsharel);
+		windowm.add(addMenuItem("Show contactlist", "contactlist"));
+		windowm.add(addMenuItem("Show sharelist", "sharelist"));
 		menu.add(windowm);
 		// Winlist
 		winmenu = new JMenu("View");
 		menu.add(winmenu);
 	}
 	
+	private JMenuItem addMenuItem(String title, String command) {
+		JMenuItem mi = new JMenuItem(title);
+		mi.setActionCommand(command);
+		mi.addActionListener(this);
+		return mi;
+	}
+	
+	public void actionPerformed(ActionEvent arg0) {
+		String ac = arg0.getActionCommand();
+		if (ac.equals("sharelist")) {
+			addShareList();
+		} else if (ac.equals("contactlist")) {
+			addContactList();
+		} else if (ac.equals("challenge")) {
+			String nn = JOptionPane.showInputDialog(desktop, "Please " +
+					"enter a new e-Mail address: ", lshare.getSettings().
+					getUsername(), JOptionPane.QUESTION_MESSAGE);
+			if (nn != null) {
+				lshare.getSettings().setChallenge(nn);
+			}
+		} else if (ac.equals("nick")) {
+			String nn = JOptionPane.showInternalInputDialog(desktop, "Please " +
+					"enter a new nickname: ", lshare.getSettings().
+					getUsername(), JOptionPane.QUESTION_MESSAGE);
+			if (nn != null) {
+				lshare.getSettings().setUsername(nn);
+			}
+		} else if (ac.equals("quit")) {
+			stop();
+		} else if (ac.equals("search")) {
+			String nn = JOptionPane.showInternalInputDialog(desktop,
+					"Enter search query: ", "", JOptionPane.QUESTION_MESSAGE);
+			if (nn != null) {
+				addSearchList(new StringFilter(nn));
+				lshare.getSearchList().searchForString(nn);
+			}
+		}
+	}
+	
 	public void addContactList() {
-		ContactList cl = new ContactList(lshare, this);
-		addFrame(cl);
+		contactlist.getFrame().setVisible(true);
 		updateMenu();
 	}
 	
 	public void addShareList() {
-		ShareList sl = new ShareList(lshare);
-		addFrame(sl);
+		sharelist.getFrame().setVisible(true);
 		updateMenu();
 	}
 	

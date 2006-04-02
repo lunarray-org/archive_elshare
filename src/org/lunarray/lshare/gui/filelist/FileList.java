@@ -4,8 +4,6 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
@@ -31,24 +29,17 @@ public class FileList extends GUIFrame {
 		t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table = new JScrollPane(t);
 		
-		frame.addInternalFrameListener(new InternalFrameListener() {
-			public void internalFrameActivated(InternalFrameEvent arg0) {}
-			public void internalFrameClosed(InternalFrameEvent arg0) {}
-			public void internalFrameClosing(InternalFrameEvent arg0) {
-				Object o = model.getRoot();
-				if (o.getClass().equals(ListNode.class)) {
-					ListNode n = (ListNode)o;
-					n.getEntry().closeReceiver();
-				}
-			}
-			public void internalFrameDeactivated(InternalFrameEvent arg0) {}
-			public void internalFrameDeiconified(InternalFrameEvent arg0) {}
-			public void internalFrameIconified(InternalFrameEvent arg0) {}
-			public void internalFrameOpened(InternalFrameEvent arg0) {}
-		});
-		
 		frame.setTitle(getTitle());
 		frame.getContentPane().add(table);
+	}
+	
+	@Override
+	public void close() {
+		Object o = model.getRoot();
+		if (o.getClass().equals(ListNode.class)) {
+			ListNode n = (ListNode)o;
+			n.getEntry().closeReceiver();
+		}
 	}
 	
 	public String getTitle() {

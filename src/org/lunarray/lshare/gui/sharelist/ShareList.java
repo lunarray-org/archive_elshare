@@ -9,6 +9,7 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,7 +20,7 @@ import javax.swing.ListSelectionModel;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 
-public class ShareList extends GUIFrame {
+public class ShareList extends GUIFrame implements ActionListener {
 
 	private JPanel panel;
 	private JTextField name;
@@ -74,16 +75,8 @@ public class ShareList extends GUIFrame {
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		JButton floc = new JButton("Browse");
-		floc.addActionListener(new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
-				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				int res = fc.showDialog(panel, "Select Share Folder");
-				if (res == JFileChooser.APPROVE_OPTION) {
-					loc.setText(fc.getSelectedFile().getPath());
-				}
-			};
-		});
+		floc.setActionCommand("browse");
+		floc.addActionListener(this);
 		info.add(floc, gbc);
 		
 		gbc.gridx = 0;
@@ -92,17 +85,8 @@ public class ShareList extends GUIFrame {
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		JButton add = new JButton("Add Directory");
-		add.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (loc.getText() != null) {
-					File f = new File(loc.getText());
-					if (f.exists() && f.isDirectory() && !f.isHidden()) {
-						lshare.getShareList().addShare(name.getText(), f);
-						model.refresh();
-					}
-				}
-			}
-		});
+		add.setActionCommand("add");
+		add.addActionListener(this);
 		info.add(add, gbc);
 		panel.add(info, BorderLayout.NORTH);
 		
@@ -127,6 +111,28 @@ public class ShareList extends GUIFrame {
 		
 		frame.add(panel);
 		frame.setTitle(getTitle());
+		
+		frame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+	}
+	
+	public void actionPerformed(ActionEvent arg0) {
+		String ac = arg0.getActionCommand();
+		if (ac.equals("add")) {
+			if (loc.getText() != null) {
+				File f = new File(loc.getText());
+				if (f.exists() && f.isDirectory() && !f.isHidden()) {
+					lshare.getShareList().addShare(name.getText(), f);
+					model.refresh();
+				}
+			}
+		} else if (ac.equals("browse")) {
+			JFileChooser fc = new JFileChooser();
+			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			int res = fc.showDialog(panel, "Select Share Folder");
+			if (res == JFileChooser.APPROVE_OPTION) {
+				loc.setText(fc.getSelectedFile().getPath());
+			}
+		}
 	}
 	
 	public String getTitle() {
