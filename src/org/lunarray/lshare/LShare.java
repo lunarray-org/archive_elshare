@@ -2,6 +2,7 @@ package org.lunarray.lshare;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.ExternalSettings;
+import org.lunarray.lshare.protocol.state.search.ExternalSearchList;
 import org.lunarray.lshare.protocol.state.sharing.ExternalShareList;
 import org.lunarray.lshare.protocol.state.userlist.ExternalUserList;
 
@@ -32,6 +33,10 @@ public class LShare {
 	
 	public ExternalShareList getShareList() {
 		return controls.getState().getShareList();
+	}
+	
+	public ExternalSearchList getSearchList() {
+		return controls.getState().getSearchList();
 	}
 	
 	public void start() {

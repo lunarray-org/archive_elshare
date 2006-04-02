@@ -1,7 +1,7 @@
 package org.lunarray.lshare.tasks;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.protocol.packets.SignOnOut;
+import org.lunarray.lshare.protocol.packets.user.SignOnOut;
 
 public class SignOnTimer extends TimedRunnableTask {
 

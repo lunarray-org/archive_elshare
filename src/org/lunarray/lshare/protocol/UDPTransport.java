@@ -11,8 +11,9 @@ import org.lunarray.lshare.protocol.packets.InvalidPacket;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
 import org.lunarray.lshare.protocol.packets.PacketOut;
-import org.lunarray.lshare.protocol.packets.SignOffIn;
-import org.lunarray.lshare.protocol.packets.SignOnIn;
+import org.lunarray.lshare.protocol.packets.search.SearchIn;
+import org.lunarray.lshare.protocol.packets.user.SignOffIn;
+import org.lunarray.lshare.protocol.packets.user.SignOnIn;
 
 public class UDPTransport extends Thread {
 	/** The listen timeout. */
@@ -80,6 +81,9 @@ public class UDPTransport extends Thread {
 							} else if (SignOnIn.isType(packet.getData())) {
 								type = "SignOn";
 								inpack = new SignOnIn(packet);
+							} else if (SearchIn.isType(packet.getData())) {
+								type = "Search";
+								inpack = new SearchIn(packet);
 							} else {
 								type = "";
 								inpack = new InvalidPacket();

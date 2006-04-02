@@ -9,7 +9,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.lunarray.lshare.protocol.packets.SignOffOut;
+import org.lunarray.lshare.protocol.packets.user.SignOffOut;
 
 public class Controls {
 	public static int UDP_PORT = 7400;

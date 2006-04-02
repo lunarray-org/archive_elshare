@@ -124,6 +124,18 @@ public class MainGUI {
 		menu = new JMenuBar();
 		// File
 		JMenu filem = new JMenu("File");
+		JMenuItem filemsearch = new JMenuItem("Search");
+		filemsearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO
+				String nn = JOptionPane.showInternalInputDialog(desktop,
+						"Enter search query: ", "", JOptionPane.QUESTION_MESSAGE);
+				if (nn != null) {
+					lshare.getSearchList().searchForString(nn);
+				}
+			}
+		});
+		filem.add(filemsearch);		
 		JMenuItem filemquit = new JMenuItem("Quit");
 		filemquit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

@@ -1,9 +1,10 @@
-package org.lunarray.lshare.protocol.packets;
+package org.lunarray.lshare.protocol.packets.user;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.packets.PacketIn;
 
 public class SignOffIn extends PacketIn {
 	

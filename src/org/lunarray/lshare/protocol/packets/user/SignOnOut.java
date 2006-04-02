@@ -1,9 +1,11 @@
-package org.lunarray.lshare.protocol.packets;
+package org.lunarray.lshare.protocol.packets.user;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.packets.PacketOut;
+import org.lunarray.lshare.protocol.packets.Util;
 
 /*
  * Purpose:
