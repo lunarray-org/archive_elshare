@@ -1,8 +1,8 @@
 package org.lunarray.lshare.protocol.state.sharing;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.tasks.RunnableTask;
-import org.lunarray.lshare.tasks.TimedRunnableTask;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
+import org.lunarray.lshare.protocol.tasks.TimedRunnableTask;
 
 public class HashTask extends TimedRunnableTask {
 

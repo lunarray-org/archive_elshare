@@ -1,7 +1,7 @@
 package org.lunarray.lshare.protocol.packets;
 
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
-import org.lunarray.lshare.tasks.RunnableTask;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 public abstract class PacketIn implements RunnableTask {
 	

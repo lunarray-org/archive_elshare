@@ -1,7 +1,7 @@
 package org.lunarray.lshare.protocol.state.search;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.tasks.RunnableTask;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 public class ResultHandler implements RunnableTask {
 

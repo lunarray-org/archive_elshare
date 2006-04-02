@@ -3,7 +3,7 @@ package org.lunarray.lshare.protocol.state.userlist;
 import java.util.ArrayList;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.tasks.TimedRunnableTask;
+import org.lunarray.lshare.protocol.tasks.TimedRunnableTask;
 
 public class UserListTask extends TimedRunnableTask {
 

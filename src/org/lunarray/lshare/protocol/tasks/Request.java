@@ -1,4 +1,4 @@
-package org.lunarray.lshare.tasks;
+package org.lunarray.lshare.protocol.tasks;
 
 public class Request {
 	public void setHandled() {

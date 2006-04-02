@@ -4,11 +4,11 @@ import java.util.Timer;
 
 import org.lunarray.lshare.protocol.state.sharing.HashTask;
 import org.lunarray.lshare.protocol.state.userlist.UserListTask;
-import org.lunarray.lshare.tasks.LazyThread;
-import org.lunarray.lshare.tasks.RunnableTask;
-import org.lunarray.lshare.tasks.SignOnTimer;
-import org.lunarray.lshare.tasks.TaskThread;
-import org.lunarray.lshare.tasks.TimedRunnableTask;
+import org.lunarray.lshare.protocol.tasks.LazyThread;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
+import org.lunarray.lshare.protocol.tasks.SignOnTimer;
+import org.lunarray.lshare.protocol.tasks.TaskThread;
+import org.lunarray.lshare.protocol.tasks.TimedRunnableTask;
 
 public class Tasks {
 	// 2 threads, timer tasks, single tasks

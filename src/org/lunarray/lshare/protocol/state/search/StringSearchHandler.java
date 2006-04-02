@@ -6,7 +6,7 @@ import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.search.ResultOut;
 import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
 import org.lunarray.lshare.protocol.state.sharing.SharedFile;
-import org.lunarray.lshare.tasks.RunnableTask;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 public class StringSearchHandler implements RunnableTask {
 

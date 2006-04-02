@@ -1,4 +1,4 @@
-package org.lunarray.lshare.tasks;
+package org.lunarray.lshare.protocol.tasks;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
