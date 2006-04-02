@@ -5,6 +5,7 @@ import javax.swing.JTable;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
+import org.lunarray.lshare.gui.MainGUI;
 import org.lunarray.lshare.protocol.events.SearchEvent;
 import org.lunarray.lshare.protocol.events.SearchListener;
 
@@ -15,7 +16,9 @@ public class SearchList extends GUIFrame implements SearchListener {
 	private JTable restable;
 	private SearchModel model;
 	
-	public SearchList(LShare ls, SearchFilter f) {
+	public SearchList(LShare ls, SearchFilter f, MainGUI mg) {
+		super(mg);
+		
 		filter = f;
 		lshare = ls;
 		
@@ -43,5 +46,6 @@ public class SearchList extends GUIFrame implements SearchListener {
 	@Override
 	public void close() {
 		lshare.getSearchList().removeListener(this);
+		frame.dispose();
 	}
 }

@@ -48,9 +48,9 @@ public abstract class RemoteFile {
 	
 	public boolean hasHash() {
 		if (SharedFile.isEmpty(hash)) {
-			return true;
-		} else {
 			return false;
+		} else {
+			return true;
 		}
 	}
 }

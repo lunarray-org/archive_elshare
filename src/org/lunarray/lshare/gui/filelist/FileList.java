@@ -7,6 +7,7 @@ import javax.swing.ListSelectionModel;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
+import org.lunarray.lshare.gui.MainGUI;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 import com.sun.swing.JTreeTable;
@@ -18,8 +19,8 @@ public class FileList extends GUIFrame {
 	private ListModel model;
 	private JComponent table;
 	
-	public FileList(LShare ls, User u) {
-		super();
+	public FileList(LShare ls, User u, MainGUI mg) {
+		super(mg);
 		
 		lshare = ls;
 		user = u;
@@ -40,6 +41,7 @@ public class FileList extends GUIFrame {
 			ListNode n = (ListNode)o;
 			n.getEntry().closeReceiver();
 		}
+		frame.dispose();
 	}
 	
 	public String getTitle() {

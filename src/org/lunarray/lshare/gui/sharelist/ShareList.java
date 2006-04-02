@@ -19,6 +19,7 @@ import javax.swing.ListSelectionModel;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
+import org.lunarray.lshare.gui.MainGUI;
 
 public class ShareList extends GUIFrame implements ActionListener {
 
@@ -30,7 +31,8 @@ public class ShareList extends GUIFrame implements ActionListener {
 	private ShareTable model;
 	private ShareListener slis;
 
-	public ShareList(LShare ls) {
+	public ShareList(LShare ls, MainGUI mg) {
+		super(mg);
 		lshare = ls;
 		panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -133,6 +135,11 @@ public class ShareList extends GUIFrame implements ActionListener {
 				loc.setText(fc.getSelectedFile().getPath());
 			}
 		}
+	}
+	
+	@Override
+	public void close() {
+		frame.setVisible(false);
 	}
 	
 	public String getTitle() {
