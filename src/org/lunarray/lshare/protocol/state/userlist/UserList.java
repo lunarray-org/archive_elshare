@@ -70,7 +70,7 @@ public class UserList implements ExternalUserList {
 		}
 	}
 	
-	private User findUserByChallenge(String challenge) {
+	public User findUserByChallenge(String challenge) {
 		User u = null;
 		search: {
 			for (User w: userlist) {
@@ -83,7 +83,7 @@ public class UserList implements ExternalUserList {
 		return u;
 	}
 	
-	private User findUserByAddress(InetAddress a) {
+	public User findUserByAddress(InetAddress a) {
 		User u = null;
 		search: {
 			for (User w: userlist) {

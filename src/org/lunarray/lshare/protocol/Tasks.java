@@ -4,6 +4,7 @@ import java.util.Timer;
 
 import org.lunarray.lshare.protocol.state.sharing.HashTask;
 import org.lunarray.lshare.protocol.state.userlist.UserListTask;
+import org.lunarray.lshare.tasks.LazyThread;
 import org.lunarray.lshare.tasks.RunnableTask;
 import org.lunarray.lshare.tasks.SignOnTimer;
 import org.lunarray.lshare.tasks.TaskThread;
@@ -15,21 +16,26 @@ public class Tasks {
 	private Controls controls;
 	// A standard timer for multi tasks
 	private Timer timer;
-	// The group of threads of multi tasks
+	// The group of threads
 	private ThreadGroup tgroup;
+	// The lazy thread to handle noncritical tasks
+	LazyThread lazy;
 	
 	public Tasks(Controls c) {
 		controls = c;
 		tgroup = new ThreadGroup(c.getThreadGroup(), "tasks");
 		timer = new Timer();
+		lazy = new LazyThread(controls);
 	}
 	
 	public void start() {
 		setupDefaultTasks();
+		lazy.start();
 	}
 	
 	public void stop() {
 		timer.cancel();
+		lazy.close();
 	}
 	
 	public void setupDefaultTasks() {
@@ -43,6 +49,10 @@ public class Tasks {
 	
 	public void enqueueSingleTask(RunnableTask r) {
 		r.runTask(controls);
+	}
+	
+	public void enqueueLazyTask(RunnableTask r) {
+		lazy.enqueue(r);
 	}
 	
 	public void enqueueMultiTask(TimedRunnableTask r) {

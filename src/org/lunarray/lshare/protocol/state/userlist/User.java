@@ -88,13 +88,17 @@ public class User implements Comparable<User> {
 	}
 	
 	public void setBuddy() {
-		ulist.addBuddy(this);
-		isbuddy = true;
+		if (ulist != null) {
+			ulist.addBuddy(this);
+			isbuddy = true;
+		}
 	}
 	
 	public void unsetBuddy() {
-		ulist.removeBuddy(this);
-		isbuddy = false;
+		if (ulist != null) {
+			ulist.removeBuddy(this);
+			isbuddy = false;
+		}
 	}
 	
 	public int compareTo(User arg0) {
