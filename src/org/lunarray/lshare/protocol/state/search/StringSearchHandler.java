@@ -8,12 +8,12 @@ import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
 import org.lunarray.lshare.protocol.state.sharing.SharedFile;
 import org.lunarray.lshare.tasks.RunnableTask;
 
-public class SearchHandler implements RunnableTask {
+public class StringSearchHandler implements RunnableTask {
 
 	private InetAddress to;
 	private String query;
 	
-	public SearchHandler(InetAddress t, String q) {
+	public StringSearchHandler(InetAddress t, String q) {
 		to = t;
 		query = q;
 	}
@@ -21,7 +21,6 @@ public class SearchHandler implements RunnableTask {
 	public void runTask(Controls c) {
 		for (SharedDirectory d: c.getState().getShareList().getShares()) {
 			for (SharedFile f: d.getMatchingFiles(query)) {
-				// TODO
 				ResultOut o = new ResultOut(to, f);
 				c.getUDPTransport().send(o);
 			}

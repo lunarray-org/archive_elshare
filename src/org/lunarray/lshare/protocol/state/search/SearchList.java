@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.events.SearchListener;
-import org.lunarray.lshare.protocol.filelist.FilelistEntry;
 import org.lunarray.lshare.protocol.packets.search.SearchOut;
 
 public class SearchList implements ExternalSearchList {
@@ -25,8 +24,8 @@ public class SearchList implements ExternalSearchList {
 		listeners.remove(lis);
 	}
 	
-	public void processResult(FilelistEntry e) {
-		
+	public void processResult(SearchResult e) {
+		// TODO
 	}
 	
 	public void searchForString(String s) {
@@ -35,6 +34,6 @@ public class SearchList implements ExternalSearchList {
 	}
 	
 	public void searchForHash(byte[] h) {
-		
+		// TODO
 	}
 }

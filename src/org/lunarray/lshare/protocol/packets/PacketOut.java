@@ -4,9 +4,11 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 
 public abstract class PacketOut {
 
+	public static int HLEN = ShareSettings.HASH_UNSET.length;
 	public static String BROADCAST = "255.255.255.255";
 	
 	protected byte[] data;

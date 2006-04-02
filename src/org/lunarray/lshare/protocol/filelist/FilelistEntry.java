@@ -2,23 +2,15 @@ package org.lunarray.lshare.protocol.filelist;
 
 import java.util.List;
 
+import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
 
-public class FilelistEntry {
+public class FilelistEntry extends RemoteFile {
 
-	private String path;
-	private String name;
-	private byte[] hash;
-	private long lastmodified;
-	private long size;
 	private FilelistReceiver receiver;
 	
 	public FilelistEntry(FilelistReceiver fr, String p, String n, byte[] h, long lm, long s) {
-		path = p;
-		name = n;
-		hash = h;
-		lastmodified = lm;
-		size = s;
+		super(p, n, h, lm, s);
 		receiver = fr;
 	}
 	
@@ -27,40 +19,12 @@ public class FilelistEntry {
 	}
 	
 	public List<FilelistEntry> getEntries() {
-		if (path.equals(".")) {
-			return receiver.getEntries(path);
-		} if (path.equals("")) {
-			return receiver.getEntries(name);
+		if (getPath().equals(".")) {
+			return receiver.getEntries(getPath());
+		} if (getPath().equals("")) {
+			return receiver.getEntries(getName());
 		} else {
-			return receiver.getEntries(path + SharedDirectory.SEPARATOR + name);
+			return receiver.getEntries(getPath() + SharedDirectory.SEPARATOR + getName());
 		}
-	}
-
-	public String getPath() {
-		return path;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public byte[] getHash() {
-		return hash;
-	}
-	
-	public long getLastModified() {
-		return lastmodified;
-	}
-	
-	public long getSize() {
-		return size;
-	}
-	
-	public boolean isDirectory() {
-		return size < 0;
-	}
-	
-	public boolean isFile() {
-		return size >= 0;
 	}
 }
