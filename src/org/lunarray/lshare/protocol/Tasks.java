@@ -19,7 +19,7 @@ public class Tasks {
 	// The group of threads
 	private ThreadGroup tgroup;
 	// The lazy thread to handle noncritical tasks
-	LazyThread lazy;
+	private LazyThread lazy;
 	
 	public Tasks(Controls c) {
 		controls = c;

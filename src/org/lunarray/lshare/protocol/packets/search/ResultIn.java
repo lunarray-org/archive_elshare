@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
-import org.lunarray.lshare.protocol.packets.Util;
+import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.search.ResultHandler;
 import org.lunarray.lshare.protocol.state.search.SearchResult;
 
@@ -31,17 +31,17 @@ public class ResultIn extends PacketIn {
 		try {
 			byte[] data = packet.getData();
 			
-			long ad = Util.byteArrayToLong(data, 1);
-			long size = Util.byteArrayToLong(data, 1 + 8);
-			byte[] hash = Util.getByteArrayFromByteArray(data, HLEN, 1 + 8 + 8);
+			long ad = PacketUtil.byteArrayToLong(data, 1);
+			long size = PacketUtil.byteArrayToLong(data, 1 + 8);
+			byte[] hash = PacketUtil.getByteArrayFromByteArray(data, HLEN, 1 + 8 + 8);
 			
-			short psize = Util.byteArrayToShortU(data, HLEN + 1 + 8 + 8);
-			byte[] pbytes = Util.getByteArrayFromByteArray(data, psize, HLEN + 1 + 8 + 8 + 2);
-			String path = Util.decode(pbytes);
+			short psize = PacketUtil.byteArrayToShortU(data, HLEN + 1 + 8 + 8);
+			byte[] pbytes = PacketUtil.getByteArrayFromByteArray(data, psize, HLEN + 1 + 8 + 8 + 2);
+			String path = PacketUtil.decode(pbytes).trim();
 			
 			short nsize = data[HLEN + 1 + 8 + 8 + 2 + psize];
-			byte[] nbytes = Util.getByteArrayFromByteArray(data, nsize, HLEN + 1 + 8 + 8 + 2 + psize + 1);
-			String name = Util.decode(nbytes);
+			byte[] nbytes = PacketUtil.getByteArrayFromByteArray(data, nsize, HLEN + 1 + 8 + 8 + 2 + psize + 1);
+			String name = PacketUtil.decode(nbytes).trim();
 			
 			result = new SearchResult(packet.getAddress(), path, name, hash, ad, size);
 		} catch (Exception e) {

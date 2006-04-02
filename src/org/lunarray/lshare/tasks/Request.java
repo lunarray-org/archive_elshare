@@ -1,11 +1,12 @@
 package org.lunarray.lshare.tasks;
 
 public class Request {
-	void setHandled() {
-		
+	public void setHandled() {
+		// TODO
 	}
 	
-	boolean isHandled() {
+	public boolean isHandled() {
+		// TODO
 		return true;
 	}
 }

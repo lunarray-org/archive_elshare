@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
-import org.lunarray.lshare.protocol.packets.Util;
+import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.search.StringSearchHandler;
 
 public class SearchIn extends PacketIn {
@@ -34,8 +34,8 @@ public class SearchIn extends PacketIn {
 			byte[] data = packet.getData();
 			
 			int qlen = data[1];
-			byte[] qb = Util.getByteArrayFromByteArray(data, qlen, 2);
-			query = Util.decode(qb).trim();
+			byte[] qb = PacketUtil.getByteArrayFromByteArray(data, qlen, 2);
+			query = PacketUtil.decode(qb).trim();
 		} catch (Exception e) {
 			throw new MalformedPacketException();
 		}

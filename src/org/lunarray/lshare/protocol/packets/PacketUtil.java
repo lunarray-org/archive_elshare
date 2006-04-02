@@ -10,7 +10,7 @@ import java.nio.charset.CodingErrorAction;
 
 import org.lunarray.lshare.protocol.Controls;
 
-public final class Util {
+public final class PacketUtil {
 	/**
 	 * Injects the byte array source of length length into the target
 	 * byte array at the offset offset.

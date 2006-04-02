@@ -24,6 +24,14 @@ public class StringSearchHandler implements RunnableTask {
 				ResultOut o = new ResultOut(to, f);
 				c.getUDPTransport().send(o);
 			}
+			for (SharedDirectory f: d.getMatchingDirectories(query)) {
+				ResultOut o = new ResultOut(to, f);
+				c.getUDPTransport().send(o);
+			}
+			if (d.getName().contains(query)) {
+				ResultOut o = new ResultOut(to, d);
+				c.getUDPTransport().send(o);
+			}
 		}
 	}
 

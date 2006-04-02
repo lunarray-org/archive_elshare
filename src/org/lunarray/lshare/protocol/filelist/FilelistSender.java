@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.protocol.packets.Util;
+import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
 import org.lunarray.lshare.protocol.state.sharing.SharedFile;
@@ -40,9 +40,9 @@ public class FilelistSender extends Thread {
 					// read and write data
 					try {
 						byte[] dlenb = get(2);
-						int dlen = Util.byteArrayToShortU(dlenb, 0);
+						int dlen = PacketUtil.byteArrayToShortU(dlenb, 0);
 						byte[] dstrb = get(dlen);
-						path = Util.decode(dstrb).trim();
+						path = PacketUtil.decode(dstrb).trim();
 					} catch (IOException ie) {
 						Controls.getLogger().fine("Could not read!");
 						break run;
@@ -88,7 +88,7 @@ public class FilelistSender extends Thread {
 					}
 					writelen: {
 						byte[] tlen = new byte[8];
-						Util.longToByteArray(len, tlen, 0);
+						PacketUtil.longToByteArray(len, tlen, 0);
 						try {
 							ostream.write(tlen);
 						} catch (IOException ie) {
@@ -121,43 +121,43 @@ public class FilelistSender extends Thread {
 	
 	private void writeRoots() throws IOException {
 		byte[] tlen = new byte[8];
-		Util.longToByteArray(controls.getState().getShareList().getShareNames().size(), tlen, 0);
+		PacketUtil.longToByteArray(controls.getState().getShareList().getShareNames().size(), tlen, 0);
 		ostream.write(tlen);		
 		for (String s: controls.getState().getShareList().getShareNames()) {
-			byte[] name = Util.encode(s);
+			byte[] name = PacketUtil.encode(s);
 			byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
 			byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
-			Util.longToByteArray(0, data, 0);
-			Util.longToByteArray(-1, data, 8);
-			Util.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET, ShareSettings.HASH_UNSET.length, data, 16);
-			Util.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
-			Util.injectByteArrayIntoByteArray(name, nlen[0] & 0xFF, data, 16 + 1 + ShareSettings.HASH_UNSET.length);
+			PacketUtil.longToByteArray(0, data, 0);
+			PacketUtil.longToByteArray(-1, data, 8);
+			PacketUtil.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET, ShareSettings.HASH_UNSET.length, data, 16);
+			PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
+			PacketUtil.injectByteArrayIntoByteArray(name, nlen[0] & 0xFF, data, 16 + 1 + ShareSettings.HASH_UNSET.length);
 			ostream.write(data);
 		}
 	}
 
 	
 	private void send(SharedFile d) throws IOException {
-		byte[] name = Util.encode(d.getName());
+		byte[] name = PacketUtil.encode(d.getName());
 		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
 		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
-		Util.longToByteArray(d.getLastModified(),data, 0);
-		Util.longToByteArray(d.getSize(), data, 8);
-		Util.injectByteArrayIntoByteArray(d.getHash(), d.getHash().length, data, 16);
-		Util.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
-		Util.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
+		PacketUtil.longToByteArray(d.getLastModified(),data, 0);
+		PacketUtil.longToByteArray(d.getSize(), data, 8);
+		PacketUtil.injectByteArrayIntoByteArray(d.getHash(), d.getHash().length, data, 16);
+		PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
+		PacketUtil.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
 		ostream.write(data);
 	}
 	
 	private void send(SharedDirectory d) throws IOException {
-		byte[] name = Util.encode(d.getName());
+		byte[] name = PacketUtil.encode(d.getName());
 		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
 		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
-		Util.longToByteArray(0, data, 0);
-		Util.longToByteArray(-1, data, 8);
-		Util.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET, ShareSettings.HASH_UNSET.length, data, 16);
-		Util.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
-		Util.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
+		PacketUtil.longToByteArray(0, data, 0);
+		PacketUtil.longToByteArray(-1, data, 8);
+		PacketUtil.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET, ShareSettings.HASH_UNSET.length, data, 16);
+		PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
+		PacketUtil.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
 		ostream.write(data);
 	}
 	

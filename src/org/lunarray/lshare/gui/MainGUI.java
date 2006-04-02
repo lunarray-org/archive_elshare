@@ -22,6 +22,9 @@ import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.contactlist.ContactList;
 import org.lunarray.lshare.gui.filelist.FileList;
 import org.lunarray.lshare.gui.main.ShowFrameMenu;
+import org.lunarray.lshare.gui.search.SearchFilter;
+import org.lunarray.lshare.gui.search.SearchList;
+import org.lunarray.lshare.gui.search.StringFilter;
 import org.lunarray.lshare.gui.sharelist.ShareList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -127,10 +130,10 @@ public class MainGUI {
 		JMenuItem filemsearch = new JMenuItem("Search");
 		filemsearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO
 				String nn = JOptionPane.showInternalInputDialog(desktop,
 						"Enter search query: ", "", JOptionPane.QUESTION_MESSAGE);
 				if (nn != null) {
+					addSearchList(new StringFilter(nn));
 					lshare.getSearchList().searchForString(nn);
 				}
 			}
@@ -208,6 +211,12 @@ public class MainGUI {
 	public void addFileList(User u) {
 		FileList fl = new FileList(lshare, u);
 		addFrame(fl);
+		updateMenu();
+	}
+	
+	public void addSearchList(SearchFilter f) {
+		SearchList sl = new SearchList(lshare, f);
+		addFrame(sl);
 		updateMenu();
 	}
 	

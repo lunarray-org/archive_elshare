@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.PacketOut;
-import org.lunarray.lshare.protocol.packets.Util;
+import org.lunarray.lshare.protocol.packets.PacketUtil;
 
 /*
  * Purpose:
@@ -24,11 +24,11 @@ public class SignOnOut extends PacketOut {
 	
 	public SignOnOut(Controls c) {
 		String username = c.getSettings().getUsername();
-		byte[] un = Util.encode(username);
+		byte[] un = PacketUtil.encode(username);
 		int unlen = Math.min(un.length, 255);
 
 		String challenge = c.getSettings().getChallenge();
-		byte[] uc = Util.encode(challenge);
+		byte[] uc = PacketUtil.encode(challenge);
 		int uclen = Math.min(uc.length, 255);
 
 		int len = 1 + 1 + unlen + 1 + uclen;
@@ -37,10 +37,10 @@ public class SignOnOut extends PacketOut {
 		data[0] = SignOnIn.getType();
 		
 		data[1] = Integer.valueOf(unlen).byteValue();
-		Util.injectByteArrayIntoByteArray(un, unlen, data, 2);
+		PacketUtil.injectByteArrayIntoByteArray(un, unlen, data, 2);
 		
 		data[2 + unlen] = Integer.valueOf(uclen).byteValue();
-		Util.injectByteArrayIntoByteArray(uc, uclen, data, 3 + unlen);
+		PacketUtil.injectByteArrayIntoByteArray(uc, uclen, data, 3 + unlen);
 	}
 	
 	@Override

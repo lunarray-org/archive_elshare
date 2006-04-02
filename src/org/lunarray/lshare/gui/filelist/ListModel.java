@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.swing.event.TreeModelListener;
 
+import org.lunarray.lshare.gui.GUIUtil;
 import org.lunarray.lshare.protocol.state.userlist.ExternalUserList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -94,7 +95,7 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
 				return n.getName();
 			case 1:
 				if (n.getFileSize() >= 0) {
-					return prettyPrint(n.getFileSize());
+					return GUIUtil.prettyPrint(n.getFileSize());
 				} else {
 					return "";
 				}
@@ -120,15 +121,5 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
 		} else {
 			return false;
 		}
-	}
-	
-	public String prettyPrint(long n) {
-		String[] units = {"B" ,"KB", "MB", "GB"};
-		int i = 0;
-		while (n > 9999 && i < units.length) {
-			n = n / 1024;
-			i++;
-		}
-		return Long.valueOf(n).toString() + " " + units[i];
 	}
 }

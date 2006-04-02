@@ -5,7 +5,7 @@ import java.net.InetAddress;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.PacketIn;
-import org.lunarray.lshare.protocol.packets.Util;
+import org.lunarray.lshare.protocol.packets.PacketUtil;
 
 public class SignOnIn extends PacketIn {
 	
@@ -32,13 +32,13 @@ public class SignOnIn extends PacketIn {
 		source = packet.getAddress();
 		
 		int unlen = data[1];
-		byte[] unb = Util.getByteArrayFromByteArray(data, unlen, 2);
-		String uns = Util.decode(unb);
+		byte[] unb = PacketUtil.getByteArrayFromByteArray(data, unlen, 2);
+		String uns = PacketUtil.decode(unb);
 		username = uns.trim();
 		
 		int uclen = data[unlen + 2];
-		byte[] ucb = Util.getByteArrayFromByteArray(data, uclen, unlen + 3);
-		String ucs = Util.decode(ucb);
+		byte[] ucb = PacketUtil.getByteArrayFromByteArray(data, uclen, unlen + 3);
+		String ucs = PacketUtil.decode(ucb);
 		challenge = ucs.trim();
 
 		Controls.getLogger().finer("SignOn from: " + source.getHostName() +

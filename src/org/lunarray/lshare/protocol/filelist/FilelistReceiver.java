@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.protocol.packets.Util;
+import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -38,16 +38,16 @@ public class FilelistReceiver {
 				write: {
 					Controls.getLogger().finer("Requested path: " + path);
 					ostream = socket.getOutputStream();
-					byte[] pdat = Util.encode(path);
+					byte[] pdat = PacketUtil.encode(path);
 					byte[] data = new byte[pdat.length + 2];
-					Util.shortUToByteArray(pdat.length, data, 0);
-					Util.injectByteArrayIntoByteArray(pdat, pdat.length, data, 2);
+					PacketUtil.shortUToByteArray(pdat.length, data, 0);
+					PacketUtil.injectByteArrayIntoByteArray(pdat, pdat.length, data, 2);
 					ostream.write(data);
 				}
 				read: {
 					istream = socket.getInputStream();
 					byte[] a = get(8);
-					long amount = Util.byteArrayToLong(a, 0);
+					long amount = PacketUtil.byteArrayToLong(a, 0);
 					for (long i = 0; i < amount; i++) {
 						ret.add(getOne(path));
 					}
@@ -67,11 +67,11 @@ public class FilelistReceiver {
 	
 	private FilelistEntry getOne(String p) throws IOException {
 		byte[] predata = get(8 + 8 + ShareSettings.HASH_UNSET.length + 1);
-		long ad = Util.byteArrayToLong(predata, 0);
-		long size = Util.byteArrayToLong(predata, 8);
-		byte[] hash = Util.getByteArrayFromByteArray(predata, ShareSettings.HASH_UNSET.length, 16);
+		long ad = PacketUtil.byteArrayToLong(predata, 0);
+		long size = PacketUtil.byteArrayToLong(predata, 8);
+		byte[] hash = PacketUtil.getByteArrayFromByteArray(predata, ShareSettings.HASH_UNSET.length, 16);
 		int nlen = predata[16 + ShareSettings.HASH_UNSET.length] & 0xFF;
-		String name = Util.decode(get(nlen)).trim();
+		String name = PacketUtil.decode(get(nlen)).trim();
 		Controls.getLogger().finer("Data for: " + name);
 		if (p.equals(".")) {
 			return new FilelistEntry(this, "", name, hash, ad, size);
