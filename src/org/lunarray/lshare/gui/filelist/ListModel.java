@@ -12,23 +12,46 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import com.sun.swing.AbstractTreeTableModel;
 import com.sun.swing.TreeTableModel;
 
-public class ListModel extends AbstractTreeTableModel implements TreeTableModel {
+public class ListModel extends AbstractTreeTableModel implements 
+		TreeTableModel {
 	
+	/**
+	 * The model listeners.
+	 */
 	private ArrayList<TreeModelListener> listeners;
 	
+	/**
+	 * Constructs a list.
+	 * @param l The userlist that the filelisti s fetched from.
+	 * @param u The user that the filelist is to be fetched from.
+	 */
 	public ListModel(ExternalUserList l, User u) {
 		super(new ListNode(l.getFilelist(u)));
 		listeners = new ArrayList<TreeModelListener>();
 	}
 	
+	/**
+	 * Removes a model listener.
+	 * @param arg0 The listener to be removed.
+	 */
 	public void removeTreeModelListener(TreeModelListener arg0) {
 		listeners.remove(arg0);
 	}
 	
+	/**
+	 * Adds a model listener.
+	 * @param arg0 The listener to be added.
+	 */
 	public void addTreeModelListener(TreeModelListener arg0) {
 		listeners.add(arg0);
 	}
 	
+	/**
+	 * Gets a the child at of the specified node at the specified index.
+	 * @param arg0 The parent.
+	 * @param arg1 The index of the child.
+	 * @return The child.
+	 */
 	public Object getChild(Object arg0, int arg1) {
 		if (arg0.getClass().equals(ListNode.class)) {
 			return ((ListNode)arg0).get(arg1);
@@ -37,6 +60,10 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
 		}
 	}
 	
+	/**
+	 * Gets the amount of children the node has.
+	 * @param arg0 The node to get the count of.
+	 */
 	public int getChildCount(Object arg0) {
 		if (arg0.getClass().equals(ListNode.class)) {
 			return ((ListNode)arg0).size();
@@ -45,33 +72,48 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
 		}
 	}
 	
+	/**
+	 * Gets the index of the child in the parent.
+	 * @param arg0 The parent.
+	 * @param arg1 The child.
+	 * @return The index of the child in the parent.
+	 */
 	public int getIndexOfChild(Object arg0, Object arg1) {
-		if (arg0.getClass().equals(ListNode.class) && arg1.getClass().equals(ListNode.class)) {
+		if (arg0.getClass().equals(ListNode.class) && arg1.getClass().equals(
+				ListNode.class)) {
 			return ((ListNode)arg0).getIndex((ListNode)arg1);
 		} else {
 			return -1;
 		}
 	}
 	
+	/**
+	 * Gets the class of the spcified column.
+	 * @param column The column whose class to get.
+	 * @return The class of the specified column.
+	 */
 	public Class getColumnClass(int column) {
 		switch (column) {
 		case 0:
 			return TreeTableModel.class;
-		case 1:
-			return String.class;
-		case 2:
-			return String.class;
-		case 3:
-			return String.class;
 		default:
-			return null;
+			return String.class;
 		}
 	}
 	
+	/**
+	 * Gets the amount of columns.
+	 * @return The amount of columns. (Generally 4)
+	 */
 	public int getColumnCount() {
 		return 4;
 	}
 	
+	/**
+	 * Gets the name of the specified column.
+	 * @param column The column index.
+	 * @return The name of the specified column.
+	 */
 	public String getColumnName(int column) {
 		switch (column) {
 		case 0:
@@ -87,6 +129,12 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
 		}	
 	}
 	
+	/**
+	 * Gets the value of the node in the specific column.
+	 * @param node The node to get the value of.
+	 * @param column The column to get the value of.
+	 * @return The value at the specified node and column.
+	 */
 	public Object getValueAt(Object node, int column) {
 		if (node.getClass().equals(ListNode.class)) {
 			ListNode n = (ListNode)node;
@@ -115,6 +163,11 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
 		}
 	}
 	
+	/**
+	 * Checks wether the specified node is a leaf.
+	 * @param arg0 The node to check.
+	 * @return True if the node is a leaf, false if not.
+	 */
 	public boolean isLeaf(Object arg0) {
 		if (arg0.getClass().equals(ListNode.class)) {
 			return ((ListNode)arg0).isLeaf();
