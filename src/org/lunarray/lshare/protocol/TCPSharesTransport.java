@@ -7,14 +7,41 @@ import java.util.ArrayList;
 
 import org.lunarray.lshare.protocol.filelist.FilelistSender;
 
+/**
+ * A server socket for sharing a filelist.
+ * @author Pal Hargitai
+ */
 public class TCPSharesTransport extends Thread {
 	
+	/**
+	 * The server sockets that accepts connections.
+	 */
 	private ServerSocket server;
+	
+	/**
+	 * The running variable to control behavior of the server.
+	 */
 	private boolean run;
+	
+	/**
+	 * The threadgroup in which client threads will reside.
+	 */
 	private ThreadGroup tgroup;
+	
+	/**
+	 * The client threads.
+	 */
 	private ArrayList<FilelistSender> senders;
+	
+	/**
+	 * Access to the protocol.
+	 */
 	private Controls controls;
 
+	/**
+	 * Instanciates the transport.
+	 * @param c The controlls for access to the protocol.
+	 */
 	public TCPSharesTransport(Controls c) {
 		super(c.getThreadGroup(), "tcptransport");
 		run = true;
@@ -23,17 +50,23 @@ public class TCPSharesTransport extends Thread {
 		tgroup = new ThreadGroup(c.getThreadGroup(), "filelisters");
 	}
 	
+	/**
+	 * Initialises the socket and sets up the thread.
+	 */
 	public void init() {
 		try {
 			server = new ServerSocket(Controls.TCP_PORT);
+			// Start running
+			run = true;
+			start();
 		} catch (IOException ie) {
 			Controls.getLogger().severe("Cannot instanciate socket!");
 		}
-		// Start running
-		run = true;
-		start();
 	}
 	
+	/**
+	 * Handling connections.
+	 */
 	public void run() {
 		if (server.isBound()) {
 			while (run) {
@@ -53,6 +86,9 @@ public class TCPSharesTransport extends Thread {
 		}
 	}
 	
+	/**
+	 * Close down the clients and clean up the socket.
+	 */
 	public void close() {
 		for (FilelistSender l: senders) {
 			l.close();

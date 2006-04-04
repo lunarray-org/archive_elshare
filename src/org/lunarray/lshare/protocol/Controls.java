@@ -11,18 +11,61 @@ import java.util.logging.SimpleFormatter;
 
 import org.lunarray.lshare.protocol.packets.user.SignOffOut;
 
+/**
+ * Standard controls that should be known throughout the system.
+ * @author Pal Hargitai
+ */
 public class Controls {
+	/**
+	 * The UDP port that UDP traffic will be sent and received on. This is
+	 * port {@value}.
+	 */
 	public static int UDP_PORT = 7400;
+	
+	/**
+	 * The TCP port for filelist handling. This is port {@value}.
+	 */
 	public static int TCP_PORT = 7400;
+	
+	/**
+	 * The maximum packet size for sending over UDP. The MTU size of {@value}.
+	 */
 	public static int UDP_MTU = 1400;
 	
+	/**
+	 * The UDP transport.
+	 */
 	private UDPTransport utrans;
+	
+	/**
+	 * The TCP transport for file list sharing.
+	 */
 	private TCPSharesTransport tstrans;
+	
+	/**
+	 * The protocol state.
+	 */
 	private State state;
+	
+	/**
+	 * The settings for the state.
+	 */
 	private Settings settings;
+	
+	/**
+	 * Task handling for background tasks.
+	 */
 	private Tasks tasks;
+	
+	/**
+	 * The threadgroup in which most threads of this protocol will reside in.
+	 */
 	private ThreadGroup lsgroup;
 	
+	/**
+	 * Instanciates the controls and sets up the protocol and all it's
+	 * supporting functionality.
+	 */
 	public Controls() {
 		// Init logger
 		Handler ha;
@@ -53,16 +96,18 @@ public class Controls {
 		tstrans = new TCPSharesTransport(this);
 	}
 	
-	protected ThreadGroup getThreadGroup() {
-		return lsgroup;
-	}	
-	
+	/**
+	 * Start the protocol and it's subsystems.
+	 */
 	public void start() {
 		tstrans.init();
 		getUDPTransport().init();
 		getTasks().start();
 	}
 	
+	/**
+	 * Stop the protocol and it's subsystems.
+	 */
 	public void stop() {
 		tstrans.close();
 		getTasks().stop();
@@ -75,23 +120,53 @@ public class Controls {
 		getState().commit();
 		//controls.getSettings().commit();
 	}
+	
+	/**
+	 * Get the settings that are available for this protocol.
+	 * @return The settings.
+	 */
 	public Settings getSettings() {
 		return settings;
 	}
 	
+	/**
+	 * Get the state of the protocol.
+	 * @return The state.
+	 */
 	public State getState() {
 		return state;
 	}
-	
+	 
+	/**
+	 * Get the UDP transport for this protocol.
+	 * @return The UDP Transport.
+	 */
 	public UDPTransport getUDPTransport() {
 		return utrans;
 	}
 	
+	/**
+	 * Get the tasks for this protocol.
+	 * @return The tasks.
+	 */
 	public Tasks getTasks() {
 		return tasks;
 	}
 	
+	/**
+	 * Gets the logger that may be used for this instance of the protocol.
+	 * @return The logger.
+	 */
 	public static Logger getLogger() {
 		return LogManager.getLogManager().getLogger("lshare");
+	}
+	
+	
+	/**
+	 * Gets the threadgroup for this instance of the protocol.
+	 * @return The threadgroup all threads of this instance should reside in.
+	 */
+	protected ThreadGroup getThreadGroup() {
+		return lsgroup;
 	}
 }

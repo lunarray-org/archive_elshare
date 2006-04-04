@@ -50,7 +50,7 @@ public class ResultIn extends PacketIn {
 	}
 
 	public void runTask(Controls c) {
-		c.getTasks().enqueueLazyTask(new ResultHandler(result));
+		c.getTasks().backgroundTask(new ResultHandler(result));
 	}
 
 }
