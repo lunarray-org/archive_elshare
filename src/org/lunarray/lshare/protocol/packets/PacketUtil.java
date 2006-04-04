@@ -101,12 +101,12 @@ public final class PacketUtil {
 		array[offset + 1] = (byte) value;
 	}
 
-    /**
-     * Get an unsigned short from a byte array.
-     * @param array The array to get it from.
-     * @param offset The offset of the array.
-     * @return The short that comes from the array. 
-     */
+	/**
+	 * Place an unsigned short in a byte array at a given offset.
+	 * @param value The value to convert.
+	 * @param array The array to put it in.
+	 * @param offset The offset to put it at.
+	 */
     public static void shortUToByteArray(int value, byte[] array, int
     		offset) {
 		array[offset] = (byte) (value >>> 8);
