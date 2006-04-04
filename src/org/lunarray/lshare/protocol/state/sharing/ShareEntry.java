@@ -6,42 +6,38 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
 
-public class SharedFile {
+public class ShareEntry {
+
 	
 	private File file;
-	private List<String> path;
+	private String path;
+	private String name;
 	private ShareSettings settings;
 	
-	public SharedFile(File f, List<String> p, ShareSettings s) {
+	public ShareEntry(File f, String n, String p, ShareSettings s) {
 		file = f;
 		path = p;
+		name = n;
 		settings = s;
 	}
 	
-	public String getName() {
-		return file.getName();
+	public boolean isFile() {
+		return file.isFile();
 	}
 	
-	public List<String> getSplitPath() {
-		return path;
+	public boolean isDirectory() {
+		return !isFile();
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public String getPath() {
-		List<String> l = getSplitPath();
-		String rebuilt = "";
-		for (String s: l) {
-			rebuilt += "/" + s;
-		}
-		
-		if (rebuilt.length() > 0) {
-			return rebuilt.substring(1);
-		} else {
-			return rebuilt;
-		}		
+		return path;
 	}
 	
 	public long getLastModified() {
@@ -69,24 +65,19 @@ public class SharedFile {
 	}
 	
 	public byte[] getHash() {
-		return settings.getHash(file.getPath());
-	}
-	
-	private static boolean equals(byte[] h, byte[] j) {
-		if (h.length == j.length) {
-			for (int i = 0; i < h.length; i++) {
-				if (h[i] != j[i]) {
-					return false;
-				}
-			}
-			return true;
+		if (file.isFile()) {
+			return settings.getHash(file.getPath());
 		} else {
-			return false;
-		}
+			return ShareSettings.HASH_UNSET;
+		}		
 	}
 	
 	public static boolean isEmpty(byte[] h) {
 		return equals(h, ShareSettings.HASH_UNSET);
+	}
+	
+	public File getFile() {
+		return file;
 	}
 	
 	protected static byte[] hash(File f) {
@@ -109,5 +100,18 @@ public class SharedFile {
 			Controls.getLogger().fine("File error!");
 		}
 		return md5;
+	}
+	
+	private static boolean equals(byte[] h, byte[] j) {
+		if (h.length == j.length) {
+			for (int i = 0; i < h.length; i++) {
+				if (h[i] != j[i]) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

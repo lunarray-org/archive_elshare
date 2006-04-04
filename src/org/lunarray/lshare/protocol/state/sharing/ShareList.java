@@ -1,64 +1,140 @@
 package org.lunarray.lshare.protocol.state.sharing;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Set;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.protocol.Settings;
 
 public class ShareList implements ExternalShareList {
 	
-	private TreeMap<String, SharedDirectory> pathmap;
-	private Settings settings;
+	public static String SEPARATOR = "/";
+	private TreeMap<String, File> shares;
+	private ShareSettings settings;
 	private boolean ishashing;
 	
 	public ShareList(Controls c) {
-		pathmap = new TreeMap<String, SharedDirectory>();
-		settings = c.getSettings();
+		shares = new TreeMap<String, File>();
+		settings = c.getSettings().getShareSettings();
 		ishashing = false;
 		init();
 	}
 	
+	public void addShare(String sname, File fpath) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void removeShare(String sname) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	private void init() {
-		for (String s: settings.getShareSettings().getShareNames()) {
-			File f = new File(settings.getShareSettings().getSharePath(s));
+		for (String s: settings.getShareNames()) {
+			File f = new File(settings.getSharePath(s));
 			if (f.exists() && f.isDirectory() && !f.isHidden()) {
-				pathmap.put(s, new SharedDirectory(f, s, settings.getShareSettings()));
+				shares.put(s, f);
 			} else {
-				settings.getShareSettings().removeSharePath(s);
+				settings.removeSharePath(s);
 			}
 		}
 	}
 	
-	public void addShare(String name, File location) {
-		pathmap.put(name, new SharedDirectory(location, name, settings.getShareSettings()));
-		if (location.isDirectory() && location.exists()) {
-			settings.getShareSettings().setSharePath(name, location.getAbsolutePath());
+	public ShareEntry getEntryFor(File f) throws FileNotFoundException {
+		for (String skey: shares.keySet()) {
+			if (f.getPath().startsWith(shares.get(skey).getPath())) {
+				String rewritten = "." + SEPARATOR + skey + f.getPath().
+						substring(shares.get(skey).getPath().length()).
+						replace(File.pathSeparator, SEPARATOR);
+				int i = rewritten.lastIndexOf(SEPARATOR);
+				rewritten = rewritten.substring(0, i);
+				return new ShareEntry(f, f.getName(), rewritten, settings);
+			}
+		}
+		throw new FileNotFoundException();
+	}
+	
+	public List<ShareEntry> getEntriesMatching(String s) {
+		ArrayList <ShareEntry> entries = new ArrayList<ShareEntry>();
+		for (String skey: shares.keySet()) {
+			entries.addAll(getEntriesMatching(s, shares.get(skey), "." + SEPARATOR + skey));
+		}
+		return entries;
+	}
+	
+	private List<ShareEntry> getEntriesMatching(String s, File f, String path) {
+		ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+		for (File e: f.listFiles()) {
+			if (!e.isHidden() && e.getName().contains(s)) {
+				entries.add(new ShareEntry(e, e.getName(), path, settings));
+			}
+			if (e.isDirectory()) {
+				entries.addAll(getEntriesMatching(s, e, path + SEPARATOR + e.getName()));
+			}
+		}
+		return entries;
+	}
+	
+	public List<ShareEntry> getChildrenIn(String path) throws FileNotFoundException {
+		ArrayList <ShareEntry> entries = new ArrayList<ShareEntry>();
+		String[] split = path.split(SEPARATOR);
+		
+		if (split.length > 0) {
+			if (split[0].equals(".")) {
+				if (split.length > 1) {
+					if (shares.containsKey(split[1])) {
+						entries.addAll(fetchDirEntries(split, 2, shares.get(split[1]), path));
+					} else {
+						throw new FileNotFoundException();
+					}
+				} else {
+					entries.addAll(getBaseEntries());
+				}
+			} else {
+				throw new FileNotFoundException();
+			}
+		} else {
+			throw new FileNotFoundException();
+		}
+		return entries;
+	}
+	
+	private List<ShareEntry> fetchDirEntries(String[] path, int depth, File f, String sp) throws FileNotFoundException {
+		if (path.length <= depth) {
+			ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+			// Last element, get children
+			for (File e: f.listFiles()) {
+				if (!e.isHidden()) {
+					entries.add(new ShareEntry(e, e.getName(), sp, settings));
+				}
+			}
+			return entries;
+		} else {
+			// Just get the children of the matching element
+			for (File e: f.listFiles()) {
+				if (e.isDirectory() && !e.isHidden() && e.getName().equals(path[depth])) {
+					return fetchDirEntries(path, depth + 1, e, sp);
+				}
+			}
+			throw new FileNotFoundException();
 		}
 	}
 	
-	public Set<String> getShareNames() {
-		return pathmap.keySet();
-	}
-
-	public SharedDirectory getShareByName(String name) {
-		return pathmap.get(name);
-	}
-	
-	public Collection<SharedDirectory> getShares() {
-		return pathmap.values();
-	}
-	
-	public void removeShare(String name) {
-		pathmap.remove(name);
-		settings.getShareSettings().removeSharePath(name);
+	public List<ShareEntry> getBaseEntries() {
+		ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+		for (String n: shares.keySet()) {
+			entries.add(new ShareEntry(shares.get(n), n, ".", settings));
+		}
+		return entries;
 	}
 	
 	private boolean isInShares(File f) {
-		for (SharedDirectory s: getShares()) {
-			if (f.getPath().startsWith(s.getFilePath())) {
+		for (File s: shares.values()) {
+			if (f.getPath().startsWith(s.getPath())) {
 				return true;
 			}
 		}
@@ -77,10 +153,25 @@ public class ShareList implements ExternalShareList {
 				sset.removePath(s);
 			}
 		}
-		for (SharedDirectory s: getShares()) {
-			s.hash();
+		for (String s: shares.keySet()) {
+			hash(shares.get(s));
 		}
 		ishashing = false;
 	}
 	
+	private void hash(File f) {
+		for (File fl: f.listFiles()) {
+			// Hash
+			if (fl.isDirectory() && !fl.isHidden()) {
+				// Hash children
+				hash(fl);
+			} else if (fl.isFile() && !fl.isHidden() && fl.canRead()) {
+				if (settings.getAccessDate(f.getPath()) < fl.lastModified()) {
+					// Update hash
+					byte[] h = ShareEntry.hash(fl);
+					settings.setData(f.getPath(), h, fl.lastModified());
+				}
+			}
+		}
+	}
 }

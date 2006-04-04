@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Collections;
+import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
+import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
-import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
-import org.lunarray.lshare.protocol.state.sharing.SharedFile;
 
 public class FilelistSender extends Thread {
 
@@ -49,66 +50,32 @@ public class FilelistSender extends Thread {
 					}
 				}
 				Controls.getLogger().finer("Requested " + path);
-				if (path.equals(".")) {
-					// get .
+				
+				// Get entries
+				List<ShareEntry> entries = Collections.emptyList();
+				try {
+					entries = controls.getState().getShareList().getChildrenIn(path);
+				} catch (FileNotFoundException ne) {
+					// We can safely ignore this.
+				}
+				
+				writelen: {
+					byte[] tlen = new byte[8];
+					PacketUtil.longToByteArray(entries.size(), tlen, 0);
 					try {
-						writeRoots();
+						ostream.write(tlen);
 					} catch (IOException ie) {
 						Controls.getLogger().fine("Cannot write!");
 						break run;
 					}
-				} else {
-					// Get entries
-					String name;
-					String rest;
-					if (path.contains(SharedDirectory.SEPARATOR)) {
-						name = path.substring(0, path.indexOf(SharedDirectory.SEPARATOR));
-						rest = path.substring(path.indexOf(SharedDirectory.SEPARATOR) + 1);
-					} else {
-						name = path;
-						rest = "";
+				}
+				try {
+					for (ShareEntry e: entries) {
+						send(e);
 					}
-					
-					SharedDirectory ret = controls.getState().getShareList().getShareByName(name);
-					SharedDirectory dir = ret;
-					
-					if (rest.length() > 0) {
-						try {
-							dir = ret.findDirectory(rest);
-						} catch (FileNotFoundException nfne) {
-							dir = null;
-							Controls.getLogger().finer("Fine not found: " + name + SharedDirectory.SEPARATOR + rest);
-						}
-					}
-					
-					
-					long len = 0;
-					if (dir != null) {
-						len = (long)dir.getDirectories().size() + (long)dir.getFiles().size();
-					}
-					writelen: {
-						byte[] tlen = new byte[8];
-						PacketUtil.longToByteArray(len, tlen, 0);
-						try {
-							ostream.write(tlen);
-						} catch (IOException ie) {
-							Controls.getLogger().fine("Cannot write!");
-							break run;
-						}
-					}
-					if (len > 0) {
-						try {
-							for (SharedDirectory d: dir.getDirectories()) {
-								send(d);
-							}
-							for (SharedFile f: dir.getFiles()) {
-								send(f);
-							}
-						} catch (IOException ie) {
-							Controls.getLogger().fine("Cannot write!");
-							break run;
-						}
-					}
+				} catch (IOException ie) {
+					Controls.getLogger().fine("Cannot write!");
+					break run;
 				}
 			}
 		}
@@ -119,43 +86,19 @@ public class FilelistSender extends Thread {
 		}
 	}
 	
-	private void writeRoots() throws IOException {
-		byte[] tlen = new byte[8];
-		PacketUtil.longToByteArray(controls.getState().getShareList().getShareNames().size(), tlen, 0);
-		ostream.write(tlen);		
-		for (String s: controls.getState().getShareList().getShareNames()) {
-			byte[] name = PacketUtil.encode(s);
-			byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
-			byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
+	private void send(ShareEntry d) throws IOException {
+		byte[] name = PacketUtil.encode(d.getName());
+		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
+		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
+		if (d.isDirectory()) {
 			PacketUtil.longToByteArray(0, data, 0);
 			PacketUtil.longToByteArray(-1, data, 8);
 			PacketUtil.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET, ShareSettings.HASH_UNSET.length, data, 16);
-			PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
-			PacketUtil.injectByteArrayIntoByteArray(name, nlen[0] & 0xFF, data, 16 + 1 + ShareSettings.HASH_UNSET.length);
-			ostream.write(data);
+		} else {
+			PacketUtil.longToByteArray(d.getLastModified(),data, 0);
+			PacketUtil.longToByteArray(d.getSize(), data, 8);
+			PacketUtil.injectByteArrayIntoByteArray(d.getHash(), d.getHash().length, data, 16);
 		}
-	}
-
-	
-	private void send(SharedFile d) throws IOException {
-		byte[] name = PacketUtil.encode(d.getName());
-		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
-		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
-		PacketUtil.longToByteArray(d.getLastModified(),data, 0);
-		PacketUtil.longToByteArray(d.getSize(), data, 8);
-		PacketUtil.injectByteArrayIntoByteArray(d.getHash(), d.getHash().length, data, 16);
-		PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
-		PacketUtil.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
-		ostream.write(data);
-	}
-	
-	private void send(SharedDirectory d) throws IOException {
-		byte[] name = PacketUtil.encode(d.getName());
-		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).byteValue()};
-		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + nlen[0]];
-		PacketUtil.longToByteArray(0, data, 0);
-		PacketUtil.longToByteArray(-1, data, 8);
-		PacketUtil.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET, ShareSettings.HASH_UNSET.length, data, 16);
 		PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + ShareSettings.HASH_UNSET.length);
 		PacketUtil.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 + ShareSettings.HASH_UNSET.length);
 		ostream.write(data);

@@ -1,13 +1,19 @@
 package org.lunarray.lshare.protocol.state.sharing;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Set;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 public interface ExternalShareList {
-	void addShare(String name, File location);
-	Set<String> getShareNames();
-	SharedDirectory getShareByName(String name);
-	Collection<SharedDirectory> getShares();
-	void removeShare(String name);
+	public ShareEntry getEntryFor(File f) throws FileNotFoundException;
+	
+	public List<ShareEntry> getEntriesMatching(String s);
+	
+	public List<ShareEntry> getChildrenIn(String path) throws FileNotFoundException;
+	
+	public List<ShareEntry> getBaseEntries();
+	
+	public void removeShare(String sname);
+	
+	public void addShare(String sname, File fpath);
 }

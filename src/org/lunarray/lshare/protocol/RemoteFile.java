@@ -1,6 +1,6 @@
 package org.lunarray.lshare.protocol;
 
-import org.lunarray.lshare.protocol.state.sharing.SharedFile;
+import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 
 public abstract class RemoteFile {
 
@@ -47,7 +47,7 @@ public abstract class RemoteFile {
 	}
 	
 	public boolean hasHash() {
-		if (SharedFile.isEmpty(hash)) {
+		if (ShareEntry.isEmpty(hash)) {
 			return false;
 		} else {
 			return true;

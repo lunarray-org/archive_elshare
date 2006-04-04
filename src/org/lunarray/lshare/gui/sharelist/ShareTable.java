@@ -7,7 +7,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import org.lunarray.lshare.LShare;
-import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
+import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 
 /**
  * The table model to contain share information.
@@ -23,7 +23,7 @@ public class ShareTable implements TableModel {
 	/**
 	 * The shared directories that are to be shown here.
 	 */
-	private ArrayList<SharedDirectory> dirs;
+	private ArrayList<ShareEntry> dirs;
 	
 	/**
 	 * The instance of the protocol to use.
@@ -36,7 +36,7 @@ public class ShareTable implements TableModel {
 	 */
 	public ShareTable(LShare ls) {
 		listeners = new ArrayList<TableModelListener>();
-		dirs = new ArrayList<SharedDirectory>();
+		dirs = new ArrayList<ShareEntry>();
 		lshare = ls;
 		init();
 	}
@@ -122,7 +122,7 @@ public class ShareTable implements TableModel {
 			case 0:
 				return dirs.get(arg0).getName();
 			case 1:
-				return dirs.get(arg0).getFilePath();
+				return dirs.get(arg0).getFile().getPath();
 			default:
 				return "";
 			}
@@ -168,8 +168,6 @@ public class ShareTable implements TableModel {
 	 * Initialises or reloads the model.
 	 */
 	private void init() {
-		for (SharedDirectory d: lshare.getShareList().getShares()) {
-			dirs.add(d);
-		}
+		dirs.addAll(lshare.getShareList().getBaseEntries());
 	}
 }

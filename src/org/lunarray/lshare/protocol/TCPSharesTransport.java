@@ -60,7 +60,7 @@ public class TCPSharesTransport extends Thread {
 		run = false;
 		try {
 			server.close();
-		} catch (IOException ie) {
+		} catch (Exception ie) {
 			Controls.getLogger().severe("Cannot close socket!");
 		}
 		Controls.getLogger().fine("Closed TCP socket and connections");

@@ -31,7 +31,16 @@ public class FilelistReceiver {
 		}
 	}
 	
-	public List<FilelistEntry> getEntries(String path) {
+	public List<FilelistEntry> getEntries(String path, boolean isroot) {
+		//Exception e = new Exception();
+		//e.printStackTrace();
+		
+		System.out.println(path);
+		
+		if (isroot) {
+			path = ".";
+		}
+		
 		ArrayList<FilelistEntry> ret = new ArrayList<FilelistEntry>();
 		run: {
 			try {
@@ -73,11 +82,7 @@ public class FilelistReceiver {
 		int nlen = predata[16 + ShareSettings.HASH_UNSET.length] & 0xFF;
 		String name = PacketUtil.decode(get(nlen)).trim();
 		Controls.getLogger().finer("Data for: " + name);
-		if (p.equals(".")) {
-			return new FilelistEntry(this, "", name, hash, ad, size);
-		} else {
-			return new FilelistEntry(this, p, name, hash, ad, size);
-		}		
+		return new FilelistEntry(this, p, name, hash, ad, size, false);
 	}
 	
 	private byte[] get(int a) throws IOException {
@@ -103,6 +108,6 @@ public class FilelistReceiver {
 	}
 
 	public FilelistEntry getRoot() {
-		return new FilelistEntry(this, ".", user.getName(), ShareSettings.HASH_UNSET, 0, -1);
+		return new FilelistEntry(this, ".", user.getName(), ShareSettings.HASH_UNSET, 0, -1, true);
 	}
 }

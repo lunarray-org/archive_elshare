@@ -1,6 +1,6 @@
 package org.lunarray.lshare.gui;
 
-import org.lunarray.lshare.protocol.state.sharing.SharedDirectory;
+import org.lunarray.lshare.protocol.state.sharing.ShareList;
 
 /**
  * Some standard functions to allow an more appealing representation of the
@@ -87,9 +87,8 @@ public class GUIUtil {
 	 * @return The path with the last path element stripped.
 	 */
 	public static String stripDirPath(String path) {
-		if (path.contains(SharedDirectory.SEPARATOR)) {
-			return path.substring(0, path.lastIndexOf(SharedDirectory.
-					SEPARATOR));
+		if (path.contains(ShareList.SEPARATOR)) {
+			return path.substring(0, path.lastIndexOf(ShareList.SEPARATOR));
 		} else {
 			return "";
 		}
