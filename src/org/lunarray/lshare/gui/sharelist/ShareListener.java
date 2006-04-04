@@ -47,7 +47,7 @@ public class ShareListener implements ListSelectionListener {
 	
 	/**
 	 * Get the name of the share of the selected row.
-	 * @return
+	 * @return The name of the selected row.
 	 */
 	public String getSelectedName() {
 		return name;

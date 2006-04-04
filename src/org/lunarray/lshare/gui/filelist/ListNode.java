@@ -84,7 +84,7 @@ public class ListNode {
 	
 	/**
 	 * Gets the file size of the entry represented in this node.
-	 * @return
+	 * @return The size of the node.
 	 */
 	public long getFileSize() {
 		return entry.getSize(); 
@@ -100,7 +100,7 @@ public class ListNode {
 	
 	/**
 	 * Gets the name of the entey represented in this node.
-	 * @return The name of node.
+	 * @return The name of the node.
 	 */
 	public String getName() {
 		return entry.getName();

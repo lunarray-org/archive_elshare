@@ -20,17 +20,17 @@ public class Controls {
 	 * The UDP port that UDP traffic will be sent and received on. This is
 	 * port {@value}.
 	 */
-	public static int UDP_PORT = 7400;
+	public final static int UDP_PORT = 7400;
 	
 	/**
 	 * The TCP port for filelist handling. This is port {@value}.
 	 */
-	public static int TCP_PORT = 7400;
+	public final static int TCP_PORT = 7400;
 	
 	/**
 	 * The maximum packet size for sending over UDP. The MTU size of {@value}.
 	 */
-	public static int UDP_MTU = 1400;
+	public final static int UDP_MTU = 1400;
 	
 	/**
 	 * The UDP transport.

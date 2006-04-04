@@ -16,24 +16,45 @@ import org.lunarray.lshare.protocol.packets.search.SearchIn;
 import org.lunarray.lshare.protocol.packets.user.SignOffIn;
 import org.lunarray.lshare.protocol.packets.user.SignOnIn;
 
+/**
+ * The UDP transport to send and receive packets.
+ * @author Pal Hargitai
+ */
 public class UDPTransport extends Thread {
-	/** The listen timeout. */
+	/**
+	 * The listen timeout.	 
+	 */
 	public static int LISTEN_TO = 5;
 	
-	
-	// Set to true to listen, false to stop listening
+	/**
+	 * Manages the running of the transport.
+	 */
 	private boolean run;
-	// The UDP socket
+	
+	/**
+	 * The UDP socket for sending and receiving.
+	 */
 	private DatagramSocket socket;
-	// The packets to send
+	
+	/**
+	 * The list of packets to be sent.
+	 */
 	private LinkedBlockingQueue<DatagramPacket> sendlist;
-	// Synchronisation primitive for shutdown
+	
+	/**
+	 * The semaphore for synchronising the shutdown.
+	 */
 	private Semaphore shutdownsem;
-	// Tasks class for handling incoming packets
+	
+	/**
+	 * The controls for communicating with the rest of the protocol.
+	 */
 	private Controls controls;
 
-
-
+	/**
+	 * Constructs the UDP transport.
+	 * @param c The controls for the protocol.
+	 */
 	public UDPTransport(Controls c) {
 		super(c.getThreadGroup(), "udptransport");
 		sendlist = new LinkedBlockingQueue<DatagramPacket>();
@@ -42,7 +63,11 @@ public class UDPTransport extends Thread {
 		controls = c;
 	}
 
+	/**
+	 * Initialises the transport and makes it run.
+	 */
 	public void init() {
+		// Sets up the socket
 		try {
 			socket = new DatagramSocket(Controls.UDP_PORT);
 			socket.setSoTimeout(LISTEN_TO);
@@ -58,6 +83,9 @@ public class UDPTransport extends Thread {
 		Controls.getLogger().fine("Started UDP transport");
 	}
 	
+	/**
+	 * The running code for the UDP transport.
+	 */
 	public void run() {
 		run: {
 			try {
@@ -113,14 +141,15 @@ public class UDPTransport extends Thread {
 							try {
 								send = sendlist.take();
 								socket.send(send);
-								Controls.getLogger().fine("Send packet to " + send.getAddress().
-										getHostAddress() + " on " + Integer.
-										valueOf(send.getPort()).toString());
+								Controls.getLogger().fine("Send packet to " + 
+										send.getAddress().getHostAddress() + 
+										" on " + Integer.valueOf(send.
+										getPort()).toString());
 							} catch (InterruptedException ie) {
 								// This isn't going to happen
 							} catch (IOException ie) {
-								Controls.getLogger().severe("Unable to send " +
-										"packet to: " + send.getAddress().
+								Controls.getLogger().severe("Unable to send " 
+										+ "packet to: " + send.getAddress().
 										getHostAddress());
 							}
 						}
@@ -134,7 +163,12 @@ public class UDPTransport extends Thread {
 		shutdownsem.release();
 	}
 	
+	/**
+	 * Neatly closes the socket. After this call, the UDP transport should be
+	 * stopped.
+	 */
 	public void close() {
+		// Stop thread
 		run = false;
 		try {
 			shutdownsem.acquire();
@@ -142,12 +176,17 @@ public class UDPTransport extends Thread {
 			Controls.getLogger().severe("Shutdown " +
 					"interrupted!");
 		}
+		// Close socket
 		if (socket != null) {
 			socket.close();
 		}
 		Controls.getLogger().fine("Stopped UDP transport");
 	}
 	
+	/**
+	 * Enqueues a packet for sending.
+	 * @param p The packet to be sent.
+	 */
 	public void send(PacketOut p) {
 		try {
 			sendlist.put(p.getPacket());

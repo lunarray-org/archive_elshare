@@ -33,12 +33,13 @@ import org.lunarray.lshare.protocol.state.userlist.User;
  * @author Pal Hargitai
  */
 public class MainGUI implements ActionListener {
+	
 	/**
 	 * The amount of frame padding given for kicking back an internal frame
 	 * when it goes beyond the bounds of the viewport of the desktop. This is
 	 * {@value} pixels.
 	 */
-	public static int FRAME_PAD = 30;
+	public final static int FRAME_PAD = 30;
 	
 	/**
 	 * The abstraction of the protocol.

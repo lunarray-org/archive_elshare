@@ -374,7 +374,6 @@ public class SearchPane {
 		
 		/**
 		 * The constructor of a button listener.
-		 * @param m The main frame.
 		 * @param s The search pane.
 		 */
 		public ButtonListener(SearchPane s) {

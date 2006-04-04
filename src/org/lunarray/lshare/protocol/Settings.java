@@ -15,29 +15,29 @@ public class Settings implements ExternalSettings {
 	 * The default location of the settings that are to be saved. This location
 	 * is {@value}.
 	 */
-	public static String DEFAULT_LOC = "/lshare";
+	public final static String DEFAULT_LOC = "/lshare";
 	
 	/**
 	 * The key used for retrieving the username. The key for the username
 	 * {@value}.
 	 */
-	public static String USERNAME_KEY = "username";
+	public final static String USERNAME_KEY = "username";
 	
 	/**
 	 * The username if it's unset. This is {@value}.
 	 */
-	public static String USERNAME_UNSET = "anonymous";
+	public final static String USERNAME_UNSET = "anonymous";
 	
 	/**
 	 * The key used for retrieving the challenge. The key for the challenge is
 	 * {@value}.
 	 */
-	public static String CHALLENGE_KEY = "challenge";
+	public final static String CHALLENGE_KEY = "challenge";
 	
 	/**
 	 * The challenge if it's unset. The is {@value}.
 	 */
-	public static String CHALLENGE_UNSET = "";
+	public final static String CHALLENGE_UNSET = "";
 	
 	/**
 	 * Raw settings to be used as a backend for settings.
