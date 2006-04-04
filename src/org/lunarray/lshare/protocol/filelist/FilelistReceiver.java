@@ -74,17 +74,6 @@ public class FilelistReceiver {
 		return ret;
 	}
 	
-	private FilelistEntry getOne(String p) throws IOException {
-		byte[] predata = get(8 + 8 + ShareSettings.HASH_UNSET.length + 1);
-		long ad = PacketUtil.byteArrayToLong(predata, 0);
-		long size = PacketUtil.byteArrayToLong(predata, 8);
-		byte[] hash = PacketUtil.getByteArrayFromByteArray(predata, ShareSettings.HASH_UNSET.length, 16);
-		int nlen = predata[16 + ShareSettings.HASH_UNSET.length] & 0xFF;
-		String name = PacketUtil.decode(get(nlen)).trim();
-		Controls.getLogger().finer("Data for: " + name);
-		return new FilelistEntry(this, p, name, hash, ad, size, false);
-	}
-	
 	private byte[] get(int a) throws IOException {
 		byte[] dat = new byte[a];
 		int todo = a;
@@ -109,5 +98,16 @@ public class FilelistReceiver {
 
 	public FilelistEntry getRoot() {
 		return new FilelistEntry(this, ".", user.getName(), ShareSettings.HASH_UNSET, 0, -1, true);
+	}
+	
+	private FilelistEntry getOne(String p) throws IOException {
+		byte[] predata = get(8 + 8 + ShareSettings.HASH_UNSET.length + 1);
+		long ad = PacketUtil.byteArrayToLong(predata, 0);
+		long size = PacketUtil.byteArrayToLong(predata, 8);
+		byte[] hash = PacketUtil.getByteArrayFromByteArray(predata, ShareSettings.HASH_UNSET.length, 16);
+		int nlen = predata[16 + ShareSettings.HASH_UNSET.length] & 0xFF;
+		String name = PacketUtil.decode(get(nlen)).trim();
+		Controls.getLogger().finer("Data for: " + name);
+		return new FilelistEntry(this, p, name, hash, ad, size, false);
 	}
 }
