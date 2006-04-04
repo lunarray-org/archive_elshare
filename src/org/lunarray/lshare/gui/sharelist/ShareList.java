@@ -9,7 +9,6 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,20 +20,47 @@ import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
 
+/**
+ * Shows a list of currently shared directories.
+ * @author Pal Hargitai
+ */
 public class ShareList extends GUIFrame implements ActionListener {
 
-	private JPanel panel;
+	/**
+	 * The textfield for setting the name of the share.
+	 */
 	private JTextField name;
+	
+	/**
+	 * The textfield for setting the location of the share.
+	 */
 	private JTextField loc;
+	
+	/**
+	 * The instance of the protocol to communicate with.
+	 */
 	private LShare lshare;
-	private JTable shares;
+	
+	/**
+	 * The table model representing all known shares.
+	 */
 	private ShareTable model;
+	
+	/**
+	 * The selection listener for selecting a share for removal.
+	 */
 	private ShareListener slis;
 
+	/**
+	 * Constructs a sharelist frame.
+	 * @param ls The instance of the protocol to assocate with.
+	 * @param mg The window this frame resides in.
+	 */
 	public ShareList(LShare ls, MainGUI mg) {
 		super(mg);
+		// Setup Panel
 		lshare = ls;
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		
 		JPanel info = new JPanel();
@@ -92,8 +118,9 @@ public class ShareList extends GUIFrame implements ActionListener {
 		info.add(add, gbc);
 		panel.add(info, BorderLayout.NORTH);
 		
+		// Setup model and table
 		model = new ShareTable(lshare);
-		shares = new JTable();
+		JTable shares = new JTable();
 		slis = new ShareListener(model, lshare);
 		shares.setModel(model);
 		shares.getSelectionModel().addListSelectionListener(slis);
@@ -103,20 +130,20 @@ public class ShareList extends GUIFrame implements ActionListener {
 		panel.add(sp, BorderLayout.CENTER);
 		
 		JButton rem = new JButton("Remove Selected");
-		rem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				slis.removeSelected();
-			}
-		});
+		rem.setActionCommand("remove");
+		rem.addActionListener(this);
 		
 		panel.add(rem, BorderLayout.SOUTH);
-		
+
+		// Setup the frame
 		frame.add(panel);
 		frame.setTitle(getTitle());
-		
-		frame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 	}
 	
+	/**
+	 * The action listener to respond to the button presses.
+	 * @param arg0 The event that triggered this.
+	 */
 	public void actionPerformed(ActionEvent arg0) {
 		String ac = arg0.getActionCommand();
 		if (ac.equals("add")) {
@@ -130,18 +157,27 @@ public class ShareList extends GUIFrame implements ActionListener {
 		} else if (ac.equals("browse")) {
 			JFileChooser fc = new JFileChooser();
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			int res = fc.showDialog(panel, "Select Share Folder");
+			int res = fc.showDialog(frame, "Select Share Folder");
 			if (res == JFileChooser.APPROVE_OPTION) {
 				loc.setText(fc.getSelectedFile().getPath());
 			}
+		} else if (ac.equals("remove")) {
+			slis.removeSelected();
 		}
 	}
 	
 	@Override
+	/**
+	 * Hides the frame.
+	 */
 	public void close() {
 		frame.setVisible(false);
 	}
 	
+	/**
+	 * Gets the title of the frame.
+	 * @return The title of the frame.
+	 */
 	public String getTitle() {
 		return "Shared Directories";
 	}

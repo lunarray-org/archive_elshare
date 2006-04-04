@@ -14,14 +14,28 @@ import org.lunarray.lshare.protocol.events.SearchEvent;
 
 public class SearchModel implements TableModel {
 
+	/**
+	 * The events that have been processed, seen as search results.
+	 */
 	private ArrayList<SearchEvent> events;
+	
+	/**
+	 * The listeners to this model.
+	 */
 	private ArrayList<TableModelListener> listeners;
 	
+	/**
+	 * Constructs the search model.
+	 */
 	public SearchModel() {
 		events = new ArrayList<SearchEvent>();
 		listeners = new ArrayList<TableModelListener>();
 	}
 	
+	/**
+	 * Processes a search event.
+	 * @param e The search event to process.
+	 */
 	public void processEvent(SearchEvent e) {
 		search: {
 			System.out.println(e.getEntry().getName());
@@ -40,14 +54,27 @@ public class SearchModel implements TableModel {
 		}
 	}
 	
+	/**
+	 * Gets the amount of rows in this model.
+	 * @return The amount of rows.
+	 */
 	public int getRowCount() {
 		return events.size();
 	}
 
+	/**
+	 * Gets the amount of columns for displaying result data.
+	 * @return The amount of columns.
+	 */
 	public int getColumnCount() {
 		return 8;
 	}
 
+	/**
+	 * Gets the name of the specified column.
+	 * @param arg0 The index of the column.
+	 * @return The name of the column.
+	 */
 	public String getColumnName(int arg0) {
 		switch (arg0) {
 		case 1:
@@ -69,6 +96,11 @@ public class SearchModel implements TableModel {
 		}
 	}
 
+	/**
+	 * Gets the class of a column for rendering.
+	 * @param arg0 The column to check.
+	 * @return The class of the specified column.
+	 */
 	public Class<?> getColumnClass(int arg0) {
 		if (arg0 == 0) {
 			return Icon.class;
@@ -77,10 +109,22 @@ public class SearchModel implements TableModel {
 		}
 	}
 
+	/**
+	 * Checks if a cell is editable.
+	 * @param arg0 The column of the cell.
+	 * @param arg1 The row of the cell.
+	 * @return By default false as no cell is editable.
+	 */
 	public boolean isCellEditable(int arg0, int arg1) {
 		return false;
 	}
 
+	/**
+	 * Gets the value of a specified cell.
+	 * @param arg1 The row of the cell.
+	 * @param arg0 The column of the cell.
+	 * @return The value of the specified cell.
+	 */
 	public Object getValueAt(int arg1, int arg0) {
 		switch (arg0) {
 		case 0:
@@ -125,14 +169,28 @@ public class SearchModel implements TableModel {
 		}
 	}
 
+	/**
+	 * Gets the value of a specified cell. Generally ignored.
+	 * @param arg0 The value to set the cell to.
+	 * @param arg1 The row of the cell.
+	 * @param arg2 The column of the cell.
+	 */
 	public void setValueAt(Object arg0, int arg1, int arg2) {
 		// Ignore
 	}
 
+	/**
+	 * Adds a listener to this table model.
+	 * @param arg0 The listener to add.
+	 */
 	public void addTableModelListener(TableModelListener arg0) {
 		listeners.add(arg0);
 	}
 
+	/**
+	 * Removes a listener from this model.
+	 * @param arg0 The listener to remove.
+	 */
 	public void removeTableModelListener(TableModelListener arg0) {
 		listeners.remove(arg0);
 	}
