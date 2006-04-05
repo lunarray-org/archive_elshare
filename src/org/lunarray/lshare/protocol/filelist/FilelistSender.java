@@ -14,7 +14,37 @@ import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 
 /**
- * A class for sending file entries.
+ * A class for sending file entries.<br>
+ * Stream 1:<br>
+ * Purpose:<br>
+ * File browsing.<br>
+ * TCP socket.<br>
+ * Input:<br>
+ * Directory request as follows:<br>
+ * 2 fields:<br>
+ * 0: 2 bytes, representing an int n<br>
+ * 1: n bytes, path name<br>
+ * Output:<br>
+ * Directory contents as follows:<br>
+ * 8 bytes, representing the int n<br>
+ * n times:<br>
+ * 5 fields:<br>
+ * 0: 8 bytes, long, epoch of file modification<br>
+ * 1: 8 bytes, long, file size<br>
+ * 2: 16 bytes, the hash of the file<br>
+ * 3: 1 byte, representing an int n<br>
+ * 4: n bytes, file name encoded in UTF-8<br>
+ * Constraints:<br>
+ * A new directory name may not be sent while a directories content isbeing
+ * requested. Multiple clients may connect simultaneously to get the file
+ * contents.<br>
+ * Note:<br>
+ * Root path is given by requesting the '.' path<br>
+ * Path elements are seperated with a '/'.<br>
+ * Directories will be denoted by having a file size of '-1'.<br>
+ * While a connection stands, the contents of any number of directories may be
+ * requested.<br>
+ * The file hash of a directory will always be an empty hash, ie. just zeroes.
  * @author Pal Hargitai
  */
 public class FilelistSender extends Thread {
