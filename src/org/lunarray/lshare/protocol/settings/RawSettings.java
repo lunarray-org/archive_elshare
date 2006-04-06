@@ -4,8 +4,15 @@ import java.util.prefs.*;
 
 import org.lunarray.lshare.protocol.Controls;
 
+/**
+ * The raw settings to be used by the other settings.
+ * @author Pal Hargitai
+ */
 public class RawSettings {
 	
+	/**
+	 * The java preferences to use.
+	 */
 	private Preferences prefs;
 	
 	/**
@@ -14,7 +21,6 @@ public class RawSettings {
 	public RawSettings() {
 		prefs = Preferences.userNodeForPackage(this.getClass());
 	}
-	
 	
 	/**
 	 * Handles quitting, flushes settings to backstore.
@@ -129,7 +135,7 @@ public class RawSettings {
 	}
 	
 	/**
-	 * Get the int at the given key.
+	 * Get the bool at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -158,7 +164,7 @@ public class RawSettings {
 	}
 	
 	/**
-	 * Get the int at the given key.
+	 * Get the bytearray at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -187,7 +193,7 @@ public class RawSettings {
 	}
 	
 	/**
-	 * Get the int at the given key.
+	 * Get the long at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -215,6 +221,11 @@ public class RawSettings {
 		}
 	}
 	
+	/**
+	 * Gets the names of all children.
+	 * @param loc The location to get the children of.
+	 * @return The children of the specified location.
+	 */
 	public String[] getChildren(String loc) {
 		Preferences n = prefs.node(loc);
 		try {
