@@ -11,7 +11,7 @@ public class GUISettings {
 	/**
 	 * The default location for userinterface settings. Usually {@value}.
 	 */
-	public static String DEFAULT_LOC = Settings.DEFAULT_LOC + "/gui";
+	public final static String DEFAULT_LOC = Settings.DEFAULT_LOC + "/gui";
 	
 	/**
 	 * The raw settings to write the data to.
@@ -148,11 +148,10 @@ public class GUISettings {
 	}
 
 	/**
-	 * Get the int at the given key.
+	 * Associate a value to a given key.
 	 * @param loc The location of the node.
-	 * @param key The key to get the value of;
-	 * @param def The default value if none is set.
-	 * @return The value associated with the key, or default.
+	 * @param key The key to associate.
+	 * @param val The value.
 	 */
 	public void setLong(String loc, String key, long val) {
 		rs.setLong(DEFAULT_LOC, key, val);
