@@ -166,10 +166,11 @@ public class ShareList implements ExternalShareList {
 				// Hash children
 				hash(fl);
 			} else if (fl.isFile() && !fl.isHidden() && fl.canRead()) {
-				if (settings.getAccessDate(f.getPath()) < fl.lastModified()) {
+				if (settings.getAccessDate(fl.getPath()) < fl.lastModified()) {
 					// Update hash
 					byte[] h = ShareEntry.hash(fl);
-					settings.setData(f.getPath(), h, fl.lastModified());
+					byte[] n = ShareEntry.hashName(fl.getPath());
+					settings.setData(fl.getPath(), h, n, fl.lastModified());
 				}
 			}
 		}

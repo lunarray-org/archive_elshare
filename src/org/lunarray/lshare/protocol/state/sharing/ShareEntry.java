@@ -80,6 +80,19 @@ public class ShareEntry {
 		return file;
 	}
 	
+	protected static byte[] hashName(String name) {
+		byte[] md5 = ShareSettings.HASH_UNSET;
+		try {
+			byte[] nbyte = name.getBytes();
+			MessageDigest md = MessageDigest.getInstance(ShareSettings.HASH_ALGO);
+			md.update(nbyte);
+			md5 = md.digest();
+		} catch (NoSuchAlgorithmException nse) {
+			Controls.getLogger().fine("Hashing not supported!");
+		}
+		return md5;
+	}
+	
 	protected static byte[] hash(File f) {
 		byte[] md5 = ShareSettings.HASH_UNSET;
 		try {

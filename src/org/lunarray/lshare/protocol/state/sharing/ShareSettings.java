@@ -24,11 +24,11 @@ public class ShareSettings {
 	public static String HASH_ALGO = "md5";
 	
 	private RawSettings rsettings;
-	private TreeMap<String, byte[]> hashmap;
+	private TreeMap<String, String> hashmap;
 	
 	public ShareSettings(RawSettings rs) {
 		rsettings = rs;
-		hashmap = new TreeMap<String, byte[]>();
+		hashmap = new TreeMap<String, String>();
 		initTree();
 	}
 	
@@ -36,7 +36,7 @@ public class ShareSettings {
 		for (String s: rsettings.getKeys(Settings.DEFAULT_LOC + FILE_LOC)) {
 			String name = rsettings.getString(Settings.DEFAULT_LOC + FILE_LOC, s, "");
 			if (name.length() > 0) {
-				hashmap.put(name, rsettings.getByteArray(Settings.DEFAULT_LOC + HASH_LOC, s, HASH_UNSET));
+				hashmap.put(name, s);
 			} else {
 				rsettings.remove(Settings.DEFAULT_LOC + FILE_LOC, s);
 				rsettings.remove(Settings.DEFAULT_LOC + ACCESSDATE_LOC, s);
@@ -69,7 +69,7 @@ public class ShareSettings {
 	
 	public byte[] getHash(String loc) {
 		if (hashmap.containsKey(loc)) {
-			return hashmap.get(loc);
+			return rsettings.getByteArray(Settings.DEFAULT_LOC + HASH_LOC, hashmap.get(loc), HASH_UNSET);
 		} else {
 			return HASH_UNSET;
 		}
@@ -77,7 +77,7 @@ public class ShareSettings {
 	
 	public long getAccessDate(String loc) {
 		if (hashmap.containsKey(loc)) {
-			return rsettings.getLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC, hashToString(hashmap.get(loc)), ACCESSDATE_UNSET);
+			return rsettings.getLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC, hashmap.get(loc), ACCESSDATE_UNSET);
 		} else {
 			return ACCESSDATE_UNSET;
 		}
@@ -85,7 +85,7 @@ public class ShareSettings {
 	
 	public void removePath(String loc) {
 		if (hashmap.containsKey(loc)) {
-			String k = hashToString(hashmap.get(loc));
+			String k = hashmap.get(loc);
 			rsettings.remove(Settings.DEFAULT_LOC + FILE_LOC, k);
 			rsettings.remove(Settings.DEFAULT_LOC + HASH_LOC, k);
 			rsettings.remove(Settings.DEFAULT_LOC + ACCESSDATE_LOC, k);
@@ -94,12 +94,12 @@ public class ShareSettings {
 		}
 	}
 	
-	public void setData(String loc, byte[] h, long i) {
-		String k = hashToString(h);
+	public void setData(String loc, byte[] h, byte[] nh, long i) {
+		String k = hashToString(nh);
 		rsettings.setString(Settings.DEFAULT_LOC + FILE_LOC, k, loc);
 		rsettings.setByteArray(Settings.DEFAULT_LOC + HASH_LOC, k, h);
 		rsettings.setLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC, k, i);
-		hashmap.put(loc, h);
+		hashmap.put(loc, k);
 		Controls.getLogger().finer("Set hash \"" + loc + "\"");
 	}
 	
