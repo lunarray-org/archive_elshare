@@ -7,6 +7,7 @@ import org.lunarray.lshare.protocol.events.SearchEvent;
 import org.lunarray.lshare.protocol.events.SearchListener;
 import org.lunarray.lshare.protocol.packets.search.SearchOut;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
 /**
  * The search list for handling searching.
@@ -57,8 +58,10 @@ public class SearchList implements ExternalSearchList {
 		Controls.getLogger().fine("Result received: " + e.getName());
 		Controls.getLogger().fine("Form: " + e.getAddress().getHostName());
 		
-		User u = controls.getState().getUserList().findUserByAddress(e.getAddress());
-		if (u == null) {
+		User u;
+		try {
+			u = controls.getState().getUserList().findUserByAddress(e.getAddress());
+		} catch (UserNotFound unf) {
 			u = new User("", e.getAddress(), "<not logged on>", false, null);
 		}
 		

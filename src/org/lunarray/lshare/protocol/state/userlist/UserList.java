@@ -47,38 +47,32 @@ public class UserList implements ExternalUserList {
 	 * Find a specified user by his challenge.
 	 * @param challenge The challenge to find the user by.
 	 * @return The user associated with this challenge, or null.
+	 * @throws UserNotFound Thrown if the user cannot be found.
 	 */
-	public User findUserByChallenge(String challenge) {
-		User u = null;
-		search: {
-			for (User w: userlist) {
-				if (w.challengeMatches(challenge)) {
-					u = w;
-					break search;
-				}						
-			}
+	public User findUserByChallenge(String challenge) throws UserNotFound {
+		for (User w: userlist) {
+			if (w.challengeMatches(challenge)) {
+				return w;
+			}						
 		}
-		return u;
+		throw new UserNotFound();
 	}
 	
 	/**
 	 * Find a user by his address.
 	 * @param a The address to find the user by.
 	 * @return The user with the specified address.
+	 * @throws UserNotFound Thrown if the user cannot be found.
 	 */
-	public User findUserByAddress(InetAddress a) {
-		User u = null;
-		search: {
-			for (User w: userlist) {
-				if (w.getAddress() != null) {
-					if (w.getAddress().equals(a)) {
-						u = w;
-						break search;
-					}
+	public User findUserByAddress(InetAddress a) throws UserNotFound {
+		for (User w: userlist) {
+			if (w.getAddress() != null) {
+				if (w.getAddress().equals(a)) {
+					return w;
 				}
 			}
 		}
-		return u;
+		throw new UserNotFound();
 	}
 	
 	/**
@@ -97,9 +91,9 @@ public class UserList implements ExternalUserList {
 	 */
 	public synchronized void signonUser(String challenge, InetAddress a,
 			String name) {
-		User u = findUserByAddress(a);
-		
-		if (u != null) {
+		try {
+			User u = findUserByAddress(a);
+			
 			// Address exists
 			if (u.challengeMatches(challenge)) {
 				// Challenge and address match
@@ -126,16 +120,14 @@ public class UserList implements ExternalUserList {
 				}
 				signon(new UserEvent(u, this));
 			}
-		} else {
+		} catch (UserNotFound unf) {
 			// Address doesn't exist
-			u = findUserByChallenge(challenge);
-		
-			if (u != null) {
-				// Challenge matches
+			User u;
+			try {
+				u = findUserByChallenge(challenge);
 				u.setAddress(a);
 				u.setName(name);
-			} else {
-				// Completely new
+			} catch (UserNotFound un) {
 				u = new User(challenge, a, name, false, this);
 				userlist.add(u);
 			}
@@ -148,15 +140,18 @@ public class UserList implements ExternalUserList {
 	 * @param a The address of the user to sign off.
 	 */
 	public synchronized void signoffUser(InetAddress a) {
-		User u = findUserByAddress(a);
 		
-		if (u != null) {
+		try {
+			User u = findUserByAddress(a);
+		
 			if (!u.isBuddy()) {
 				userlist.remove(u);
 			}
 			u.setAddress(null);
 			
 			signoff(new UserEvent(u, this));
+		} catch (UserNotFound ufn) {
+			// User wasn't signed on in the first place.
 		}
 	}
 
