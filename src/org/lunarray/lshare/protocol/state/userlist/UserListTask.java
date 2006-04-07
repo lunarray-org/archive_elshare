@@ -12,7 +12,8 @@ import org.lunarray.lshare.protocol.tasks.TimedRunnableTask;
 public class UserListTask extends TimedRunnableTask {
 
 	/**
-	 * The amount of milliseconds after which a user is concidered inactive. This is: {@value}.
+	 * The amount of milliseconds after which a user is concidered inactive.
+	 * This is: {@value}.
 	 */
 	public final static long USER_TO = 60000;
 	

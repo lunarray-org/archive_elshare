@@ -44,7 +44,8 @@ public class UserSettings {
 	 */
 	public void removeBuddy(String ch) {
 		Controls.getLogger().finer("Buddy removed: " + rsettings.
-				getString(Settings.DEFAULT_LOC + BUDDY_LOC, ch, Settings.USERNAME_UNSET));
+				getString(Settings.DEFAULT_LOC + BUDDY_LOC, ch, Settings.
+				USERNAME_UNSET));
 		rsettings.remove(Settings.DEFAULT_LOC + BUDDY_LOC, ch);
 	}
 
@@ -54,7 +55,8 @@ public class UserSettings {
 	 * @return The username associated with the challenge.
 	 */
 	public String getSavedName(String su) {
-		return rsettings.getString(Settings.DEFAULT_LOC + BUDDY_LOC, su, Settings.CHALLENGE_UNSET);
+		return rsettings.getString(Settings.DEFAULT_LOC + BUDDY_LOC, su, 
+				Settings.CHALLENGE_UNSET);
 	}	
 	
 	/**

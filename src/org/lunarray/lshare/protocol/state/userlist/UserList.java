@@ -196,7 +196,8 @@ public class UserList implements ExternalUserList {
 	 * @param u The user to buddify.
 	 */
 	protected void addBuddy(User u) {
-		controls.getSettings().getUserSettings().saveBuddy(u.getName(), u.getChallenge());
+		controls.getSettings().getUserSettings().saveBuddy(u.getName(),
+				u.getChallenge());
 		
 		update(new UserEvent(u, this));
 	}
@@ -205,8 +206,10 @@ public class UserList implements ExternalUserList {
 	 * Inits the user list
 	 */
 	private void initList() {
-		for (String k: controls.getSettings().getUserSettings().getChallenges()) {
-			String h = controls.getSettings().getUserSettings().getSavedName(k);
+		for (String k: controls.getSettings().getUserSettings().
+				getChallenges()) {
+			String h = controls.getSettings().getUserSettings().
+					getSavedName(k);
 			userlist.add(new User(k, null, h, true, this));
 		}
 	}
