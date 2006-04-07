@@ -156,11 +156,15 @@ public class ShareList implements ExternalShareList {
 		}
 		ishashing = true;
 		// Cleanup
+		ArrayList<String> torem = new ArrayList<String>();
 		for (String s: sset.getFilesInPath()) {
 			File n = new File(s);
 			if (!n.exists() || !isInShares(n)) {
-				sset.removePath(s);
+				torem.add(s);
 			}
+		}
+		for (String s: torem) {
+			sset.removePath(s);
 		}
 		// Hashes
 		for (String s: shares.keySet()) {

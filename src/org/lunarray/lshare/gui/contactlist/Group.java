@@ -1,6 +1,7 @@
 package org.lunarray.lshare.gui.contactlist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -65,9 +66,27 @@ public class Group {
 
 	/**
 	 * The string representation of this group.
+	 * @return The string representation of this group.
 	 */
 	public String toString() {
 		return name;
+	}
+	
+	/**
+	 * Resort the list to match new user names.
+	 * @param n The node to resort for.
+	 */
+	protected void resort(UserNode n) {
+		if (ulist.contains(n)) {
+			ulist.remove(n);
+			
+			int i = Collections.binarySearch(ulist, n.getUser());
+			if (i < 0) {
+				ulist.add(-(i + 1), n);
+			} else {
+				ulist.add(i, n);
+			}
+		}
 	}
 	
 	/**
@@ -88,10 +107,10 @@ public class Group {
 	 * @param u The user to find the associated node of.
 	 * @return The node that has the specified user associated with it. 
 	 */
-	protected UserNode findUser(User u) {		
-		for (int i = 0; i < ulist.size(); i++) {
-			if (ulist.get(i).compareTo(u) == 0) {
-				return ulist.get(i);
+	protected UserNode findUser(User u) {
+		for (UserNode n: ulist) {
+			if (u.equals(n.getUser())) {
+				return n;
 			}
 		}
 		return null;
@@ -104,7 +123,13 @@ public class Group {
 	 */
 	protected UserNode addUser(User u) {
 		UserNode n = new UserNode(this, u);
-		ulist.add(n);
+		int i = Collections.binarySearch(ulist, u);
+		
+		if (i < 0) {
+			ulist.add(-(i + 1), n);
+		} else {
+			ulist.add(i, n);
+		}
 		return n;
 	}
 }

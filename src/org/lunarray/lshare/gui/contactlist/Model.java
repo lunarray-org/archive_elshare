@@ -186,9 +186,11 @@ public class Model implements TreeModel,UserListener {
 	public void update(UserEvent e) {
 		UserNode n;
 		if (e.getUser().isBuddy()) {
-			n = root.getChildAt(0).findUser(e.getUser());
+			n = root.getOnlineBuddies().findUser(e.getUser());
+			root.getOnlineBuddies().resort(n);
 		} else {
-			n = root.getChildAt(1).findUser(e.getUser());
+			n = root.getOnlineMisc().findUser(e.getUser());
+			root.getOnlineMisc().resort(n);
 		}
 		if (n != null) {
 			fireUpdate(n);
@@ -201,23 +203,28 @@ public class Model implements TreeModel,UserListener {
 	 * @param u The user to toggle.
 	 */
 	public void toggleBuddy(UserNode u) {
-		// TODO FIX
-		if (u.getUser().isBuddy()) {
-			 
-			if (u.getUser().isOnline()) {
-				int i = root.getChildAt(0).getIndex(u);	
-				fireRemove(root.getChildAt(0).removeUser(u.getUser()), i);
-				fireInsert(root.getChildAt(1).addUser(u.getUser()));
-			} else {
-				int i = root.getChildAt(2).getIndex(u);
-				fireRemove(root.getChildAt(2).removeUser(u.getUser()), i);
+		for (int i = 0; i < root.getChildCount(); i++) {
+			int j = root.getChildAt(i).getIndex(u);
+			UserNode n = root.getChildAt(i).removeUser(u.getUser());
+			if (n != null) {
+				if (j > 0) {
+					fireRemove(n, j);
+				} else {
+					fireRemove(n, 0);	
+				}
 			}
+		}
+		
+		if (u.getUser().isBuddy()) {
 			u.getUser().unsetBuddy();
+			
+			if (u.getUser().isOnline()) {
+				fireInsert(root.getOnlineMisc().addUser(u.getUser()));
+			}
 		} else {
-			int i = root.getChildAt(1).getIndex(u);
-			fireRemove(root.getChildAt(1).removeUser(u.getUser()), i);
-			fireInsert(root.getChildAt(0).addUser(u.getUser()));
 			u.getUser().setBuddy();
+			
+			fireInsert(root.getOnlineBuddies().addUser(u.getUser()));
 		}
 	}
 
@@ -264,7 +271,7 @@ public class Model implements TreeModel,UserListener {
 			Object[] children = {n};
 			Object[] p = {root, n.getParent()};
 			
-			TreeModelEvent e =  new TreeModelEvent(n.getParent(), p, j, children);		
+			TreeModelEvent e =  new TreeModelEvent(n.getParent(), p, j, children);
 			
 			for (TreeModelListener l: listener) {
 				l.treeNodesRemoved(e);

@@ -59,6 +59,6 @@ public class UserNode implements Comparable<User> {
 	 * @return The compared value of this node.
 	 */
 	public int compareTo(User arg0) {
-		return user.compareTo(user);
+		return user.compareTo(arg0);
 	}
 }

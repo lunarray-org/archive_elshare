@@ -149,15 +149,34 @@ public class User implements Comparable<User> {
 	 * = 0 If the user equals this user.
 	 */
 	public int compareTo(User arg0) {
-		if (!getName().equals(arg0.getName())) {
-			return getName().compareTo(arg0.getName());
-		} else if (!getHostaddress().equals(arg0.getHostaddress())) {
-			return getHostaddress().compareTo(arg0.getHostaddress());
+		if (!getHostaddress().equals(arg0.getHostaddress())) {
+			if (getName().equals(arg0.getName())) {
+				return getHostaddress().compareTo(arg0.getHostaddress());
+			} else {
+				return getName().compareTo(arg0.getName());
+			}
 		} else if (!getChallenge().equals(arg0.getChallenge())) {
 			return getChallenge().compareTo(arg0.getChallenge());
 		} else {
 			return 0;
 		}
+	}
+	
+	@Override
+	public boolean equals(Object arg0) {
+		if (arg0.getClass().equals(User.class)) {
+			User u = (User)arg0;
+			if (challengeMatches(u.challenge)) {
+				return true;
+			} else {
+				if (address != null && u.address != null) {
+					return address.equals(u.address);
+				} else {
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**

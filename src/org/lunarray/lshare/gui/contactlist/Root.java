@@ -91,6 +91,30 @@ public class Root {
 	public String toString() {
 		return "Contact List";
 	}
+	
+	/**
+	 * Gets the online buddies group.
+	 * @return The buddies group.
+	 */
+	protected Group getOnlineBuddies() {
+		return buddies;
+	}
+	
+	/**
+	 * Gets the offline buddies group.
+	 * @return The offline group.
+	 */
+	protected Group getOfflineBuddies() {
+		return offline;
+	}
+	
+	/**
+	 * Gets the other online group.
+	 * @return The online group.
+	 */
+	protected Group getOnlineMisc() {
+		return online;
+	}
 
 	/**
 	 * Populating the groups with nodes.
