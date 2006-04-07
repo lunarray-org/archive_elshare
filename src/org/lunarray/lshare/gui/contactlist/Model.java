@@ -201,6 +201,7 @@ public class Model implements TreeModel,UserListener {
 	 * @param u The user to toggle.
 	 */
 	public void toggleBuddy(UserNode u) {
+		// TODO FIX
 		if (u.getUser().isBuddy()) {
 			 
 			if (u.getUser().isOnline()) {
@@ -253,19 +254,21 @@ public class Model implements TreeModel,UserListener {
 	}
 	
 	/**
-	 * Fires a remove of a ndoe to the models listeners.
+	 * Fires a remove of a node to the models listeners.
 	 * @param n The node that has been removed.
 	 * @param i The nodes former index.
 	 */
 	private void fireRemove(UserNode n, int i) {
-		int[] j = {i};
-		Object[] children = {n};
-		Object[] p = {root, n.getParent()};
-		
-		TreeModelEvent e =  new TreeModelEvent(n.getParent(), p, j, children);		
-		
-		for (TreeModelListener l: listener) {
-			l.treeNodesRemoved(e);
+		if (n != null) {
+			int[] j = {i};
+			Object[] children = {n};
+			Object[] p = {root, n.getParent()};
+			
+			TreeModelEvent e =  new TreeModelEvent(n.getParent(), p, j, children);		
+			
+			for (TreeModelListener l: listener) {
+				l.treeNodesRemoved(e);
+			}
 		}
 	}
 	

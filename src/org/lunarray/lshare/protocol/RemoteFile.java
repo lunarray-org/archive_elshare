@@ -6,7 +6,7 @@ import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
  * A remote file or directory representation.
  * @author Pal Hargitai
  */
-public abstract class RemoteFile {
+public abstract class RemoteFile implements Comparable<RemoteFile> {
 
 	/**
 	 * The remote path in which this file or directory resides. 
@@ -116,6 +116,27 @@ public abstract class RemoteFile {
 			return false;
 		} else {
 			return true;
+		}
+	}
+	
+	/**
+	 * Compares this remote file to another.
+	 * @param arg0 The remote file to compare to.
+	 * @return Returns < 0 if the given remote file is smaller.
+	 * > 0 if the given remote file is bigger.
+	 * = 0 if they are equal.
+	 */
+	public int compareTo(RemoteFile arg0) {
+		if (isDirectory() && arg0.isFile()) {
+			return -1;
+		} else if (isFile() && arg0.isDirectory()) {
+			return 1;
+		} else if (getPath().compareTo(arg0.getPath()) < 0) {
+			return -1;
+		} else if (getPath().compareTo(arg0.getPath()) > 0) {
+			return 1;
+		} else {
+			return getName().compareTo(arg0.getName());
 		}
 	}
 }

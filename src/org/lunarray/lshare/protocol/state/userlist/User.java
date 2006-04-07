@@ -102,14 +102,12 @@ public class User implements Comparable<User> {
 	}
 	
 	public int compareTo(User arg0) {
-		if (getName().compareTo(arg0.getName()) > 0) {
-			return 1;
-		} else if (getName().compareTo(arg0.getName()) < 0) {
-			return -1;
-		} else if (getHostaddress().compareTo(arg0.getHostaddress()) > 0) {
-			return 1;
-		} else if (getHostaddress().compareTo(arg0.getHostaddress()) < 0) {
-			return -1;
+		if (!getName().equals(arg0.getName())) {
+			return getName().compareTo(arg0.getName());
+		} else if (!getHostaddress().equals(arg0.getHostaddress())) {
+			return getHostaddress().compareTo(arg0.getHostaddress());
+		} else if (!getChallenge().equals(arg0.getChallenge())) {
+			return getChallenge().compareTo(arg0.getChallenge());
 		} else {
 			return 0;
 		}

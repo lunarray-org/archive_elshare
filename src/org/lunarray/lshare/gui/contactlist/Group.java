@@ -1,7 +1,6 @@
 package org.lunarray.lshare.gui.contactlist;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -89,9 +88,8 @@ public class Group {
 	 * @param u The user to find the associated node of.
 	 * @return The node that has the specified user associated with it. 
 	 */
-	protected UserNode findUser(User u) {
-		int i = Collections.binarySearch(ulist, u);
-		if (0 <= i && i < ulist.size()) {
+	protected UserNode findUser(User u) {		
+		for (int i = 0; i < ulist.size(); i++) {
 			if (ulist.get(i).compareTo(u) == 0) {
 				return ulist.get(i);
 			}
@@ -106,8 +104,7 @@ public class Group {
 	 */
 	protected UserNode addUser(User u) {
 		UserNode n = new UserNode(this, u);
-		int i = Collections.binarySearch(ulist, u) + 1;
-		ulist.add(i, n);
+		ulist.add(n);
 		return n;
 	}
 }

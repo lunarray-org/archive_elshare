@@ -1,6 +1,7 @@
 package org.lunarray.lshare.gui.filelist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.lunarray.lshare.gui.GUIUtil;
 import org.lunarray.lshare.protocol.filelist.FilelistEntry;
@@ -9,7 +10,7 @@ import org.lunarray.lshare.protocol.filelist.FilelistEntry;
  * A specific node of a users filelist.
  * @author Pal Hargitai
  */
-public class ListNode {
+public class ListNode implements Comparable<FilelistEntry> {
 
 	/**
 	 * The file entry that is represented in the node.
@@ -125,6 +126,17 @@ public class ListNode {
 	public String toString() {
 		return getName();
 	}
+
+	/**
+	 * Compare the file list entry of another node to this filelist entry.
+	 * @param arg0 The file list entry to compare to.
+	 * @return < 0 If the entry in this node is less than the given entry.
+	 * > 0 If the entry in this node is greater than the given entry.
+	 * = 0 If the entry in this nodes equals the given entry.
+	 */
+	public int compareTo(FilelistEntry arg0) {
+		return entry.compareTo(arg0);
+	}
 	
 	/**
 	 * Gets the file entry associated with the entry in this node.
@@ -140,7 +152,10 @@ public class ListNode {
 	private void popChildren() {
 		children = new ArrayList<ListNode>();
 		for (FilelistEntry e: entry.getEntries()) {
-			children.add(new ListNode(e));
+			int i = Collections.binarySearch(children, e);
+			if (i < 0) {
+				children.add(-(i + 1), new ListNode(e));
+			}
 		}
 	}
 }
