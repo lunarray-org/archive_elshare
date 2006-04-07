@@ -39,7 +39,7 @@ public class ShareSettings {
 	public final static String SHARE_UNSET = ".";
 	
 	/**
-	 * The hash if it is unset. This is: {@value}.
+	 * The hash if it is unset.
 	 */
 	public final static byte[] HASH_UNSET = {
 		0x00, 0x00, 0x00, 0x00,

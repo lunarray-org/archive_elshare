@@ -181,7 +181,7 @@ public class User implements Comparable<User> {
 	
 	/**
 	 * Get this users challenge.
-	 * @return
+	 * @return The users challenge.
 	 */
 	protected String getChallenge() {
 		return challenge;
