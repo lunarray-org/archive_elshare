@@ -161,7 +161,7 @@ public class MainGUI implements ActionListener {
 		// File
 		JMenu filem = new JMenu("File");
 		filem.add(addMenuItem("Search", "search"));
-		filem.add(addMenuItem("Quit", "stop"));
+		filem.add(addMenuItem("Quit", "quit"));
 		menu.add(filem);
 		// Settings
 		JMenu settingsm = new JMenu("Settings");
