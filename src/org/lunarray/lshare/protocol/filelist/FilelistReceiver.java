@@ -83,6 +83,7 @@ public class FilelistReceiver {
 		} catch (IOException ie) {
 			Controls.getLogger().warning("Could not connect to user!");
 		}
+		
 	}
 	
 	/**
@@ -91,10 +92,14 @@ public class FilelistReceiver {
 	 * @param isroot True if the root entry is requested.
 	 * @return The entries to be gotten.
 	 */
-	public List<FilelistEntry> getEntries(String path, boolean isroot) {
+	public synchronized List<FilelistEntry> getEntries(String path, boolean isroot) {
 		if (isroot) {
 			path = ".";
 		}
+		
+		RecTO timeouthandler = new RecTO();
+		timeouthandler.startGet();
+		
 		ArrayList<FilelistEntry> ret = new ArrayList<FilelistEntry>();
 		run: {
 			try {
@@ -113,6 +118,7 @@ public class FilelistReceiver {
 					byte[] a = get(8);
 					long amount = PacketUtil.byteArrayToLong(a, 0);
 					for (long i = 0; i < amount; i++) {
+						timeouthandler.bump();
 						ret.add(getOne(path));
 					}
 				}
@@ -126,6 +132,8 @@ public class FilelistReceiver {
 				break run;
 			}
 		}
+		
+		timeouthandler.stopGet();
 		return ret;
 	}
 	
@@ -139,6 +147,7 @@ public class FilelistReceiver {
 			Controls.getLogger().fine("Could not close socket!");
 		}
 		Controls.getLogger().finer("Closed socket!");
+
 	}
 
 	/**
@@ -185,5 +194,90 @@ public class FilelistReceiver {
 		String name = PacketUtil.decode(get(nlen)).trim();
 		Controls.getLogger().finer("Data for: " + name);
 		return new FilelistEntry(this, p, name, hash, ad, size, false);
+	}
+	
+	/**
+	 * A timeout thread to ensure that a get does not go on indefinitely.
+	 * @author Pal Hargitai
+	 */
+	private class RecTO extends Thread {
+		
+		/**
+		 * The allocated time to get a single item.
+		 */
+		public int NEXT = 1000;
+		
+		/**
+		 * The timestamp at which a socket is concidered corrupt.
+		 */
+		private long nextstamp;
+		
+		/**
+		 * True if there are items to be gotten, false if not.
+		 */
+		private boolean shouldget;
+		
+		/**
+		 * Constructs a timeout type thread.
+		 */
+		public RecTO() {
+			nextstamp = System.currentTimeMillis() + NEXT;
+			shouldget = false;
+		}
+		
+		/**
+		 * Bumps the timestamp.
+		 */
+		public void bump() {
+			nextstamp = System.currentTimeMillis() + NEXT;
+		}
+		
+		/**
+		 * Allow this thread to check for validity of the socket.
+		 */
+		public void startGet() {
+			shouldget = true;
+			start();
+		}
+		
+		/**
+		 * Disallows this thread from checking socket validity.
+		 *
+		 */
+		public void stopGet() {
+			shouldget = false;
+			if (getState().equals(Thread.State.TIMED_WAITING)) {
+				interrupt();
+			}
+			try {
+				join();
+			} catch (InterruptedException ie) {
+				// Can't happen
+			}
+		}
+		
+		/**
+		 * Checks the socket for validity.
+		 */
+		public void run() {
+			run: {
+				while (true) {
+					try {
+						if (nextstamp - System.currentTimeMillis() < 0 ) {							
+							shouldget = false;
+							close();
+						} else {
+							sleep(nextstamp - System.currentTimeMillis());
+						}					
+						
+						if (!shouldget) {
+							break run;
+						}
+					} catch (InterruptedException ie) {
+						// Shouldn't happen
+					}
+				}
+			}
+		}
 	}
 }
