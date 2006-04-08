@@ -71,9 +71,10 @@ public class FilelistReceiver {
 	
 	/**
 	 * Constructs a file list receiver for receiving a users file list.
+	 * @param c The controls of the protocol.
 	 * @param u The user whose file list to get.
 	 */
-	public FilelistReceiver(User u) {
+	public FilelistReceiver(Controls c, User u) {
 		user = u;
 		// Setup stuff
 		socket = new Socket();
@@ -197,7 +198,8 @@ public class FilelistReceiver {
 	}
 	
 	/**
-	 * A timeout thread to ensure that a get does not go on indefinitely.
+	 * A timeout thread to ensure that a get does not go on indefinitely.<br>
+	 * TODO Make something neat of this. IE no independant thread.
 	 * @author Pal Hargitai
 	 */
 	private class RecTO extends Thread {

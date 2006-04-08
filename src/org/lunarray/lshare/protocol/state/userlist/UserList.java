@@ -177,7 +177,7 @@ public class UserList implements ExternalUserList {
 	 * @return The users filelist.
 	 */
 	public FilelistEntry getFilelist(User u) {
-		FilelistReceiver flr = new FilelistReceiver(u);
+		FilelistReceiver flr = new FilelistReceiver(controls, u);
 		return flr.getRoot();
 	}
 	
