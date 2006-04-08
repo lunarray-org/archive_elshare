@@ -3,7 +3,9 @@ package org.lunarray.lshare.gui.filelist;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreePath;
 
 import org.lunarray.lshare.gui.GUIUtil;
 import org.lunarray.lshare.protocol.state.userlist.ExternalUserList;
@@ -26,7 +28,8 @@ public class ListModel extends AbstractTreeTableModel implements
 	 * @param u The user that the filelist is to be fetched from.
 	 */
 	public ListModel(ExternalUserList l, User u) {
-		super(new ListNode(l.getFilelist(u)));
+		super(new ListNode(l.getFilelist(u), null, null));
+		((ListNode)getRoot()).setModel(this);
 		listeners = new ArrayList<TreeModelListener>();
 	}
 	
@@ -174,5 +177,37 @@ public class ListModel extends AbstractTreeTableModel implements
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Updates the given node, ie. tells listeners that children have bene
+	 * inserted.
+	 * @param n The node to update.
+	 */
+	protected void updateNode(ListNode n) {
+		TreePath p = new TreePath(getPathToRoot(n, 0));
+		
+		TreeModelEvent e = new TreeModelEvent(n, p);
+		for (TreeModelListener l: listeners) {
+			l.treeStructureChanged(e);
+		}
+	}
+	
+	/**
+	 * Gets the path from this node to the root node.
+	 * @param node The node to get the path of.
+	 * @param depth The current depth.
+	 * @return The path from the given node to the root.
+	 */
+	protected ListNode[] getPathToRoot(ListNode node, int depth) {
+		if (node == null) {
+			if (depth == 0) {
+				return null;
+			}
+			return new ListNode[depth];
+		}
+		ListNode[] path = getPathToRoot(node.getParent(), depth + 1);
+		path[path.length - depth - 1] = node;
+		return path;
 	}
 }

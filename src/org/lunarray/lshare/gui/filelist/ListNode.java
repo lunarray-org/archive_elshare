@@ -23,12 +23,48 @@ public class ListNode implements Comparable<FilelistEntry> {
 	private ArrayList<ListNode> children;
 	
 	/**
+	 * The parent of this node.
+	 */
+	private ListNode parent;
+	
+	/**
+	 * The model that this node resides in. 
+	 */
+	private ListModel model;
+	
+	/**
+	 * A thread for adding entries.
+	 */
+	private EntryAdder adder;
+	
+	/**
 	 * Constructs the node with a specified entry.
 	 * @param e The entry to be represented by this node.
+	 * @param p The parent of this node.
+	 * @param m The model in which this node resides.
 	 */
-	public ListNode(FilelistEntry e) {
+	public ListNode(FilelistEntry e, ListNode p, ListModel m) {
 		entry = e;
 		children = null;
+		parent = p;
+		model = m;
+		adder = new EntryAdder();
+	}
+	
+	/**
+	 * Set the model for this node.
+	 * @param m The model to set it to.
+	 */
+	public void setModel(ListModel m) {
+		model = m;
+	}
+	
+	/**
+	 * Gets the parent of this node.
+	 * @return The parent of this node.
+	 */
+	public ListNode getParent() {
+		return parent;
 	}
 	
 	/**
@@ -46,7 +82,8 @@ public class ListNode implements Comparable<FilelistEntry> {
 	 */
 	public int size() {
 		if (children == null) {
-			popChildren(); 
+			popChildren();
+			return 0;
 		}
 		return children.size();
 	}
@@ -59,6 +96,7 @@ public class ListNode implements Comparable<FilelistEntry> {
 	public ListNode get(int i) {
 		if (children == null) {
 			popChildren();
+			return null;
 		}
 		if (0 <= i && i < children.size()) {
 			return children.get(i);
@@ -75,6 +113,7 @@ public class ListNode implements Comparable<FilelistEntry> {
 	public int getIndex(ListNode n) {
 		if (children == null) {
 			popChildren();
+			return -1;
 		}
 		if (children.contains(n)) {
 			return children.indexOf(n);
@@ -149,13 +188,44 @@ public class ListNode implements Comparable<FilelistEntry> {
 	/**
 	 * Populates the child entries in this node.
 	 */
-	private void popChildren() {
-		children = new ArrayList<ListNode>();
-		for (FilelistEntry e: entry.getEntries()) {
-			int i = Collections.binarySearch(children, e);
-			if (i < 0) {
-				children.add(-(i + 1), new ListNode(e));
+	private synchronized void popChildren() {
+		if (!adder.isAlive()) {
+			adder.start();
+		}
+	}
+	
+	/**
+	 * Add the given entry to this node.
+	 * @param e The entry to add.
+	 */
+	private void addChild(FilelistEntry e) {
+		int i = Collections.binarySearch(children, e);
+		if (i < 0) {
+			children.add(-(i + 1), new ListNode(e, this, model));
+		}
+	}
+	
+	/**
+	 * Trigger an update of the model on this node.
+	 */
+	private void triggerModel() {
+		model.updateNode(this);
+	}
+	
+	/**
+	 * An entry adder
+	 * @author Pal Hargitai
+	 */
+	private class EntryAdder extends Thread {
+		/**
+		 * Gets all child nodes and registers this with the model.
+		 */
+		public void run () {
+			children = new ArrayList<ListNode>();
+			for (FilelistEntry e: entry.getEntries()) {
+				addChild(e);
 			}
+			triggerModel();
 		}
 	}
 }
