@@ -3,6 +3,7 @@ package org.lunarray.lshare.gui.filelist;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.TableModelEvent;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
@@ -27,6 +28,11 @@ public class FileList extends GUIFrame {
 	 * The list model that allows showing of the file list.
 	 */
 	private ListModel model;
+	
+	/**
+	 * The table used.
+	 */
+	private JTable table;
 
 	/**
 	 * Constructs a filelist window.
@@ -39,16 +45,16 @@ public class FileList extends GUIFrame {
 		
 		// Setup model
 		user = u;
-		model = new ListModel(ls.getUserList(), user);
+		model = new ListModel(ls.getUserList(), user, this);
 		
 		// Setup table
-		JTable t = new JTreeTable(model);
-		t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane table = new JScrollPane(t);
+		table = new JTreeTable(model);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		JScrollPane t = new JScrollPane(table);
 		
 		// Setup frame
 		frame.setTitle(getTitle());
-		frame.getContentPane().add(table);
+		frame.getContentPane().add(t);
 	}
 	
 	@Override
@@ -70,5 +76,12 @@ public class FileList extends GUIFrame {
 	 */
 	public String getTitle() {
 		return user.getName() + " (" + user.getHostname() + ")";
+	}
+	
+	/**
+	 * The model has been updated, notify table.
+	 */
+	protected void updatedModel() {
+		table.tableChanged(new TableModelEvent(table.getModel()));
 	}
 }

@@ -23,14 +23,22 @@ public class ListModel extends AbstractTreeTableModel implements
 	private ArrayList<TreeModelListener> listeners;
 	
 	/**
+	 * The file list that this model is used in.
+	 */
+	private FileList list;
+	
+	/**
 	 * Constructs a list.
 	 * @param l The userlist that the filelisti s fetched from.
 	 * @param u The user that the filelist is to be fetched from.
+	 * @param f The file list that this model is used in.
 	 */
-	public ListModel(ExternalUserList l, User u) {
+	public ListModel(ExternalUserList l, User u, FileList f) {
 		super(new ListNode(l.getFilelist(u), null, null));
 		((ListNode)getRoot()).setModel(this);
 		listeners = new ArrayList<TreeModelListener>();
+		
+		list = f;
 	}
 	
 	/**
@@ -191,6 +199,8 @@ public class ListModel extends AbstractTreeTableModel implements
 		for (TreeModelListener l: listeners) {
 			l.treeStructureChanged(e);
 		}
+		
+		list.updatedModel();
 	}
 	
 	/**
