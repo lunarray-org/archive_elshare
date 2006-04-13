@@ -1,6 +1,7 @@
 package org.lunarray.lshare.protocol.settings;
 
-import java.util.prefs.*;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import org.lunarray.lshare.protocol.Controls;
 

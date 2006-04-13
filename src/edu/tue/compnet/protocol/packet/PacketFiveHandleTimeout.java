@@ -1,7 +1,9 @@
 package edu.tue.compnet.protocol.packet;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.protocol.FiletransferServer;
+import edu.tue.compnet.protocol.State;
+import edu.tue.compnet.protocol.Transport;
 
 /**
  * This means that when a timeout occurs, the packet 6, advertising the

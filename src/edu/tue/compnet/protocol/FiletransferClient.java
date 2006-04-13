@@ -1,10 +1,14 @@
 package edu.tue.compnet.protocol;
 
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.protocol.state.*;
+import edu.tue.compnet.protocol.state.Chunk;
+import edu.tue.compnet.protocol.state.Transfer;
+import edu.tue.compnet.protocol.state.TransferFile;
 
 /**
  * The class that handles the download of a file.

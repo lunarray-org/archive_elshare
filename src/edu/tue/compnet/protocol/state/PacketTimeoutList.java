@@ -1,6 +1,7 @@
 package edu.tue.compnet.protocol.state;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import edu.tue.compnet.Output;
 import edu.tue.compnet.protocol.packet.PacketTimeout;

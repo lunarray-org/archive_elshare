@@ -2,13 +2,19 @@ package edu.tue.compnet.protocol.packet;
 
 import java.io.File;
 import java.net.DatagramPacket;
-import java.nio.*;
-import java.nio.charset.*;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.protocol.State;
+import edu.tue.compnet.protocol.Transport;
 
 /**
  * The interface describing basic functionality of a packet.

@@ -2,7 +2,8 @@ package edu.tue.compnet.protocol.packet;
 
 import java.net.InetAddress;
 
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.protocol.State;
+import edu.tue.compnet.protocol.Transport;
 import edu.tue.compnet.protocol.state.Request;
 import edu.tue.compnet.protocol.state.TransferFile;
 

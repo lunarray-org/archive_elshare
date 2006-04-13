@@ -39,13 +39,16 @@ package com.sun.swing;
  * maintenance of any nuclear facility.
  */
 
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.table.*;
-
-import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
+
+import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.TreeModel;
 
 /**
  * This example shows how to create a simple JTreeTable component, 

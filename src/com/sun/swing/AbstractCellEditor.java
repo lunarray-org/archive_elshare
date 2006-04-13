@@ -39,9 +39,12 @@ package com.sun.swing;
  * maintenance of any nuclear facility.
  */
 
-import javax.swing.*;
-import javax.swing.event.*;
 import java.util.EventObject;
+
+import javax.swing.CellEditor;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.EventListenerList;
 
 /**
  * @version %I% %G% 

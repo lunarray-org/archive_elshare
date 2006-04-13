@@ -143,6 +143,25 @@ public class ShareEntry {
 	}
 	
 	/**
+	 * Checks if both hashes are equal.
+	 * @param h The hash to comare to.
+	 * @param j The hash to compare to.
+	 * @return True if both hashes are equal, false if not.
+	 */
+	public static boolean equals(byte[] h, byte[] j) {
+		if (h.length == j.length) {
+			for (int i = 0; i < h.length; i++) {
+				if (h[i] != j[i]) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * Gets a hash of the given name.
 	 * @param name The name to hash.
 	 * @return The hash of the name.
@@ -185,24 +204,5 @@ public class ShareEntry {
 			Controls.getLogger().fine("File error!");
 		}
 		return md5;
-	}
-	
-	/**
-	 * Checks if both hashes are equal.
-	 * @param h The hash to comare to.
-	 * @param j The hash to compare to.
-	 * @return True if both hashes are equal, false if not.
-	 */
-	private static boolean equals(byte[] h, byte[] j) {
-		if (h.length == j.length) {
-			for (int i = 0; i < h.length; i++) {
-				if (h[i] != j[i]) {
-					return false;
-				}
-			}
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

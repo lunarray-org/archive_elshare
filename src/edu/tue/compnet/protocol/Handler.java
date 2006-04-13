@@ -1,11 +1,18 @@
 package edu.tue.compnet.protocol;
 
-import java.net.*;
-import java.util.*;
+import java.net.DatagramPacket;
+import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.protocol.packet.*;
+import edu.tue.compnet.protocol.packet.PacketEight;
+import edu.tue.compnet.protocol.packet.PacketFive;
+import edu.tue.compnet.protocol.packet.PacketFour;
+import edu.tue.compnet.protocol.packet.PacketOne;
+import edu.tue.compnet.protocol.packet.PacketSeven;
+import edu.tue.compnet.protocol.packet.PacketSix;
+import edu.tue.compnet.protocol.packet.PacketThree;
+import edu.tue.compnet.protocol.packet.PacketTwo;
 
 
 /**

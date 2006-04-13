@@ -12,6 +12,7 @@ import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /**
  * A class for receiving file lists from users.
@@ -70,12 +71,18 @@ public class FilelistReceiver {
 	private InputStream istream;
 	
 	/**
+	 * Controls to the protocol.
+	 */
+	private Controls controls;
+	
+	/**
 	 * Constructs a file list receiver for receiving a users file list.
 	 * @param c The controls of the protocol.
 	 * @param u The user whose file list to get.
 	 */
 	public FilelistReceiver(Controls c, User u) {
 		user = u;
+		controls = c;
 		// Setup stuff
 		socket = new Socket();
 		try {
@@ -100,6 +107,8 @@ public class FilelistReceiver {
 		
 		RecTO timeouthandler = new RecTO();
 		timeouthandler.startGet();
+		
+		controls.getTasks().backgroundTask(timeouthandler);
 		
 		ArrayList<FilelistEntry> ret = new ArrayList<FilelistEntry>();
 		run: {
@@ -198,11 +207,10 @@ public class FilelistReceiver {
 	}
 	
 	/**
-	 * A timeout thread to ensure that a get does not go on indefinitely.<br>
-	 * TODO Make something neat of this. IE no independant thread.
+	 * A timeout thread to ensure that a get does not go on indefinitely.
 	 * @author Pal Hargitai
 	 */
-	private class RecTO extends Thread {
+	private class RecTO implements RunnableTask {
 		
 		/**
 		 * The allocated time to get a single item.
@@ -239,7 +247,6 @@ public class FilelistReceiver {
 		 */
 		public void startGet() {
 			shouldget = true;
-			start();
 		}
 		
 		/**
@@ -248,35 +255,31 @@ public class FilelistReceiver {
 		 */
 		public void stopGet() {
 			shouldget = false;
-			if (getState().equals(Thread.State.TIMED_WAITING)) {
-				interrupt();
-			}
-			try {
-				join();
-			} catch (InterruptedException ie) {
-				// Can't happen
-			}
 		}
 		
 		/**
 		 * Checks the socket for validity.
 		 */
-		public void run() {
+		public void runTask(Controls c) {
 			run: {
 				while (true) {
-					try {
-						if (nextstamp - System.currentTimeMillis() < 0 ) {							
-							shouldget = false;
-							close();
-						} else {
-							sleep(nextstamp - System.currentTimeMillis());
-						}					
-						
+					if (nextstamp - System.currentTimeMillis() < 0 ) {
 						if (!shouldget) {
 							break run;
 						}
-					} catch (InterruptedException ie) {
-						// Shouldn't happen
+
+						shouldget = false;
+						close();
+					} else {
+						try {
+							Thread.sleep(nextstamp - System.currentTimeMillis());
+						} catch (InterruptedException ie) {
+							// Ignore
+						}						
+					}					
+					
+					if (!shouldget) {
+						break run;
 					}
 				}
 			}

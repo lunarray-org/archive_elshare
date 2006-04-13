@@ -1,6 +1,6 @@
 package edu.tue.compnet.protocol;
 
-import java.io.*;
+import java.io.InputStream;
 import java.util.concurrent.Semaphore;
 
 import edu.tue.compnet.Output;

@@ -1,6 +1,6 @@
 package edu.tue.compnet.events;
 
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.protocol.State;
 import edu.tue.compnet.protocol.state.Transfer;
 
 /**

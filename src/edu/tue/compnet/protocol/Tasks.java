@@ -5,7 +5,10 @@ import java.net.UnknownHostException;
 import java.util.TimerTask;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.protocol.packet.*;
+import edu.tue.compnet.protocol.packet.PacketFive;
+import edu.tue.compnet.protocol.packet.PacketOne;
+import edu.tue.compnet.protocol.packet.PacketSeven;
+import edu.tue.compnet.protocol.packet.PacketThree;
 
 /**
  * Handles regular tasks done in the protocol.

@@ -3,7 +3,18 @@ package edu.tue.compnet.protocol;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.tue.compnet.protocol.state.*;
+import edu.tue.compnet.protocol.state.AllowList;
+import edu.tue.compnet.protocol.state.BuddyList;
+import edu.tue.compnet.protocol.state.FiletransferList;
+import edu.tue.compnet.protocol.state.HashList;
+import edu.tue.compnet.protocol.state.PacketTimeoutList;
+import edu.tue.compnet.protocol.state.Query;
+import edu.tue.compnet.protocol.state.RequestList;
+import edu.tue.compnet.protocol.state.SearchList;
+import edu.tue.compnet.protocol.state.StateSettings;
+import edu.tue.compnet.protocol.state.TransferFileList;
+import edu.tue.compnet.protocol.state.UserList;
+import edu.tue.compnet.protocol.state.UserlistRequestList;
 
 /**
  * This class keeps the state of the protocol, that is, user lists etc.

@@ -1,11 +1,15 @@
 package edu.tue.compnet.protocol.packet;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.protocol.*;
-import edu.tue.compnet.protocol.state.*;
+import edu.tue.compnet.protocol.FiletransferServer;
+import edu.tue.compnet.protocol.State;
+import edu.tue.compnet.protocol.Transport;
+import edu.tue.compnet.protocol.state.Chunk;
+import edu.tue.compnet.protocol.state.TransferFile;
 
 /**
  * The class that implements a packet of type 5 (extended)

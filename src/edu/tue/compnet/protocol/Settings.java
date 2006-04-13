@@ -1,6 +1,7 @@
 package edu.tue.compnet.protocol;
 
-import java.util.prefs.*;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import edu.tue.compnet.Output;
 

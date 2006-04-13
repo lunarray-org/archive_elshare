@@ -1,7 +1,10 @@
 package edu.tue.compnet.protocol;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import edu.tue.compnet.Output;

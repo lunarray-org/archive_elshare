@@ -1,16 +1,27 @@
 package edu.tue.compnet.gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.InetAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import edu.tue.compnet.Backend;
-import edu.tue.compnet.events.*;
+import edu.tue.compnet.events.SearchEvent;
+import edu.tue.compnet.events.SearchListener;
 import edu.tue.compnet.protocol.state.HashList;
 
 /** 

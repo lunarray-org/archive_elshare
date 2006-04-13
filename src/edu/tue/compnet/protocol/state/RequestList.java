@@ -1,7 +1,8 @@
 package edu.tue.compnet.protocol.state;
 
 import java.net.InetAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import edu.tue.compnet.Output;
 

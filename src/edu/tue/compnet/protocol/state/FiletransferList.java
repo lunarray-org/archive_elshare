@@ -1,10 +1,14 @@
 package edu.tue.compnet.protocol.state;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.events.*;
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.events.FiletransferEvent;
+import edu.tue.compnet.events.TransferListener;
+import edu.tue.compnet.protocol.FiletransferClient;
+import edu.tue.compnet.protocol.FiletransferServer;
+import edu.tue.compnet.protocol.State;
 
 /**
  * The class that holds and handles most issues regarding filetransfers.

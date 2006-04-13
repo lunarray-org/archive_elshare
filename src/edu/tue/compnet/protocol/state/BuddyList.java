@@ -3,7 +3,7 @@ package edu.tue.compnet.protocol.state;
 import java.util.Map;
 import java.util.TreeMap;
 
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.protocol.Settings;
 
 /**
  * This class mostly handles the buddylist.

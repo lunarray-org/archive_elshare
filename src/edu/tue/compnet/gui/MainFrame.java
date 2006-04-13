@@ -1,15 +1,23 @@
 package edu.tue.compnet.gui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 
 import edu.tue.compnet.Backend;
-import edu.tue.compnet.events.*;
+import edu.tue.compnet.events.FiletransferEvent;
+import edu.tue.compnet.events.QueryListener;
+import edu.tue.compnet.events.TransferListener;
 import edu.tue.compnet.protocol.state.HashList;
 
 /**

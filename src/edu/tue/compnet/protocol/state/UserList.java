@@ -4,7 +4,8 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import edu.tue.compnet.events.*;
+import edu.tue.compnet.events.ListEvent;
+import edu.tue.compnet.events.UserListListener;
 import edu.tue.compnet.protocol.State;
 
 /**

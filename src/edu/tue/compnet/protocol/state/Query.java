@@ -1,6 +1,7 @@
 package edu.tue.compnet.protocol.state;
 
-import edu.tue.compnet.events.*;
+import edu.tue.compnet.events.Event;
+import edu.tue.compnet.events.QueryListener;
 import edu.tue.compnet.protocol.State;
 
 /**

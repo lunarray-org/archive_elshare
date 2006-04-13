@@ -1,6 +1,7 @@
 package edu.tue.compnet;
 
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.protocol.State;
+import edu.tue.compnet.protocol.Transport;
 
 /**
  * The backend that runs all the network related stuff. It should provide

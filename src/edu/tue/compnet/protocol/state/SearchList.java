@@ -3,7 +3,8 @@ package edu.tue.compnet.protocol.state;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-import edu.tue.compnet.events.*;
+import edu.tue.compnet.events.SearchEvent;
+import edu.tue.compnet.events.SearchListener;
 import edu.tue.compnet.protocol.State;
 
 /**

@@ -1,15 +1,22 @@
 package edu.tue.compnet.gui;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 import edu.tue.compnet.Backend;
-import edu.tue.compnet.events.*;
-import edu.tue.compnet.protocol.state.*;
+import edu.tue.compnet.events.ListEvent;
+import edu.tue.compnet.events.UserListListener;
+import edu.tue.compnet.protocol.state.ListUser;
 
 /**
  * This panel will hold the main contact list. It will be in a tree form so

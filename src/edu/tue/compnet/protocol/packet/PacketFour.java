@@ -1,10 +1,12 @@
 package edu.tue.compnet.protocol.packet;
 
 import java.io.File;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 
 import edu.tue.compnet.Output;
-import edu.tue.compnet.protocol.*;
+import edu.tue.compnet.protocol.State;
+import edu.tue.compnet.protocol.Transport;
 import edu.tue.compnet.protocol.state.HashList;
 
 /**
