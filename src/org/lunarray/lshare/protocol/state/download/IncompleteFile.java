@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.lunarray.lshare.protocol.RemoteFile;
-import org.lunarray.lshare.protocol.state.sharing.DownloadTransfer;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
