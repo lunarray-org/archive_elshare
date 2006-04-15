@@ -2,6 +2,7 @@ package org.lunarray.lshare.protocol.filelist;
 
 import java.util.List;
 
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.state.sharing.ShareList;
 
@@ -31,7 +32,7 @@ public class FilelistEntry extends RemoteFile {
 	 * @param s The size of this entry.
 	 * @param root True if this is the root node, false if not.
 	 */
-	public FilelistEntry(FilelistReceiver fr, String p, String n, byte[] h,
+	public FilelistEntry(FilelistReceiver fr, String p, String n, Hash h,
 			long lm, long s, boolean root) {
 		super(p, n, h, lm, s);
 		receiver = fr;

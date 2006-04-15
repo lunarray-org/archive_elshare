@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.Hash;
 
 /**
  * The share list for handling shares and files.
@@ -268,8 +269,9 @@ public class ShareList implements ExternalShareList {
 			} else if (fl.isFile() && !fl.isHidden() && fl.canRead()) {
 				if (settings.getAccessDate(fl.getPath()) < fl.lastModified()) {
 					// Update hash
-					byte[] h = ShareEntry.hash(fl);
-					byte[] n = ShareEntry.hashName(fl.getPath());
+					Hash h = new Hash(fl);
+					Hash n = new Hash(fl.getPath());
+					
 					settings.setData(fl.getPath(), h, n, fl.lastModified());
 				}
 			}

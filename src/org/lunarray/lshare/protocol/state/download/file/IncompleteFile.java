@@ -2,13 +2,13 @@ package org.lunarray.lshare.protocol.state.download.file;
 
 import java.io.File;
 
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
-import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 
 public class IncompleteFile {
 //	 TODO
 
-	private byte[] hash;
+	private Hash hash;
 	private ChunkedFile file;
 	
 	public IncompleteFile(File f) {
@@ -20,18 +20,18 @@ public class IncompleteFile {
 		if (file.getSize() > 0 && f.getSize() != file.getSize()) {
 			return false;
 		}
-		if (ShareEntry.isEmpty(hash)) {
+		if (hash.isEmpty()) {
 			return true;
 		} else {
-			return ShareEntry.equals(hash, f.getHash());
+			return hash.equals(f.getHash());
 		}
 	}
 	
-	protected void setHash(byte[] h) throws IllegalArgumentException {
-		if (ShareEntry.isEmpty(hash)) {
+	protected void setHash(Hash h) throws IllegalArgumentException {
+		if (hash.isEmpty()) {
 			hash = h;
 		} else {
-			if (ShareEntry.equals(hash, h)) {
+			if (hash.equals(h)) {
 				// do nothing
 			} else {
 				throw new IllegalArgumentException();

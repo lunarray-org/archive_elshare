@@ -155,7 +155,7 @@ public class SearchModel implements TableModel {
 			}
 		case 5:
 			if (events.get(arg1).getEntry().hasHash()) {
-				return GUIUtil.hashToString(events.get(arg1).getEntry().getHash());
+				return events.get(arg1).getEntry().getHash().toString();
 			} else {
 				return "";
 			}

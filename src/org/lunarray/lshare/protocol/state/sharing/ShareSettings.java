@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.Settings;
 import org.lunarray.lshare.protocol.settings.RawSettings;
 
@@ -38,15 +39,7 @@ public class ShareSettings {
 	 */
 	public final static String SHARE_UNSET = ".";
 	
-	/**
-	 * The hash if it is unset.
-	 */
-	public final static byte[] HASH_UNSET = {
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00
-	};
+	// TODO reset HASH_UNSET
 	
 	/**
 	 * The access date if it's unset.  This is: {@value}.
@@ -130,12 +123,12 @@ public class ShareSettings {
 	 * @param loc The file path to get the hash of.
 	 * @return The hash of the file.
 	 */
-	public byte[] getHash(String loc) {
+	public Hash getHash(String loc) {
 		if (hashmap.containsKey(loc)) {
-			return rsettings.getByteArray(Settings.DEFAULT_LOC + HASH_LOC, 
-					hashmap.get(loc), HASH_UNSET);
+			return new Hash(rsettings.getByteArray(Settings.DEFAULT_LOC + HASH_LOC, 
+					hashmap.get(loc), Hash.UNSET));
 		} else {
-			return HASH_UNSET;
+			return Hash.getUnset();
 		}
 	}
 	
@@ -176,12 +169,12 @@ public class ShareSettings {
 	 * @param nh The hash of the name of the file.
 	 * @param i The last modified date of the file.
 	 */
-	public void setData(String loc, byte[] h, byte[] nh, long i) {
-		String k = hashToString(nh);
-		rsettings.setString(Settings.DEFAULT_LOC + FILE_LOC, k, loc);
-		rsettings.setByteArray(Settings.DEFAULT_LOC + HASH_LOC, k, h);
-		rsettings.setLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC, k, i);
-		hashmap.put(loc, k);
+	public void setData(String loc, Hash h, Hash nh, long i) {
+		rsettings.setString(Settings.DEFAULT_LOC + FILE_LOC, nh.toString(), loc);
+		rsettings.setByteArray(Settings.DEFAULT_LOC + HASH_LOC, nh.toString(), 
+				h.getBytes());
+		rsettings.setLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC, nh.toString(), i);
+		hashmap.put(loc, nh.toString());
 		Controls.getLogger().finer("Set hash \"" + loc + "\"");
 	}
 	
@@ -200,63 +193,6 @@ public class ShareSettings {
 				rsettings.remove(Settings.DEFAULT_LOC + ACCESSDATE_LOC, s);
 				rsettings.remove(Settings.DEFAULT_LOC + HASH_LOC, s);
 			}
-		}
-	}
-	
-	/**
-	 * Converts a given hash to a readable string.
-	 * @param dat The hash to convert.
-	 * @return The string representation of the hash.
-	 */
-	private String hashToString(byte[] dat) {
-		String ret = "";
-		for (byte b: dat) {
-			ret += quadBitToString(b) + quadBitToString(b >> 4);
-		}
-		return ret;
-	}
-	
-	/**
-	 * Converts 4-bits to a certain string.
-	 * @param b The int of which to get the representation of.
-	 * @return The string representation of the first 4-bits of the int.
-	 */
-	private String quadBitToString(int b) {
-		switch (b & 0x0F) {
-		case 0x0:
-			return "0";
-		case 0x1:
-			return "1";
-		case 0x2:
-			return "2";
-		case 0x3:
-			return "3";
-		case 0x4:
-			return "4";
-		case 0x5:
-			return "5";
-		case 0x6:
-			return "6";
-		case 0x7:
-			return "7";
-		case 0x8:
-			return "8";
-		case 0x9:
-			return "9";
-		case 0xA:
-			return "A";
-		case 0xB:
-			return "B";
-		case 0xC:
-			return "C";
-		case 0xD:
-			return "D";
-		case 0xE:
-			return "E";
-		case 0xF:
-			return "F";
-		default:
-			return "";
 		}
 	}
 }

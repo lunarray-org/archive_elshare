@@ -9,9 +9,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
-import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 
 /**
  * A class for sending file entries.<br>
@@ -168,23 +168,23 @@ public class FilelistSender extends Thread {
 		byte[] name = PacketUtil.encode(d.getName());
 		byte[] nlen = {Integer.valueOf(Math.min(name.length, 255)).
 				byteValue()};
-		byte[] data = new byte[8 + 8 + ShareSettings.HASH_UNSET.length + 1 + 
+		byte[] data = new byte[8 + 8 + Hash.length() + 1 + 
 		        nlen[0]];
 		if (d.isDirectory()) {
 			PacketUtil.longToByteArray(0, data, 0);
 			PacketUtil.longToByteArray(-1, data, 8);
-			PacketUtil.injectByteArrayIntoByteArray(ShareSettings.HASH_UNSET,
-					ShareSettings.HASH_UNSET.length, data, 16);
+			PacketUtil.injectByteArrayIntoByteArray(Hash.getUnset().getBytes(),
+					Hash.length(), data, 16);
 		} else {
 			PacketUtil.longToByteArray(d.getLastModified(),data, 0);
 			PacketUtil.longToByteArray(d.getSize(), data, 8);
-			PacketUtil.injectByteArrayIntoByteArray(d.getHash(), d.getHash().
-					length, data, 16);
+			PacketUtil.injectByteArrayIntoByteArray(d.getHash().getBytes(), 
+					Hash.length(), data, 16);
 		}
 		PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + 
-				ShareSettings.HASH_UNSET.length);
+				Hash.length());
 		PacketUtil.injectByteArrayIntoByteArray(name, nlen[0], data, 16 + 1 +
-				ShareSettings.HASH_UNSET.length);
+				Hash.length());
 		ostream.write(data);
 	}
 	

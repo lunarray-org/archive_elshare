@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
-import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
@@ -165,8 +165,8 @@ public class FilelistReceiver {
 	 * @return The root entry.
 	 */
 	public FilelistEntry getRoot() {
-		return new FilelistEntry(this, ".", user.getName(), ShareSettings.
-				HASH_UNSET, 0, -1, true);
+		return new FilelistEntry(this, ".", user.getName(), Hash.getUnset(), 
+				0, -1, true);
 	}
 	
 	/**
@@ -195,15 +195,16 @@ public class FilelistReceiver {
 	 * @throws IOException If the socket could not be read from.
 	 */
 	private FilelistEntry getOne(String p) throws IOException {
-		byte[] predata = get(8 + 8 + ShareSettings.HASH_UNSET.length + 1);
+		byte[] predata = get(8 + 8 + Hash.length() + 1);
 		long ad = PacketUtil.byteArrayToLong(predata, 0);
 		long size = PacketUtil.byteArrayToLong(predata, 8);
 		byte[] hash = PacketUtil.getByteArrayFromByteArray(predata, 
-				ShareSettings.HASH_UNSET.length, 16);
-		int nlen = predata[16 + ShareSettings.HASH_UNSET.length] & 0xFF;
+				Hash.length(), 16);
+		int nlen = predata[16 + Hash.length()] & 0xFF;
 		String name = PacketUtil.decode(get(nlen)).trim();
 		Controls.getLogger().finer("Data for: " + name);
-		return new FilelistEntry(this, p, name, hash, ad, size, false);
+		return new FilelistEntry(this, p, name, new Hash(hash), ad, size, 
+				false);
 	}
 	
 	/**

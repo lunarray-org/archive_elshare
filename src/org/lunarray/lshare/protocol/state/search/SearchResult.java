@@ -2,6 +2,7 @@ package org.lunarray.lshare.protocol.state.search;
 
 import java.net.InetAddress;
 
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
 
 /**
@@ -24,7 +25,8 @@ public class SearchResult extends RemoteFile {
 	 * @param lm The last modified date of the result.
 	 * @param s The size of the result.
 	 */
-	public SearchResult(InetAddress a, String p, String n, byte[] h, long lm, long s) {
+	public SearchResult(InetAddress a, String p, String n, Hash h, long lm, 
+			long s) {
 		super(p, n, h, lm, s);
 		address = a;
 	}

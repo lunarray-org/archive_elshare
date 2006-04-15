@@ -3,7 +3,6 @@ package org.lunarray.lshare.gui.filelist;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.lunarray.lshare.gui.GUIUtil;
 import org.lunarray.lshare.protocol.filelist.FilelistEntry;
 
 /**
@@ -152,7 +151,7 @@ public class ListNode implements Comparable<FilelistEntry> {
 	 */
 	public String getHash() {
 		if (entry.hasHash()) {
-			return GUIUtil.hashToString(entry.getHash());
+			return entry.getHash().toString();
 		} else {
 			return "";
 		}

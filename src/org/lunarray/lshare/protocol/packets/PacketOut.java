@@ -4,7 +4,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 import org.lunarray.lshare.protocol.Controls;
-import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 
 /**
  * An outbound packet.
@@ -12,11 +11,6 @@ import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
  */
 public abstract class PacketOut {
 
-	/**
-	 * The length of a hash.
-	 */
-	public static int HLEN = ShareSettings.HASH_UNSET.length;
-	
 	/**
 	 * The address used for broadcasting packets.
 	 */

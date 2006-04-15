@@ -1,6 +1,5 @@
 package org.lunarray.lshare.protocol.packets;
 
-import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /**
@@ -9,11 +8,6 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
  */
 public abstract class PacketIn implements RunnableTask {
 	
-	/**
-	 * The length of a packet.
-	 */
-	public static int HLEN = ShareSettings.HASH_UNSET.length;
-
 	/**
 	 * Parses a packet.
 	 * @throws MalformedPacketException Thrown if the packet is malformed.

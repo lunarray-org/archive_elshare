@@ -1,7 +1,5 @@
 package org.lunarray.lshare.protocol;
 
-import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
-
 /**
  * A remote file or directory representation.
  * @author Pal Hargitai
@@ -21,7 +19,7 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
 	/**
 	 * The hash of this file or none if it's a directory.
 	 */
-	private byte[] hash;
+	private Hash hash;
 	
 	/**
 	 * The last modified date of this file. (Epoch)
@@ -41,7 +39,7 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
 	 * @param lm The last modified date of the file or directory. (Epoch)
 	 * @param s The size of the file or directory.
 	 */
-	public RemoteFile(String p, String n, byte[] h, long lm, long s) {
+	public RemoteFile(String p, String n, Hash h, long lm, long s) {
 		path = p;
 		name = n;
 		hash = h;
@@ -69,7 +67,7 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
 	 * The hash of the file or unset if for the directory.
 	 * @return The hash of the file or unset if for the directory.
 	 */
-	public byte[] getHash() {
+	public Hash getHash() {
 		return hash;
 	}
 	
@@ -112,7 +110,7 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
 	 * a hash or if this is a directory.
 	 */
 	public boolean hasHash() {
-		if (ShareEntry.isEmpty(hash)) {
+		if (hash.isEmpty()) {
 			return false;
 		} else {
 			return true;
