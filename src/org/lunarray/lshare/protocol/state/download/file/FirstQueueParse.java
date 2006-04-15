@@ -1,10 +1,11 @@
-package org.lunarray.lshare.protocol.state.download;
+package org.lunarray.lshare.protocol.state.download.file;
 
 import java.io.File;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.RemoteFile;
+import org.lunarray.lshare.protocol.state.download.DownloadManager;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;

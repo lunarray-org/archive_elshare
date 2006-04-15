@@ -1,4 +1,4 @@
-package org.lunarray.lshare.protocol.state.download;
+package org.lunarray.lshare.protocol.state.download.file;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.lunarray.lshare.protocol.RemoteFile;
+import org.lunarray.lshare.protocol.state.download.DownloadTransfer;
+import org.lunarray.lshare.protocol.state.download.FileResponse;
+import org.lunarray.lshare.protocol.state.download.QueueStatus;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
@@ -13,45 +16,39 @@ import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
 public class IncompleteFile {
 
-	private File target;
 	private QueueStatus status;
 	private TreeMap<User, RemoteFile> users;
-	private long size;
 	private byte[] hash;
 	private ArrayList<DownloadTransfer> transfers;
+	private ChunkedFile file;
 	
 	protected IncompleteFile(File f) {
 		users = new TreeMap<User, RemoteFile>();
 		transfers = new ArrayList<DownloadTransfer>(); 
 		status = QueueStatus.QUEUED;
-		target = f;
-		size = -1;
 		hash = ShareSettings.HASH_UNSET;
+		// file = new ChunkedFile(f);
 	}
 	
 	protected void setSize(long s) {
-		size = s;
+		file.setSize(s);
 	}
 	
 	protected void setHash(byte[] h) {
 		hash = h;
 	}
 	
-	protected void addSource(User u, RemoteFile f) {
+	public void addSource(User u, RemoteFile f) {
 		if (!users.containsKey(u)) {
 			if (ShareEntry.equals(hash, f.getHash()));
 			users.put(u, f);
 		}
 	}
 	
-	protected void removeSource(User u) {
+	public void removeSource(User u) {
 		if (users.containsKey(u)) {
 			users.remove(u);
 		}
-	}
-	
-	public File getRelTarget() {
-		return target;
 	}
 	
 	public void setStatus(QueueStatus s) {
@@ -66,19 +63,19 @@ public class IncompleteFile {
 		return users.keySet();
 	}
 	
-	public long getDone() {
-		return 0; // Blaat
+	public long getTodo() {
+		return file.getTodo(); // Blaat
 	}
 	
 	public long getSize() {
-		return size;
+		return file.getSize();
 	}
 	
 	public byte[] getHash() {
 		return hash;
 	}
 	
-	public void initDownload(User u, int port) {
+	public void initDownload(FileResponse r) {
 		// Bla bla
 	}
 	
@@ -95,7 +92,7 @@ public class IncompleteFile {
 	}
 	
 	public boolean sizeUnset() {
-		return size < 0;
+		return getSize() < 0;
 	}
 	
 	public boolean canDownloadFrom(User u) {

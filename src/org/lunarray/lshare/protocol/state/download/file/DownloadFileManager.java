@@ -1,7 +1,8 @@
-package org.lunarray.lshare.protocol.state.download;
+package org.lunarray.lshare.protocol.state.download.file;
 
 import java.io.File;
 import java.util.TreeMap;
+
 
 public class DownloadFileManager {
 

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.RemoteFile;
+import org.lunarray.lshare.protocol.state.download.file.DownloadFileManager;
+import org.lunarray.lshare.protocol.state.download.file.FirstQueueParse;
+import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
@@ -62,9 +65,9 @@ public class DownloadManager {
 	 * on user signon, kick second queue parser too
 	 */
 	
-	protected void enqueue(IncompleteFile f) {		
+	public void enqueue(IncompleteFile f) {		
 		if (!queue.contains(f)) {
-			Controls.getLogger().fine("Enqueued: " + f.getRelTarget().getPath());
+			Controls.getLogger().fine("Enqueued file.");
 			queue.add(f);
 		}
 		// kick for checks
