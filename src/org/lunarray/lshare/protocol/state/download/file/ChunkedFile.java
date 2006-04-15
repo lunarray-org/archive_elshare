@@ -8,12 +8,22 @@ public class ChunkedFile {
 	private TreeMap<Long, Chunk> chunks;
 	private long size;
 	
-	protected void write(byte[] b, int len) throws IOException {
-		
+//	 TODO
+	public ChunkedFile() {
+//		 TODO 
 	}
 	
-	protected void setSize(long s) {
-		// Bla
+	protected void write(byte[] b, int len) throws IOException, InvalidFileStateException {
+//		 TODO
+	}
+	
+	protected void setSize(long s) throws InvalidFileStateException {
+//		 TODO
+		if (size > 0) {
+			throw new InvalidFileStateException();
+		} else {
+			size = s;
+		}
 	}
 	
 	public long getTodo() {

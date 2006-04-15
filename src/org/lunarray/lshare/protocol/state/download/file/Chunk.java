@@ -44,7 +44,7 @@ public class Chunk {
 	public ChunkedFile getFile() {
 		return file;
 	}
-	
+		
 	/**
 	 * Acquire a lock on the chunk.
 	 */
@@ -72,7 +72,7 @@ public class Chunk {
 		return locksem.availablePermits() == 0;
 	}
 	
-	public void write(byte[] d, int len) throws IOException {
+	public void write(byte[] d, int len) throws IOException, InvalidFileStateException {
 		if (begin < end) {
 			int writable = Long.valueOf(Math.min(len, getTodo())).intValue();
 			file.write(d, writable);

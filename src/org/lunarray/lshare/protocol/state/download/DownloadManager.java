@@ -52,17 +52,17 @@ public class DownloadManager {
 		controls.getTasks().backgroundTask(fparse);
 		
 		/*
-		 * Init from back to stopped.
+		 * TODO Init from back to stopped.
 		 * 
-		 * directly request these from second queue parser
+		 * TODO directly request these from second queue parser
 		 */
 	}
 	
 	/*
-	 * get kicked by a finished transfer
+	 * TODO get kicked by a finished transfer
 	 * this should kick the second queue parser
 	 * 
-	 * on user signon, kick second queue parser too
+	 * TODO on user signon, kick second queue parser too
 	 */
 	
 	public void enqueue(IncompleteFile f) {		
@@ -70,7 +70,7 @@ public class DownloadManager {
 			Controls.getLogger().fine("Enqueued file.");
 			queue.add(f);
 		}
-		// kick for checks
+		// TODO kick for checks
 	}
 	
 	public void enqueue(RemoteFile f, User u) {
@@ -79,8 +79,8 @@ public class DownloadManager {
 	
 	public void addSource(RemoteFile f, IncompleteFile i, User u) {
 		if (queue.contains(i)) {
-			i.addSource(u, f);
+			//i.addSource(u, f);
 		}
-		// kick for checks
+		// TODO kick for checks
 	}
 }
