@@ -3,6 +3,7 @@ package org.lunarray.lshare.protocol.state.search;
 import java.util.ArrayList;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.events.SearchEvent;
 import org.lunarray.lshare.protocol.events.SearchListener;
 import org.lunarray.lshare.protocol.packets.search.SearchOut;
@@ -84,7 +85,7 @@ public class SearchList implements ExternalSearchList {
 	 * Search for a specific file hash.
 	 * @param h The hash to search for.
 	 */
-	public void searchForHash(byte[] h) {
+	public void searchForHash(Hash h) {
 		// TODO
 	}
 }

@@ -1,5 +1,6 @@
 package org.lunarray.lshare.protocol.state.search;
 
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.events.SearchListener;
 
 /**
@@ -30,5 +31,5 @@ public interface ExternalSearchList {
 	 * Search for a specific file hash.
 	 * @param h The hash to search for.
 	 */
-	public void searchForHash(byte[] h);
+	public void searchForHash(Hash h);
 }

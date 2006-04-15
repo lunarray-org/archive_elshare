@@ -1,5 +1,6 @@
 package org.lunarray.lshare.protocol.state.download;
 
+import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 public class FileResponse {
@@ -8,7 +9,7 @@ public class FileResponse {
 	private long offset;
 	private int port;
 	private User user;
-	private byte[] hash;
+	private Hash hash;
 	private String path;
 	private String name;
 	
@@ -28,7 +29,7 @@ public class FileResponse {
 		return user;
 	}
 	
-	public byte[] getHash() {
+	public Hash getHash() {
 		return hash;
 	}
 	
