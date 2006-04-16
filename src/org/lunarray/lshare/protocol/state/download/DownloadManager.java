@@ -39,14 +39,13 @@ public class DownloadManager {
 	private ArrayList<IncompleteFile> queue;
 	private Controls controls;
 	private FirstQueueParse fparse;
-	private DownloadSettings settings;
 	private DownloadFileManager filemanager;
 
 	public DownloadManager(Controls c) {
 		controls = c;
 		
 		queue = new ArrayList<IncompleteFile>();
-		filemanager = new DownloadFileManager();
+		filemanager = new DownloadFileManager(c);
 		
 		fparse = new FirstQueueParse(this, filemanager);
 		controls.getTasks().backgroundTask(fparse);
@@ -74,7 +73,7 @@ public class DownloadManager {
 	}
 	
 	public void enqueue(RemoteFile f, User u) {
-		fparse.toParse(f, u, settings.getDownloadDirectory());
+		//fparse.toParse(f, u, settings.getDownloadDirectory());
 	}
 	
 	public void addSource(RemoteFile f, IncompleteFile i, User u) {
