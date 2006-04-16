@@ -9,20 +9,38 @@ public class Chunk {
 	private Semaphore locksem;
 	private long begin;
 	private long end;
+	private long mark;
 	
-	protected Chunk(ChunkedFile f, long b, long e) {
+	protected Chunk(ChunkedFile f, long b, long m, long e) {
 		file = f;
 		locksem = new Semaphore(1);
 		begin = b;
+		mark = m;
 		end = e;
 	}
-	
+
+	public void write(byte[] d, int len) throws IOException, IllegalStateException {
+		if (mark < end) {
+			int writable = Long.valueOf(Math.min(len, getTodo())).intValue();
+			file.write(d, writable, mark);
+			begin += writable;
+		}
+	}
+
 	public long getBegin() {
 		return begin;
 	}
 	
 	public long getEnd() {
 		return end;
+	}
+	
+	public long getMark() {
+		return mark;
+	}
+	
+	protected void setMark(long m) {
+		mark = m;
 	}
 	
 	protected void setBegin(long b) {
@@ -34,11 +52,15 @@ public class Chunk {
 	}
 	
 	public long getTodo() {
-		return end - begin;
+		return end - mark;
 	}
 	
 	public boolean isDone() {
-		return end == begin;
+		return end == mark;
+	}
+	
+	public boolean isEmpty() {
+		return mark == begin;
 	}
 	
 	public ChunkedFile getFile() {
@@ -61,6 +83,7 @@ public class Chunk {
 	 */
 	public void unlock() {
 		locksem.release();
+		file.cleanChunks();
 	}
 	
 	/**
@@ -70,13 +93,5 @@ public class Chunk {
 	 */
 	public boolean isLocked() {
 		return locksem.availablePermits() == 0;
-	}
-	
-	public void write(byte[] d, int len) throws IOException, InvalidFileStateException {
-		if (begin < end) {
-			int writable = Long.valueOf(Math.min(len, getTodo())).intValue();
-			file.write(d, writable);
-			begin += writable;
-		}
 	}
 }

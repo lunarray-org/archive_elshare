@@ -10,6 +10,7 @@ import org.lunarray.lshare.protocol.state.download.DownloadManager;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
+// TODO rewrite!
 public class FirstQueueParse implements RunnableTask {
 
 	private DownloadManager manager;

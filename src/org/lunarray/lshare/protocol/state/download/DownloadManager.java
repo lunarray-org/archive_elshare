@@ -9,8 +9,8 @@ import org.lunarray.lshare.protocol.state.download.file.FirstQueueParse;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
-/**
- *
+/*
+ * TODO rewrite!
  1- add to queue
 
  2- handle prelim queue to perm queue

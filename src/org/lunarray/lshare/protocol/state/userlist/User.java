@@ -202,7 +202,7 @@ public class User implements Comparable<User> {
 	 * Get this users challenge.
 	 * @return The users challenge.
 	 */
-	protected String getChallenge() {
+	public String getChallenge() {
 		return challenge;
 	}
 	

@@ -39,8 +39,6 @@ public class ShareSettings {
 	 */
 	public final static String SHARE_UNSET = ".";
 	
-	// TODO reset HASH_UNSET
-	
 	/**
 	 * The access date if it's unset.  This is: {@value}.
 	 */

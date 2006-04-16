@@ -2,6 +2,7 @@ package org.lunarray.lshare.protocol;
 
 import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.settings.RawSettings;
+import org.lunarray.lshare.protocol.state.download.DownloadSettings;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 import org.lunarray.lshare.protocol.state.userlist.UserSettings;
 
@@ -139,6 +140,10 @@ public class Settings implements ExternalSettings {
 	 */
 	public GUISettings getSettingsForGUI() {
 		return new GUISettings(rsettings);
+	}
+	
+	public DownloadSettings getDownloadSettings() {
+		return new DownloadSettings(rsettings);
 	}
 
 	/**
