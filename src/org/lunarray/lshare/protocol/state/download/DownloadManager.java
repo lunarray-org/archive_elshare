@@ -15,7 +15,6 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /*
- * TODO rewrite!
  1- add to queue
 
  2- handle prelim queue to perm queue
@@ -46,12 +45,12 @@ public class DownloadManager implements RunnableTask {
 	private Controls controls;
 	private DownloadFileManager filemanager;
 	private boolean shouldrun;
-	private ArrayList<DownloadTransfer> transfers;
+	private ArrayList<DownloadHandler> transfers;
 
 	public DownloadManager(Controls c) {
 		controls = c;
 		
-		transfers = new ArrayList<DownloadTransfer>();
+		transfers = new ArrayList<DownloadHandler>();
 		tempqueue = new LinkedBlockingQueue<QueuedItem>();
 		queue = new ArrayList<IncompleteFile>();
 		filemanager = new DownloadFileManager(c);
@@ -64,7 +63,15 @@ public class DownloadManager implements RunnableTask {
 		controls.getTasks().backgroundTask(this);
 	}
 	
-	protected List<DownloadTransfer> getTransfers() {
+	protected void removeDownloadHandler(DownloadHandler h) {
+		if (transfers.contains(h)) {
+			transfers.remove(h);
+		}
+	}
+	
+	// TODO get response
+	
+	public List<DownloadHandler> getTransfers() {
 		return transfers;
 	}
 	
@@ -74,7 +81,7 @@ public class DownloadManager implements RunnableTask {
 	
 	public void close() {
 		shouldrun = false;
-		for (DownloadTransfer t: transfers) {
+		for (DownloadHandler t: transfers) {
 			t.close();
 		}
 		filemanager.close();
@@ -111,7 +118,11 @@ public class DownloadManager implements RunnableTask {
 						}
 						
 						if (inc.matches(i.getFile())) {
-							inc.addSource(i.getUser(), i.getFile());
+							try {
+								inc.addSource(i.getUser(), i.getFile());
+							} catch (IllegalArgumentException iae) {
+								// Ignore this
+							} 
 							// If adding source fails, don't add to queue
 							if (!queue.contains(inc)) {
 								queue.add(inc);
@@ -124,8 +135,6 @@ public class DownloadManager implements RunnableTask {
 					// Ignore, shouldn't happen
 				} catch (FileExistsException fee) {
 					// Ignore, we don't overwrite
-				} catch (IllegalArgumentException iae) {
-					// Ignore, source doesn't match
 				}
 				if (!shouldrun) {
 					break run;

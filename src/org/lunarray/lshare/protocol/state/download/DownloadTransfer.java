@@ -2,7 +2,7 @@ package org.lunarray.lshare.protocol.state.download;
 
 import org.lunarray.lshare.protocol.state.userlist.User;
 
-// TODO
+// TODO make
 public class DownloadTransfer {
 	
 	public void close() {

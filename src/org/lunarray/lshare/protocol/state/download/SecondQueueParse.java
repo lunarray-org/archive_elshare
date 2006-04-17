@@ -9,7 +9,6 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /*
- * TODO
  * This does the actual parsing work
  * First get all requesteds
  * requested file is directly requested file
@@ -50,7 +49,7 @@ public class SecondQueueParse implements RunnableTask {
 			for (IncompleteFile i: manager.getQueue()) {
 				available.addAll(i.getSources());
 			}
-			for (DownloadTransfer t: manager.getTransfers()) {
+			for (DownloadHandler t: manager.getTransfers()) {
 				available.remove(t.getUser());
 			}
 
