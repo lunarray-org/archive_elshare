@@ -3,6 +3,7 @@ package org.lunarray.lshare.protocol.state.download;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.lunarray.lshare.protocol.Controls;
@@ -45,24 +46,37 @@ public class DownloadManager implements RunnableTask {
 	private Controls controls;
 	private DownloadFileManager filemanager;
 	private boolean shouldrun;
+	private ArrayList<DownloadTransfer> transfers;
 
 	public DownloadManager(Controls c) {
 		controls = c;
 		
+		transfers = new ArrayList<DownloadTransfer>();
 		tempqueue = new LinkedBlockingQueue<QueuedItem>();
 		queue = new ArrayList<IncompleteFile>();
 		filemanager = new DownloadFileManager(c);
-		controls.getTasks().backgroundTask(this);
 		
 		for (IncompleteFile f: filemanager.getIncompleteFiles()) {
 			queue.add(f);
 		}
-		
 		// TODO directly request these from second queue parser
+		
+		controls.getTasks().backgroundTask(this);
+	}
+	
+	protected List<DownloadTransfer> getTransfers() {
+		return transfers;
+	}
+	
+	protected List<IncompleteFile> getQueue() {
+		return queue;
 	}
 	
 	public void close() {
 		shouldrun = false;
+		for (DownloadTransfer t: transfers) {
+			t.close();
+		}
 		filemanager.close();
 	}
 	

@@ -1,14 +1,15 @@
 package org.lunarray.lshare.protocol.state.download;
 
-import java.net.InetAddress;
+import org.lunarray.lshare.protocol.state.userlist.User;
 
 // TODO
 public class DownloadTransfer {
-
-	private InetAddress address;
 	
-	public InetAddress getAddress() {
-		return address;
+	public void close() {
+		
 	}
 	
+	public User getUser() {
+		return null;
+	}
 }
