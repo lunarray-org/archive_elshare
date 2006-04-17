@@ -5,6 +5,8 @@ import java.util.TreeMap;
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
+import org.lunarray.lshare.protocol.state.download.DownloadTransfer;
+import org.lunarray.lshare.protocol.state.download.QueueStatus;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
@@ -15,15 +17,37 @@ public class IncompleteFile {
 	private IncompleteFileSettings settings;
 	private Controls controls;
 	private TreeMap<User, RemoteFile> sources;
+	private TreeMap<User, DownloadTransfer> transfers;
+	private QueueStatus status;
 	
 	public IncompleteFile(IncompleteFileSettings s, Controls c) {
 		settings = s;
 		controls = c;
 		sources = new TreeMap<User, RemoteFile>();
 		file = new ChunkedFile(settings);
+		transfers = new TreeMap<User, DownloadTransfer>();
+		status = QueueStatus.QUEUED;
 	}
 	
-	protected void addSource(User u, RemoteFile f) throws IllegalArgumentException {
+	public QueueStatus getStatus() {
+		return status;
+	}
+	
+	public void setStatus(QueueStatus s) {
+		status = s;
+	}
+	
+	public boolean canDownloadFromUser(User u) {
+		if (sources.containsKey(u)) {
+			return !transfers.containsKey(u);
+		} else {
+			return false;
+		}
+	}
+	
+	// TODO init transfers
+	
+	public void addSource(User u, RemoteFile f) throws IllegalArgumentException {
 		if (f.getSize() == getSize()) {
 			if (hash.isEmpty()) {
 				hash = f.getHash();
@@ -41,7 +65,7 @@ public class IncompleteFile {
 		}
 	}
 	
-	protected void removeSource(User u) {
+	public void removeSource(User u) {
 		if (sources.containsKey(u)) {
 			sources.remove(u);
 		}
@@ -71,14 +95,18 @@ public class IncompleteFile {
 	protected void close() {
 		// Close file
 		file.close();
-		
-		settings.setHash(hash);
-		
-		for (User u: sources.keySet()) {
-			RemoteFile f = sources.get(u);
+
+		if (file.isFinished()) {
+			settings.removeFile();
+		} else {
+			settings.setHash(hash);
 			
-			if (u.isBuddy()) {
-				settings.setSource(u.getChallenge(), f.getPath(), f.getName());
+			for (User u: sources.keySet()) {
+				RemoteFile f = sources.get(u);
+				
+				if (u.isBuddy()) {
+					settings.setSource(u.getChallenge(), f.getPath(), f.getName());
+				}
 			}
 		}
 	}

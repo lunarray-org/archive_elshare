@@ -1,13 +1,17 @@
 package org.lunarray.lshare.protocol.state.download;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.state.download.file.DownloadFileManager;
-import org.lunarray.lshare.protocol.state.download.file.FirstQueueParse;
+import org.lunarray.lshare.protocol.state.download.file.FileExistsException;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /*
  * TODO rewrite!
@@ -34,52 +38,85 @@ import org.lunarray.lshare.protocol.state.userlist.User;
  11- cleanup when kicked
  * @author Pal Hargitai
  */
-public class DownloadManager {
+public class DownloadManager implements RunnableTask {
 
+	private LinkedBlockingQueue<QueuedItem> tempqueue;
 	private ArrayList<IncompleteFile> queue;
 	private Controls controls;
-	private FirstQueueParse fparse;
 	private DownloadFileManager filemanager;
+	private boolean shouldrun;
 
 	public DownloadManager(Controls c) {
 		controls = c;
 		
+		tempqueue = new LinkedBlockingQueue<QueuedItem>();
 		queue = new ArrayList<IncompleteFile>();
 		filemanager = new DownloadFileManager(c);
+		controls.getTasks().backgroundTask(this);
 		
-		fparse = new FirstQueueParse(this, filemanager);
-		controls.getTasks().backgroundTask(fparse);
-		
-		/*
-		 * TODO Init from back to stopped.
-		 * 
-		 * TODO directly request these from second queue parser
-		 */
-	}
-	
-	/*
-	 * TODO get kicked by a finished transfer
-	 * this should kick the second queue parser
-	 * 
-	 * TODO on user signon, kick second queue parser too
-	 */
-	
-	public void enqueue(IncompleteFile f) {		
-		if (!queue.contains(f)) {
-			Controls.getLogger().fine("Enqueued file.");
+		for (IncompleteFile f: filemanager.getIncompleteFiles()) {
 			queue.add(f);
 		}
-		// TODO kick for checks
+		
+		// TODO directly request these from second queue parser
+	}
+	
+	public void close() {
+		shouldrun = false;
+		filemanager.close();
+	}
+	
+	public void enqueue(RemoteFile f, User u, File todir) {
+		tempqueue.add(new QueuedItem(f, u, todir));
 	}
 	
 	public void enqueue(RemoteFile f, User u) {
-		//fparse.toParse(f, u, settings.getDownloadDirectory());
+		enqueue(f, u, controls.getSettings().getDownloadSettings().
+				getDownloadDirectory());
 	}
 	
-	public void addSource(RemoteFile f, IncompleteFile i, User u) {
-		if (queue.contains(i)) {
-			//i.addSource(u, f);
+	// TODO put in new class
+	public void runTask(Controls c) {
+		run: {
+			while (true) {
+				try {
+					QueuedItem i = tempqueue.take();
+					
+					if (i.getFile().isDirectory()) {
+						// TODO recurse
+					} else {
+						// is file
+						File f = i.getTargetFile();
+						
+						IncompleteFile inc;
+						if (filemanager.fileExists(f)) {
+							inc = filemanager.getFile(f);
+						} else {
+							inc = filemanager.newFile(f, i.getFile().
+									getSize());
+						}
+						
+						if (inc.matches(i.getFile())) {
+							inc.addSource(i.getUser(), i.getFile());
+							// If adding source fails, don't add to queue
+							if (!queue.contains(inc)) {
+								queue.add(inc);
+							}
+						}
+					}
+				} catch (InterruptedException ie) {
+					// Ignore
+				} catch (FileNotFoundException nffe) {
+					// Ignore, shouldn't happen
+				} catch (FileExistsException fee) {
+					// Ignore, we don't overwrite
+				} catch (IllegalArgumentException iae) {
+					// Ignore, source doesn't match
+				}
+				if (!shouldrun) {
+					break run;
+				}
+			}
 		}
-		// TODO kick for checks
 	}
 }

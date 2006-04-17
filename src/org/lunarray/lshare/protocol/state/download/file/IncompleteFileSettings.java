@@ -17,6 +17,10 @@ public class IncompleteFileSettings {
 		key = k;
 	}
 	
+	public void removeFile() {
+		settings.removeFile(key);
+	}
+	
 	public long getSize() {
 		return settings.getFileSize(key);
 	}

@@ -1,5 +1,7 @@
 package org.lunarray.lshare.protocol.state.download;
 
+import java.io.File;
+
 import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.settings.RawSettings;
 
@@ -41,6 +43,10 @@ public class DownloadSettings {
 	
 	public DownloadSettings(RawSettings r) {
 		settings = r;
+	}
+	
+	public void removeFile(String k) {
+		settings.removeNode(DEFAULT_LOC + DOWNLOAD_LOC + k);
 	}
 	
 	public String[] getFileKeys() {
@@ -103,9 +109,9 @@ public class DownloadSettings {
 		settings.setString(DEFAULT_LOC + DOWNLOAD_LOC, DOWNLOAD_KEY, l);
 	}
 	
-	public String getDownloadDirectory() {
-		return settings.getString(DEFAULT_LOC + DOWNLOAD_LOC, DOWNLOAD_KEY, 
-				System.getProperty("user.dir"));
+	public File getDownloadDirectory() {
+		return new File(settings.getString(DEFAULT_LOC + DOWNLOAD_LOC, 
+				DOWNLOAD_KEY, System.getProperty("user.dir")));
 	}
 	
 	public String[] getSources(String k) {

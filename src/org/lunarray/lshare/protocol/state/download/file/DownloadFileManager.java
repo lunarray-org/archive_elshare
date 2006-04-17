@@ -2,6 +2,7 @@ package org.lunarray.lshare.protocol.state.download.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.TreeMap;
 
 import org.lunarray.lshare.protocol.Controls;
@@ -28,6 +29,16 @@ public class DownloadFileManager {
 			IncompleteFile n = new IncompleteFile(e, controls);
 			
 			files.put(e.getLocalTarget(), n);
+		}
+	}
+	
+	public Collection<IncompleteFile> getIncompleteFiles() {
+		return files.values();
+	}
+	
+	public void close() {
+		for (IncompleteFile f: files.values()) {
+			f.close();
 		}
 	}
 	

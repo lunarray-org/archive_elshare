@@ -27,6 +27,10 @@ public class ChunkedFile {
 		file = settings.getLocalTarget();
 	}
 	
+	public boolean isFinished() {
+		return getTodo() == 0;
+	}
+	
 	public void initFromBack() {
 		size = settings.getSize();
 
