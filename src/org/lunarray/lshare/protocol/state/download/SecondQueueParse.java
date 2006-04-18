@@ -21,8 +21,6 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
  * 
  * get some very infrequent kick to check queue, just to make sure.
  * 
- * TODO request transfers and update incomplete files for it
- * TODO new class for handling file transfers being handled, timeout handler?
  */
 
 public class SecondQueueParse implements RunnableTask {
