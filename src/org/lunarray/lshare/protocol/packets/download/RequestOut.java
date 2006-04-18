@@ -7,6 +7,7 @@ import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.packets.PacketOut;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
 /**
  * Packet 6:<br>
@@ -32,7 +33,10 @@ public class RequestOut extends PacketOut {
 	private User user;
 	private RemoteFile file;
 	
-	public RequestOut(User u, RemoteFile f, long offset) {
+	public RequestOut(User u, RemoteFile f, long offset) throws UserNotFound {
+		if (u.getAddress() == null) {
+			throw new UserNotFound();
+		}
 		user = u;
 		file = f;
 		

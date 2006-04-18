@@ -6,6 +6,7 @@ import org.lunarray.lshare.protocol.packets.download.RequestOut;
 import org.lunarray.lshare.protocol.state.download.file.Chunk;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
 public class DownloadHandler {
 	
@@ -29,8 +30,9 @@ public class DownloadHandler {
 	}
 	
 	public void close() {
-		transfer.close();
-		manager.removeDownloadHandler(this);
+		if (transfer != null) {
+			transfer.close();
+		}
 	}
 	
 	public User getUser() {
@@ -62,8 +64,11 @@ public class DownloadHandler {
 				status = DownloadHandlerStatus.CONNECTING;
 				controls.getTasks().enqueueMultiTask(new DownloadTimeout(this,
 						ro));
+				manager.addDownloadHandler(this);
 			} catch (IllegalAccessException iae) {
 				// No chunk
+			} catch (UserNotFound nfe) {
+				// No user
 			}
 		} else {
 			manager.removeDownloadHandler(this);

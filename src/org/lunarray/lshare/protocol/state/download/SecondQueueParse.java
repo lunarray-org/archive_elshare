@@ -1,11 +1,14 @@
 package org.lunarray.lshare.protocol.state.download;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /*
@@ -31,34 +34,65 @@ public class SecondQueueParse implements RunnableTask {
 	public SecondQueueParse(DownloadManager m) {
 		ischecking = false;
 		manager = m;
+		requests = new ArrayList<IncompleteFile>();
 	}
 	
 	public void directRequest(IncompleteFile inc) {
 		requests.add(inc);
 	}
 	
-	public void runTask(Controls c) {
-		check: {
-			if (ischecking) {
-				break check;
-			} else {
-				ischecking = true;
+	private void download(IncompleteFile f, Controls c, Set<User> available) {
+		for (User u: available) {
+			if (f.canDownloadFromUser(u)) {
+				try {
+					RemoteFile i = f.getSourceFromUser(u);
+					DownloadHandler h = new DownloadHandler(u, i, f, c, manager);
+					h.init();
+				} catch (UserNotFound unf) {
+					// Ignore
+				}
 			}
+		}
+	}
 	
-			TreeSet<User> available = new TreeSet<User>();
-			for (IncompleteFile i: manager.getQueue()) {
-				available.addAll(i.getSources());
+	// TODO make regular task to check
+	public void runTask(Controls c) {
+		while (true) {
+			check: {
+				if (ischecking) {
+					break check;
+				} else {
+					ischecking = true;
+				}
+		
+				TreeSet<User> available = new TreeSet<User>();
+				for (IncompleteFile i: manager.getQueue()) {
+					available.addAll(i.getSources());
+				}
+				for (DownloadHandler t: manager.getTransfers()) {
+					available.remove(t.getUser());
+				}
+				
+				for (IncompleteFile f: requests) {
+					download(f, c, available);
+				}
+				requests.clear();
+				
+				for (IncompleteFile i: manager.getQueue()) {
+					if (i.getStatus() == QueueStatus.QUEUED) {
+						download(i, c, available);
+					}
+				}
+				
+				// TODO checks for regulars
+				
+				ischecking = false;
 			}
-			for (DownloadHandler t: manager.getTransfers()) {
-				available.remove(t.getUser());
-			}
-
-			if (!requests.isEmpty()) {
-				// TODO do requests
-			}
-			// TODO checks for regulars
-			
-			ischecking = false;
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException ie) {
+				// Ignore
+			}		
 		}
 	}
 }

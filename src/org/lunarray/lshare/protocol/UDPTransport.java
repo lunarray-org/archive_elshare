@@ -11,6 +11,7 @@ import org.lunarray.lshare.protocol.packets.InvalidPacket;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
 import org.lunarray.lshare.protocol.packets.PacketOut;
+import org.lunarray.lshare.protocol.packets.download.RequestIn;
 import org.lunarray.lshare.protocol.packets.search.ResultIn;
 import org.lunarray.lshare.protocol.packets.search.SearchIn;
 import org.lunarray.lshare.protocol.packets.user.SignOffIn;
@@ -116,6 +117,9 @@ public class UDPTransport extends Thread {
 							} else if (ResultIn.isType(packet.getData())) {
 								type = "Result";
 								inpack = new ResultIn(packet);
+							} else if (RequestIn.isType(packet.getData())) {
+								type = "Request";
+								inpack = new RequestIn(packet);
 							} else {
 								type = "";
 								inpack = new InvalidPacket();

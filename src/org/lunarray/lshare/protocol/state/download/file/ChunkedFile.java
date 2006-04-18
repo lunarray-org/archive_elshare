@@ -23,8 +23,6 @@ public class ChunkedFile {
 		state = ChunkedFileState.INIT;
 		settings = s;
 		fsem = new Semaphore(1);
-		
-		file = settings.getLocalTarget();
 	}
 	
 	public boolean isFinished() {
@@ -33,7 +31,8 @@ public class ChunkedFile {
 	
 	public void initFromBack() {
 		size = settings.getSize();
-
+		file = settings.getLocalTarget();
+		
 		long begin = 0;
 		for (Long m: settings.getChunks().keySet()) {
 			long mark = m.longValue();
@@ -49,12 +48,14 @@ public class ChunkedFile {
 	}
 	
 	protected void close() {
-		try {
-			fsem.acquire();
-			
+		try {			
 			cleanChunks();
-			
-			access.close();
+
+			fsem.acquire();
+
+			if (access != null) {
+				access.close();
+			}
 		} catch (InterruptedException ie) {
 			// Ignore and go on
 		} catch (IOException ie) {
@@ -169,9 +170,10 @@ public class ChunkedFile {
 		}		
 	}
 	
-	protected void setSize(long s) throws IllegalStateException {
+	protected void initFromFront(File f, long s) throws IllegalStateException {
 		if (state == ChunkedFileState.INIT) {
 			size = s;
+			file = f;
 			
 			Chunk c = new Chunk(this, 0, 0, size);
 			chunks.put(c.getBegin(), c);
@@ -191,6 +193,7 @@ public class ChunkedFile {
 		
 		switch (state) {
 		case INIT:
+			fsem.release();
 			throw new IllegalStateException();
 		case CLOSED:
 			access = new RandomAccessFile(file, "rw");
@@ -200,6 +203,7 @@ public class ChunkedFile {
 		// Should be fine now start writing
 		access.seek(mark);
 		access.write(b);
+		fsem.release();
 	}
 	
 	public long getDone() {

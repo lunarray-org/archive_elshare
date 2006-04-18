@@ -1,7 +1,9 @@
 package org.lunarray.lshare.protocol;
 
+import org.lunarray.lshare.protocol.state.download.DownloadManager;
 import org.lunarray.lshare.protocol.state.search.SearchList;
 import org.lunarray.lshare.protocol.state.sharing.ShareList;
+import org.lunarray.lshare.protocol.state.upload.UploadManager;
 import org.lunarray.lshare.protocol.state.userlist.UserList;
 
 /**
@@ -25,14 +27,19 @@ public class State {
 	 */
 	private SearchList elist;
 	
+	private DownloadManager dman;
+	private UploadManager uman;
+	
 	/**
 	 * Initialises the state.
 	 * @param c The controlls to provide access to the protocol.
 	 */
-	public State(Controls c) {
+	public void init(Controls c) {
 		ulist = new UserList(c);
 		slist = new ShareList(c);
 		elist = new SearchList(c);
+		dman = new DownloadManager(c);
+		uman = new UploadManager(c);
 	}
 	
 	/**
@@ -40,6 +47,8 @@ public class State {
 	 */
 	public void commit() {
 		// Will be used later for download management
+		dman.close();
+		uman.close();
 	}
 	
 	/**
@@ -64,5 +73,13 @@ public class State {
 	 */
 	public SearchList getSearchList() {
 		return elist;
+	}
+	
+	public DownloadManager getDownloadManager() {
+		return dman;
+	}
+	
+	public UploadManager getUploadManager() {
+		return uman;
 	}
 }

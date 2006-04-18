@@ -2,8 +2,11 @@ package org.lunarray.lshare.gui.filelist;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
@@ -11,6 +14,7 @@ import org.lunarray.lshare.gui.MainGUI;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 import com.sun.swing.JTreeTable;
+import com.sun.swing.JTreeTable.TreeTableCellRenderer;
 
 /**
  * Shows a filelist of a specific user. Allows browsing throught that file
@@ -33,7 +37,10 @@ public class FileList extends GUIFrame {
 	 * The table used.
 	 */
 	private JTable table;
-
+	
+	private JTree tree;
+	private LShare lshare;
+	
 	/**
 	 * Constructs a filelist window.
 	 * @param ls The instance of the protocol that is to be used.
@@ -43,6 +50,8 @@ public class FileList extends GUIFrame {
 	public FileList(LShare ls, User u, MainGUI mg) {
 		super(mg);
 		
+		lshare = ls;
+		
 		// Setup model
 		user = u;
 		model = new ListModel(ls.getUserList(), user, this);
@@ -51,6 +60,16 @@ public class FileList extends GUIFrame {
 		table = new JTreeTable(model);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane t = new JScrollPane(table);
+		
+		tree = (TreeTableCellRenderer)table.getCellRenderer(0,0);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent arg0) {
+				if (arg0.getSource() != null) {
+					ListNode n = (ListNode)arg0.getPath().getLastPathComponent();
+					lshare.getDownloadManager().enqueue(n.getEntry(), user);
+				}
+			}
+		});
 		
 		// Setup frame
 		frame.setTitle(getTitle());

@@ -38,7 +38,7 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
  11- cleanup when kicked
  * @author Pal Hargitai
  */
-public class DownloadManager implements RunnableTask {
+public class DownloadManager implements RunnableTask, ExternalDownloadManager {
 
 	private LinkedBlockingQueue<QueuedItem> tempqueue;
 	private ArrayList<IncompleteFile> queue;
@@ -46,6 +46,7 @@ public class DownloadManager implements RunnableTask {
 	private DownloadFileManager filemanager;
 	private boolean shouldrun;
 	private ArrayList<DownloadHandler> transfers;
+	private SecondQueueParse secondqueue;
 
 	public DownloadManager(Controls c) {
 		controls = c;
@@ -54,13 +55,22 @@ public class DownloadManager implements RunnableTask {
 		tempqueue = new LinkedBlockingQueue<QueuedItem>();
 		queue = new ArrayList<IncompleteFile>();
 		filemanager = new DownloadFileManager(c);
+		secondqueue = new SecondQueueParse(this);
+		shouldrun = true;
 		
 		for (IncompleteFile f: filemanager.getIncompleteFiles()) {
 			queue.add(f);
+			secondqueue.directRequest(f);
 		}
-		// TODO directly request these from second queue parser
 		
 		controls.getTasks().backgroundTask(this);
+		controls.getTasks().backgroundTask(secondqueue);
+	}
+	
+	protected void addDownloadHandler(DownloadHandler h) {
+		if (!transfers.contains(h)) {
+			transfers.add(h);
+		}
 	}
 	
 	protected void removeDownloadHandler(DownloadHandler h) {
@@ -75,7 +85,7 @@ public class DownloadManager implements RunnableTask {
 		return transfers;
 	}
 	
-	protected List<IncompleteFile> getQueue() {
+	public List<IncompleteFile> getQueue() {
 		return queue;
 	}
 	
@@ -102,7 +112,6 @@ public class DownloadManager implements RunnableTask {
 			while (true) {
 				try {
 					QueuedItem i = tempqueue.take();
-					
 					if (i.getFile().isDirectory()) {
 						// TODO recurse
 					} else {
@@ -127,6 +136,10 @@ public class DownloadManager implements RunnableTask {
 							if (!queue.contains(inc)) {
 								queue.add(inc);
 							}
+							
+							// Remove >
+							
+							// Remove <
 						}
 					}
 				} catch (InterruptedException ie) {

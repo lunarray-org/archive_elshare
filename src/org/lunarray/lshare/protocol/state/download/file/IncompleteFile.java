@@ -1,5 +1,6 @@
 package org.lunarray.lshare.protocol.state.download.file;
 
+import java.io.File;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -25,6 +26,7 @@ public class IncompleteFile {
 		sources = new TreeMap<User, RemoteFile>();
 		file = new ChunkedFile(settings);
 		status = QueueStatus.QUEUED;
+		hash = Hash.getUnset();
 	}
 	
 	public QueueStatus getStatus() {
@@ -37,6 +39,14 @@ public class IncompleteFile {
 	
 	public Set<User> getSources() {
 		return sources.keySet();
+	}
+	
+	public RemoteFile getSourceFromUser(User u) throws UserNotFound {
+		if (sources.containsKey(u)) {
+			return sources.get(u);
+		} else {
+			throw new UserNotFound();
+		}
 	}
 	
 	public boolean canDownloadFromUser(User u) {
@@ -97,12 +107,10 @@ public class IncompleteFile {
 	protected void close() {
 		// Close file
 		file.close();
-
 		if (file.isFinished()) {
 			settings.removeFile();
 		} else {
 			settings.setHash(hash);
-			
 			for (User u: sources.keySet()) {
 				RemoteFile f = sources.get(u);
 				
@@ -140,8 +148,8 @@ public class IncompleteFile {
 		}
 	}
 	
-	protected void setSize(long s) throws IllegalStateException {
-		file.setSize(s);
+	protected void initFromFront(long s, File f) throws IllegalStateException {
+		file.initFromFront(f, s);
 	}
 	
 	public long getSize() {

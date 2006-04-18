@@ -90,10 +90,11 @@ public class Controls {
 
 		lsgroup = new ThreadGroup("lshare");
 		settings = new Settings(this);
-		state = new State(this);
-		tasks = new Tasks(this);
 		utrans = new UDPTransport(this);
 		tstrans = new TCPSharesTransport(this);
+		tasks = new Tasks(this);
+		state = new State();
+		state.init(this);
 	}
 	
 	/**
@@ -114,7 +115,6 @@ public class Controls {
 		// Send logout
 		SignOffOut soo = new SignOffOut();
 		getUDPTransport().send(soo);
-		
 		
 		getUDPTransport().close();
 		getState().commit();

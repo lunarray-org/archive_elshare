@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.Hash;
+import org.lunarray.lshare.protocol.RemoteFile;
 
 /**
  * The share list for handling shares and files.
@@ -80,7 +81,7 @@ public class ShareList implements ExternalShareList {
 			if (f.getPath().startsWith(shares.get(skey).getPath())) {
 				String rewritten = "." + SEPARATOR + skey + f.getPath().
 						substring(shares.get(skey).getPath().length()).
-						replace(File.pathSeparator, SEPARATOR);
+						replace(File.separator, SEPARATOR);
 				int i = rewritten.lastIndexOf(SEPARATOR);
 				rewritten = rewritten.substring(0, i);
 				return new ShareEntry(f, f.getName(), rewritten, settings);
@@ -145,6 +146,23 @@ public class ShareList implements ExternalShareList {
 			entries.add(new ShareEntry(shares.get(n), n, ".", settings));
 		}
 		return entries;
+	}
+	
+	public File getFileForEntry(RemoteFile f) throws FileNotFoundException {
+		List<ShareEntry> shares = getChildrenIn(f.getPath());
+		
+		for (ShareEntry s: shares) {
+			if (s.getName().equals(f.getName())) {
+				// name matches
+				if (s.getHash().equals(f.getHash()) && s.getSize() == f.
+						getSize()) {
+					// file seems to match
+					return s.getFile();
+				}
+			}
+		}
+		
+		throw new FileNotFoundException();
 	}
 	
 	/**

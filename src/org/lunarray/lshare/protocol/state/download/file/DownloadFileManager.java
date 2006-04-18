@@ -19,6 +19,7 @@ public class DownloadFileManager {
 	public DownloadFileManager(Controls c) {
 		controls = c;
 		settings = controls.getSettings().getDownloadSettings();
+		files = new TreeMap<File, IncompleteFile>();
 		
 		init();
 	}
@@ -27,7 +28,7 @@ public class DownloadFileManager {
 		for (String s: settings.getFileKeys()) {
 			IncompleteFileSettings e = new IncompleteFileSettings(s, settings);
 			IncompleteFile n = new IncompleteFile(e, controls);
-			
+			n.initFromSettings();
 			files.put(e.getLocalTarget(), n);
 		}
 	}
@@ -37,8 +38,8 @@ public class DownloadFileManager {
 	}
 	
 	public void close() {
-		for (IncompleteFile f: files.values()) {
-			f.close();
+		for (File f: files.keySet()) {
+			files.get(f).close();
 		}
 	}
 	
@@ -63,7 +64,7 @@ public class DownloadFileManager {
 			IncompleteFile n = new IncompleteFile(e, controls);
 			
 			try {
-				n.setSize(s);
+				n.initFromFront(s, f);
 				
 				files.put(f, n);
 				return n;

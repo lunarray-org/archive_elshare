@@ -29,7 +29,7 @@ public class QueuedItem {
 	}
 	
 	public File getTargetFile() {
-		return new File(targetdir.getPath() + File.pathSeparator + file.
+		return new File(targetdir.getPath() + File.separator + file.
 				getName());
 	}
 }
