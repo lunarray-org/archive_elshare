@@ -1,5 +1,7 @@
 package org.lunarray.lshare.protocol.state.download;
 
+import java.io.IOException;
+
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.packets.download.RequestOut;
@@ -32,6 +34,9 @@ public class DownloadHandler {
 	public void close() {
 		if (transfer != null) {
 			transfer.close();
+			if (chunk.isLocked()) {
+				chunk.unlock();
+			}
 		}
 	}
 	
@@ -43,7 +48,59 @@ public class DownloadHandler {
 		return status;
 	}
 	
-	// TODO handle response
+	public boolean canHandle(User u, FileResponse f) {
+		if (u.equals(user)) {
+			if (f.getHash().equals(remote.getHash())) {
+				if (chunk.getMark() == f.getOffset()) {
+					if (f.getName().equals(remote.getName()) &&
+							f.getPath().equals(remote.getPath())) {
+						return true;
+					} else {
+						System.out.println("name and path didn't match");
+						return false;
+					}
+				} else {
+					System.out.println("offset didn't match");
+					return false;
+				}
+			} else {
+				System.out.println("hash didn't match");
+				return false;
+			}
+		} else {
+			System.out.println("user didn't match");
+			return false;
+		}
+	}
+	
+	public void handle(User u, FileResponse f) {
+		if (canHandle(u, f)) {
+			transfer = new DownloadTransfer(chunk, u, this, f.getPort());
+			try {
+				transfer.init();
+				status = DownloadHandlerStatus.RUNNING;
+				controls.getTasks().backgroundTask(transfer);
+			} catch (IOException ie) {
+				// Something went wrong, cleanup
+				Controls.getLogger().warning("Error connecting to user.");
+				close();
+				manager.removeDownloadHandler(this);
+			}
+		}
+	}
+	
+	protected void done() {
+		close();
+		manager.removeDownloadHandler(this);
+		
+		if (chunk.getFile().isFinished()) {
+			// TODO Check hash
+			manager.removeFromQueue(incomplete);
+			Controls.getLogger().info("Transfer done.");
+		} else {
+			init(); // I'm guessing this state should allow this, unsure.
+		}
+	}
 	
 	public void init() {
 		if (incomplete.getSources().contains(user)) {
@@ -60,6 +117,7 @@ public class DownloadHandler {
 			try {
 				chunk = incomplete.getChunk();
 				RequestOut ro = new RequestOut(user, remote, chunk.getMark());
+				chunk.lock();
 				controls.getUDPTransport().send(ro);
 				status = DownloadHandlerStatus.CONNECTING;
 				controls.getTasks().enqueueMultiTask(new DownloadTimeout(this,

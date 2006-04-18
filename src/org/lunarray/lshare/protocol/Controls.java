@@ -81,7 +81,7 @@ public class Controls {
 		Logger ls = Logger.getLogger("lshare");
 		// >TEMP
 		Handler hb = new ConsoleHandler();
-		hb.setLevel(Level.ALL);
+		hb.setLevel(Level.FINER);
 		hb.setFormatter(new SimpleFormatter());
 		ls.addHandler(hb);
 		// <TEMP

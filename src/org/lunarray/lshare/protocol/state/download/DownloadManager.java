@@ -67,6 +67,12 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
 		controls.getTasks().backgroundTask(secondqueue);
 	}
 	
+	protected void removeFromQueue(IncompleteFile f) {
+		if (queue.contains(f)) {
+			queue.remove(f);
+		}
+	}
+	
 	protected void addDownloadHandler(DownloadHandler h) {
 		if (!transfers.contains(h)) {
 			transfers.add(h);
@@ -79,7 +85,23 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
 		}
 	}
 	
-	// TODO get response
+	public void handleResponse(FileResponse f, User u) {
+		handle: {
+			DownloadHandler h = null;
+			search: {
+				for (DownloadHandler i: transfers) {
+					if (i.canHandle(u, f)) {
+						h = i;
+						break search;
+					}
+				}
+				Controls.getLogger().finer("Could not handle response");
+				break handle;
+			}
+			h.handle(u, f);
+		}		
+		Controls.getLogger().finer("Received response.");
+	}
 	
 	public List<DownloadHandler> getTransfers() {
 		return transfers;

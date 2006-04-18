@@ -3,8 +3,10 @@ package org.lunarray.lshare.protocol.state.upload;
 import java.io.IOException;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.packets.download.ResponseOut;
 import org.lunarray.lshare.protocol.state.download.DownloadRequest;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 public class UploadHandler implements RunnableTask {
@@ -26,20 +28,34 @@ public class UploadHandler implements RunnableTask {
 					getFileForEntry(request), request.getOffset(), manager);
 
 			int port = transfer.init();
+			Controls.getLogger().finer("Opened transfer on: " + Integer.
+					valueOf(port).toString());
 			c.getTasks().backgroundTask(transfer);
-			// Sleep for a while
-			try {
-				Thread.sleep(1500);
-			} catch (InterruptedException ie) {
-				// Ignore
-			}
-			if (!transfer.isRunning()) {
-				transfer.close();
-			}
 			
-			// TODO send response
-			port++;
-			user.getAddress();
+			// Send response
+			try {
+				ResponseOut ro = new ResponseOut(request, port, user, request.
+						getOffset());
+				c.getUDPTransport().send(ro);
+				
+				// Sleep for a while
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException ie) {
+					// Ignore
+				}
+				if (!transfer.isDone()) {
+					if (!transfer.isRunning()) {
+						Controls.getLogger().warning("Transfer not running.");
+						transfer.close();
+					}
+				} else {
+					Controls.getLogger().info("Transfer done.");
+				}
+				
+			} catch (UserNotFound nfu) {
+				// Ignore this
+			}			
 		} catch (IOException ie) {
 			transfer.close();
 			Controls.getLogger().warning("Could transfer!");

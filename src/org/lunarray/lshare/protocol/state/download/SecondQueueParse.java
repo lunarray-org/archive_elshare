@@ -82,12 +82,10 @@ public class SecondQueueParse implements RunnableTask {
 					}
 				}
 				
-				// TODO checks for regulars
-				
 				ischecking = false;
 			}
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(2000);
 			} catch (InterruptedException ie) {
 				// Ignore
 			}		

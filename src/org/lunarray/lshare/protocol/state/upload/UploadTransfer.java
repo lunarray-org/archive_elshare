@@ -20,11 +20,13 @@ public class UploadTransfer implements RunnableTask {
 	private Socket socket;
 	private ServerSocket server;
 	private UploadManager manager;
+	private boolean done;
 	
 	public UploadTransfer(File f, long o, UploadManager m) {
 		file = f;
 		manager = m;
 		offset = o;
+		done = false;
 	}
 	
 	public int init() throws IOException {
@@ -55,6 +57,10 @@ public class UploadTransfer implements RunnableTask {
 		}
 	}
 	
+	public boolean isDone() {
+		return done;
+	}
+	
 	public boolean isRunning() {
 		if (socket == null) {
 			return false;
@@ -83,6 +89,7 @@ public class UploadTransfer implements RunnableTask {
 				socket = server.accept();
 				manager.addTransfer(this);
 				OutputStream ostream = socket.getOutputStream();
+				
 				while (istream.available() > 0) {
 					int totrans = Math.min(1024, istream.available());
 					byte[] dat = new byte[totrans];
@@ -95,6 +102,7 @@ public class UploadTransfer implements RunnableTask {
 				break run;
 			}
 		}
+		done = true;
 		manager.removeTransfer(this);
 	}
 }

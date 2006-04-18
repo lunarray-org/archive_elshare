@@ -31,20 +31,18 @@ import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 public class RequestOut extends PacketOut {
 	
 	private User user;
-	private RemoteFile file;
 	
 	public RequestOut(User u, RemoteFile f, long offset) throws UserNotFound {
 		if (u.getAddress() == null) {
 			throw new UserNotFound();
 		}
 		user = u;
-		file = f;
 		
-		byte[] path = PacketUtil.encode(file.getPath());
-		byte[] name = PacketUtil.encode(file.getName());
+		byte[] path = PacketUtil.encode(f.getPath());
+		byte[] name = PacketUtil.encode(f.getName());
 		byte nlen = (byte)Math.min(name.length, 255);
 		
-		data = new byte[1 + 8 + 8 + 16 + 2 + path.length + 1 + nlen];
+		data = new byte[1 + 8 + 8 + Hash.length() + 2 + path.length + 1 + nlen];
 		
 		data[0] = RequestIn.getType();
 		

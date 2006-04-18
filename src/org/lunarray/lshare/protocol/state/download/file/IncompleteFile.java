@@ -57,8 +57,6 @@ public class IncompleteFile {
 		}
 	}
 	
-	// TODO init transfers
-	
 	public void addSource(User u, RemoteFile f) throws IllegalArgumentException {
 		if (f.getSize() == getSize()) {
 			if (hash.isEmpty()) {

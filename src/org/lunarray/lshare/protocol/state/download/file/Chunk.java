@@ -23,7 +23,7 @@ public class Chunk {
 		if (mark < end) {
 			int writable = Long.valueOf(Math.min(len, getTodo())).intValue();
 			file.write(d, writable, mark);
-			begin += writable;
+			mark += writable;
 		}
 	}
 
