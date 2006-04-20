@@ -10,24 +10,60 @@ import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
+// TODO when chunk is unlocked, check state of incoming file
+/**
+ * A download handler for handling the setup and cleanup of a single transfer.
+ * @author Pal Hargitai
+ */
 public class DownloadHandler {
-
+    /**
+     * The user to download from.
+     */
     private User user;
 
+    /**
+     * The remote file to download.
+     */
     private RemoteFile remote;
 
+    /**
+     * The incomplete file to download to.
+     */
     private IncompleteFile incomplete;
 
+    /**
+     * The controls to the protocol.
+     */
     private Controls controls;
 
+    /**
+     * The download manager
+     */
     private DownloadManager manager;
 
+    /**
+     * The transfer.
+     */
     private DownloadTransfer transfer;
 
+    /**
+     * The chunk ot download to.
+     */
     private Chunk chunk;
 
+    /**
+     * The status of the handler.
+     */
     private DownloadHandlerStatus status;
 
+    /**
+     * Constructs a download handler.
+     * @param u The user to download from.
+     * @param f The remote entry to download.
+     * @param i The incomplete file to download to.
+     * @param c The controls of the protocol.
+     * @param m The manager.
+     */
     public DownloadHandler(User u, RemoteFile f, IncompleteFile i, Controls c,
             DownloadManager m) {
         user = u;
@@ -38,6 +74,9 @@ public class DownloadHandler {
         status = DownloadHandlerStatus.INIT;
     }
 
+    /**
+     * Close down the handler and transfer.
+     */
     public void close() {
         if (transfer != null) {
             transfer.close();
@@ -47,14 +86,20 @@ public class DownloadHandler {
         }
     }
 
+    /**
+     * Get the user that is to be used in this transfer.
+     * @return The user.
+     */
     public User getUser() {
         return user;
     }
 
-    protected DownloadHandlerStatus getStatus() {
-        return status;
-    }
-
+    /**
+     * Check if the given response is valid.
+     * @param u The user that the response came from.
+     * @param f The file response.
+     * @return True if this is a valid repsonse.
+     */
     public boolean canHandle(User u, FileResponse f) {
         if (u.equals(user)) {
             if (f.getHash().equals(remote.getHash())) {
@@ -80,6 +125,11 @@ public class DownloadHandler {
         }
     }
 
+    /**
+     * Handle the response from the user.
+     * @param u The user from which the response came.
+     * @param f The response to handle.
+     */
     public void handle(User u, FileResponse f) {
         if (canHandle(u, f)) {
             transfer = new DownloadTransfer(chunk, u, this, f.getPort());
@@ -96,19 +146,9 @@ public class DownloadHandler {
         }
     }
 
-    protected void done() {
-        close();
-        manager.removeDownloadHandler(this);
-
-        if (chunk.getFile().isFinished()) {
-            // TODO Check hash
-            manager.removeFromQueue(incomplete);
-            Controls.getLogger().info("Transfer done.");
-        } else {
-            init(); // I'm guessing this state should allow this, unsure.
-        }
-    }
-
+    /**
+     * Initialise the handler.
+     */
     public void init() {
         if (incomplete.getSources().contains(user)) {
             // Is a valid source
@@ -137,6 +177,30 @@ public class DownloadHandler {
             }
         } else {
             manager.removeDownloadHandler(this);
+        }
+    }
+
+    /**
+     * Get the status of the handler.
+     * @return The status of the handler.
+     */
+    public DownloadHandlerStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * The transfer is done transferring. Clean up.
+     */
+    protected void done() {
+        close();
+        manager.removeDownloadHandler(this);
+
+        if (chunk.getFile().isFinished()) {
+            // TODO Check hash
+            manager.removeFromQueue(incomplete);
+            Controls.getLogger().info("Transfer done.");
+        } else {
+            init(); // I'm guessing this state should allow this, unsure.
         }
     }
 }

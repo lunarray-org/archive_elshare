@@ -15,6 +15,7 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /*
+ * TODO rewrite to handle a per user queue
  1- add to queue
 
  2- handle prelim queue to perm queue
@@ -36,24 +37,52 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
  10- do 3
 
  11- cleanup when kicked
+ */
+
+/**
+ * A manager for downloads.
  * @author Pal Hargitai
  */
 public class DownloadManager implements RunnableTask, ExternalDownloadManager {
-
+    /**
+     * A temporary queue whose items should be processed to the file queue.
+     */
     private LinkedBlockingQueue<QueuedItem> tempqueue;
 
+    /**
+     * The queue that may be directly processed.
+     */
     private ArrayList<IncompleteFile> queue;
 
+    /**
+     * The controls of the protocol.
+     */
     private Controls controls;
 
+    /**
+     * The file manager.
+     */
     private DownloadFileManager filemanager;
 
+    /**
+     * A synchronisation variable. True if this class should run, false if not.
+     */
     private boolean shouldrun;
 
+    /**
+     * The known transfers.
+     */
     private ArrayList<DownloadHandler> transfers;
 
+    /**
+     * The parser of the queue that initialises the downloads.
+     */
     private SecondQueueParse secondqueue;
 
+    /**
+     * Constructs the download manager.
+     * @param c The controls to the protocol.
+     */
     public DownloadManager(Controls c) {
         controls = c;
 
@@ -73,24 +102,11 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         controls.getTasks().backgroundTask(secondqueue);
     }
 
-    protected void removeFromQueue(IncompleteFile f) {
-        if (queue.contains(f)) {
-            queue.remove(f);
-        }
-    }
-
-    protected void addDownloadHandler(DownloadHandler h) {
-        if (!transfers.contains(h)) {
-            transfers.add(h);
-        }
-    }
-
-    protected void removeDownloadHandler(DownloadHandler h) {
-        if (transfers.contains(h)) {
-            transfers.remove(h);
-        }
-    }
-
+    /**
+     * Handle a response from a user.
+     * @param f The response.
+     * @param u The user.
+     */
     public void handleResponse(FileResponse f, User u) {
         handle: {
             DownloadHandler h = null;
@@ -109,14 +125,23 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         Controls.getLogger().finer("Received response.");
     }
 
+    /**
+     * Get all known transfers.
+     */
     public List<DownloadHandler> getTransfers() {
         return transfers;
     }
 
+    /**
+     * Gets all queued files.
+     */
     public List<IncompleteFile> getQueue() {
         return queue;
     }
 
+    /**
+     * Close the manager.
+     */
     public void close() {
         shouldrun = false;
         for (DownloadHandler t : transfers) {
@@ -125,17 +150,39 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         filemanager.close();
     }
 
-    public void enqueue(RemoteFile f, User u, File todir) {
-        tempqueue.add(new QueuedItem(f, u, todir));
+    /**
+     * Enqueues a file to a target directory.
+     * @param f The file to enqueue.
+     * @param u The user where the file resides.
+     * @param todir The directory to download to.
+     * @throws IllegalArgumentException Thrown if specified file is not a
+     * directory.
+     */
+    public void enqueue(RemoteFile f, User u, File todir)
+            throws IllegalArgumentException {
+        if (todir.isDirectory()) {
+            tempqueue.add(new QueuedItem(f, u, todir));
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
+    /**
+     * Enqueus a file to the default directory.
+     * @param f The
+     * @param u The user to download from.
+     */
     public void enqueue(RemoteFile f, User u) {
         enqueue(f, u, controls.getSettings().getDownloadSettings()
                 .getDownloadDirectory());
     }
 
-    // TODO put in new class
+    /**
+     * Runs the first time checking of files.
+     * @param c The controls of the protocol.
+     */
     public void runTask(Controls c) {
+        // TODO put in new class
         run: {
             while (true) {
                 try {
@@ -163,10 +210,6 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                             if (!queue.contains(inc)) {
                                 queue.add(inc);
                             }
-
-                            // Remove >
-
-                            // Remove <
                         }
                     }
                 } catch (InterruptedException ie) {
@@ -180,6 +223,36 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                     break run;
                 }
             }
+        }
+    }
+
+    /**
+     * Removes a file from the queue.
+     * @param f The file to remove from the queue.
+     */
+    protected void removeFromQueue(IncompleteFile f) {
+        if (queue.contains(f)) {
+            queue.remove(f);
+        }
+    }
+
+    /**
+     * Adds a handler.
+     * @param h The handler to add.
+     */
+    protected void addDownloadHandler(DownloadHandler h) {
+        if (!transfers.contains(h)) {
+            transfers.add(h);
+        }
+    }
+
+    /**
+     * Removes a handler.
+     * @param h The handler to remove.
+     */
+    protected void removeDownloadHandler(DownloadHandler h) {
+        if (transfers.contains(h)) {
+            transfers.remove(h);
         }
     }
 }
