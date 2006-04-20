@@ -5,8 +5,8 @@ import org.lunarray.lshare.protocol.RemoteFile;
 
 public class QueuedRemote extends RemoteFile {
 
-	public QueuedRemote(String path, String name, Hash h, long size) {
-		super(path, name, h, 1, size);
-	}
-	
+    public QueuedRemote(String path, String name, Hash h, long size) {
+        super(path, name, h, 1, size);
+    }
+
 }

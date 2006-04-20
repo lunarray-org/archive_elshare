@@ -9,7 +9,8 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
-/** An outgoing response for a request for a file transfer.<br>
+/**
+ * An outgoing response for a request for a file transfer.<br>
  * Packet 7:<br>
  * Purpose:<br>
  * Response to file transfer, transfer details<br>
@@ -27,54 +28,57 @@ import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
  * @author Pal Hargitai
  */
 public class ResponseOut extends PacketOut {
-	/** The user that this packet is to be sent to.
-	 */
-	private User user;
-	
-	/** Constructs an outgoing response for a request for file transfer.
-	 * @param r The remote entry.
-	 * @param port The port at which the transfer may occur.
-	 * @param u The user it is to be sent to.
-	 * @param offset The offset of the file.
-	 * @throws UserNotFound Thrown if the user cannot be found.
-	 */
-	public ResponseOut(RemoteFile r, int port, User u, long offset)
-			throws UserNotFound {
-		// Construct data
-		if (u.getAddress() == null) {
-			throw new UserNotFound();
-		}
-		user = u;
-		
-		byte[] path = PacketUtil.encode(r.getPath());
-		byte[] name = PacketUtil.encode(r.getName());
-		byte nlen = (byte)Math.min(name.length, 255);
-		
-		data = new byte[1 + 8 + 8 + 2 + Hash.length() + 2 + path.length + 1 + 
-				nlen];
-		
-		data[0] = ResponseIn.getType();
-		
-		PacketUtil.longToByteArray(offset, data, 1);
-		PacketUtil.longToByteArray(r.getSize(), data, 9);
-		
-		PacketUtil.shortUToByteArray(port, data, 17);
-		
-		PacketUtil.injectByteArrayIntoByteArray(r.getHash().getBytes(), Hash.
-				length(), data, 19);
-		PacketUtil.shortUToByteArray(path.length, data, 19 + Hash.length());
-		PacketUtil.injectByteArrayIntoByteArray(path, path.length, data, 21 +
-				Hash.length());
-		data[21 + Hash.length() + path.length] = nlen;
-		PacketUtil.injectByteArrayIntoByteArray(name, nlen, data, 22 + Hash.
-				length() + path.length);
-	}
-	
-	@Override
-	/** Gets the target for the packet.
-	 * @return The target for the packet.
-	 */
-	public InetAddress getTarget() {
-		return user.getAddress();
-	}
+    /**
+     * The user that this packet is to be sent to.
+     */
+    private User user;
+
+    /**
+     * Constructs an outgoing response for a request for file transfer.
+     * @param r The remote entry.
+     * @param port The port at which the transfer may occur.
+     * @param u The user it is to be sent to.
+     * @param offset The offset of the file.
+     * @throws UserNotFound Thrown if the user cannot be found.
+     */
+    public ResponseOut(RemoteFile r, int port, User u, long offset)
+            throws UserNotFound {
+        // Construct data
+        if (u.getAddress() == null) {
+            throw new UserNotFound();
+        }
+        user = u;
+
+        byte[] path = PacketUtil.encode(r.getPath());
+        byte[] name = PacketUtil.encode(r.getName());
+        byte nlen = (byte) Math.min(name.length, 255);
+
+        data = new byte[1 + 8 + 8 + 2 + Hash.length() + 2 + path.length + 1
+                + nlen];
+
+        data[0] = ResponseIn.getType();
+
+        PacketUtil.longToByteArray(offset, data, 1);
+        PacketUtil.longToByteArray(r.getSize(), data, 9);
+
+        PacketUtil.shortUToByteArray(port, data, 17);
+
+        PacketUtil.injectByteArrayIntoByteArray(r.getHash().getBytes(), Hash
+                .length(), data, 19);
+        PacketUtil.shortUToByteArray(path.length, data, 19 + Hash.length());
+        PacketUtil.injectByteArrayIntoByteArray(path, path.length, data,
+                21 + Hash.length());
+        data[21 + Hash.length() + path.length] = nlen;
+        PacketUtil.injectByteArrayIntoByteArray(name, nlen, data, 22
+                + Hash.length() + path.length);
+    }
+
+    @Override
+    /**
+     * Gets the target for the packet.
+     * @return The target for the packet.
+     */
+    public InetAddress getTarget() {
+        return user.getAddress();
+    }
 }

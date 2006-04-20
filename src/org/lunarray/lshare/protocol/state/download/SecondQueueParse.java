@@ -25,70 +25,72 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 public class SecondQueueParse implements RunnableTask {
 
-	private boolean ischecking;
-	private ArrayList<IncompleteFile> requests;
-	private DownloadManager manager;
-	
-	public SecondQueueParse(DownloadManager m) {
-		ischecking = false;
-		manager = m;
-		requests = new ArrayList<IncompleteFile>();
-	}
-	
-	public void directRequest(IncompleteFile inc) {
-		requests.add(inc);
-	}
-	
-	private void download(IncompleteFile f, Controls c, Set<User> available) {
-		for (User u: available) {
-			if (f.canDownloadFromUser(u)) {
-				try {
-					RemoteFile i = f.getSourceFromUser(u);
-					DownloadHandler h = new DownloadHandler(u, i, f, c, manager);
-					h.init();
-				} catch (UserNotFound unf) {
-					// Ignore
-				}
-			}
-		}
-	}
-	
-	// TODO make regular task to check
-	public void runTask(Controls c) {
-		while (true) {
-			check: {
-				if (ischecking) {
-					break check;
-				} else {
-					ischecking = true;
-				}
-		
-				TreeSet<User> available = new TreeSet<User>();
-				for (IncompleteFile i: manager.getQueue()) {
-					available.addAll(i.getSources());
-				}
-				for (DownloadHandler t: manager.getTransfers()) {
-					available.remove(t.getUser());
-				}
-				
-				for (IncompleteFile f: requests) {
-					download(f, c, available);
-				}
-				requests.clear();
-				
-				for (IncompleteFile i: manager.getQueue()) {
-					if (i.getStatus() == QueueStatus.QUEUED) {
-						download(i, c, available);
-					}
-				}
-				
-				ischecking = false;
-			}
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException ie) {
-				// Ignore
-			}		
-		}
-	}
+    private boolean ischecking;
+
+    private ArrayList<IncompleteFile> requests;
+
+    private DownloadManager manager;
+
+    public SecondQueueParse(DownloadManager m) {
+        ischecking = false;
+        manager = m;
+        requests = new ArrayList<IncompleteFile>();
+    }
+
+    public void directRequest(IncompleteFile inc) {
+        requests.add(inc);
+    }
+
+    private void download(IncompleteFile f, Controls c, Set<User> available) {
+        for (User u : available) {
+            if (f.canDownloadFromUser(u)) {
+                try {
+                    RemoteFile i = f.getSourceFromUser(u);
+                    DownloadHandler h = new DownloadHandler(u, i, f, c, manager);
+                    h.init();
+                } catch (UserNotFound unf) {
+                    // Ignore
+                }
+            }
+        }
+    }
+
+    // TODO make regular task to check
+    public void runTask(Controls c) {
+        while (true) {
+            check: {
+                if (ischecking) {
+                    break check;
+                } else {
+                    ischecking = true;
+                }
+
+                TreeSet<User> available = new TreeSet<User>();
+                for (IncompleteFile i : manager.getQueue()) {
+                    available.addAll(i.getSources());
+                }
+                for (DownloadHandler t : manager.getTransfers()) {
+                    available.remove(t.getUser());
+                }
+
+                for (IncompleteFile f : requests) {
+                    download(f, c, available);
+                }
+                requests.clear();
+
+                for (IncompleteFile i : manager.getQueue()) {
+                    if (i.getStatus() == QueueStatus.QUEUED) {
+                        download(i, c, available);
+                    }
+                }
+
+                ischecking = false;
+            }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ie) {
+                // Ignore
+            }
+        }
+    }
 }

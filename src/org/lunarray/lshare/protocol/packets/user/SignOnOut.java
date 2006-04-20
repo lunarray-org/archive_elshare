@@ -7,7 +7,8 @@ import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.PacketOut;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 
-/** An outgoing signon packet.<br>
+/**
+ * An outgoing signon packet.<br>
  * Purpose:<br>
  * Signon packet.<br>
  * UDP broadcast.<br>
@@ -23,39 +24,41 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
  * @author Pal Hargitai
  */
 public class SignOnOut extends PacketOut {
-	/** Constructs an outgoing sign on packet.
-	 * @param c The controls to the rest of the protocol.
-	 */
-	public SignOnOut(Controls c) {
-		String username = c.getSettings().getUsername();
-		byte[] un = PacketUtil.encode(username);
-		int unlen = Math.min(un.length, 255);
+    /**
+     * Constructs an outgoing sign on packet.
+     * @param c The controls to the rest of the protocol.
+     */
+    public SignOnOut(Controls c) {
+        String username = c.getSettings().getUsername();
+        byte[] un = PacketUtil.encode(username);
+        int unlen = Math.min(un.length, 255);
 
-		String challenge = c.getSettings().getChallenge();
-		byte[] uc = PacketUtil.encode(challenge);
-		int uclen = Math.min(uc.length, 255);
+        String challenge = c.getSettings().getChallenge();
+        byte[] uc = PacketUtil.encode(challenge);
+        int uclen = Math.min(uc.length, 255);
 
-		int len = 1 + 1 + unlen + 1 + uclen;
-		
-		data = new byte[len];
-		data[0] = SignOnIn.getType();
-		
-		data[1] = Integer.valueOf(unlen).byteValue();
-		PacketUtil.injectByteArrayIntoByteArray(un, unlen, data, 2);
-		
-		data[2 + unlen] = Integer.valueOf(uclen).byteValue();
-		PacketUtil.injectByteArrayIntoByteArray(uc, uclen, data, 3 + unlen);
-	}
-	
-	@Override
-	/** Gets the target to which this packet is intended.
-	 * @return The address to which this packet is targeted.
-	 */
-	public InetAddress getTarget() {
-		try {
-			return InetAddress.getByName(BROADCAST);
-		} catch (UnknownHostException uhe) {
-			return null;			
-		}
-	}
+        int len = 1 + 1 + unlen + 1 + uclen;
+
+        data = new byte[len];
+        data[0] = SignOnIn.getType();
+
+        data[1] = Integer.valueOf(unlen).byteValue();
+        PacketUtil.injectByteArrayIntoByteArray(un, unlen, data, 2);
+
+        data[2 + unlen] = Integer.valueOf(uclen).byteValue();
+        PacketUtil.injectByteArrayIntoByteArray(uc, uclen, data, 3 + unlen);
+    }
+
+    @Override
+    /**
+     * Gets the target to which this packet is intended.
+     * @return The address to which this packet is targeted.
+     */
+    public InetAddress getTarget() {
+        try {
+            return InetAddress.getByName(BROADCAST);
+        } catch (UnknownHostException uhe) {
+            return null;
+        }
+    }
 }
