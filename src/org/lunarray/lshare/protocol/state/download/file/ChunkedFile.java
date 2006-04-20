@@ -11,7 +11,6 @@ import java.util.concurrent.Semaphore;
  * @author Pal Hargitai
  */
 public class ChunkedFile {
-
     /**
      * The minimum chunk size. This is generally {@value}.
      */
@@ -95,12 +94,12 @@ public class ChunkedFile {
     }
 
     /**
-     * Get a chunk. Checks wether there is an unlocked chunk ready for 
-     * download. Or find a large chunk to split.
+     * Get a chunk. Checks wether there is an unlocked chunk ready for download.
+     * Or find a large chunk to split.
      * @return A chunk to download to.
      * @throws IllegalAccessException No available chunk.
-     * @throws IllegalStateException The file is not in a state where chunks
-     * can be gotten.
+     * @throws IllegalStateException The file is not in a state where chunks can
+     * be gotten.
      */
     public Chunk getChunk() throws IllegalAccessException,
             IllegalStateException {
@@ -219,7 +218,7 @@ public class ChunkedFile {
 
     /**
      * Write data to the file.
-     * @param b The 
+     * @param b The
      * @param len The length of the data to write.
      * @param mark The mark of the data.
      * @throws IOException Thrown if it could not write.

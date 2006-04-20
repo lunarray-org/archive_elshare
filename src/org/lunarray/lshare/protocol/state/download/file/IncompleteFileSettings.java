@@ -49,7 +49,7 @@ public class IncompleteFileSettings {
 
     /**
      * Get the hash of the file.
-     * @return The hash of the file. 
+     * @return The hash of the file.
      */
     public Hash getHash() {
         return settings.getFileHash(key);

@@ -29,7 +29,8 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
  */
 public class SecondQueueParse implements RunnableTask {
     /**
-     * Wether a check is in progress. True if the check is in progress, false if not.
+     * Wether a check is in progress. True if the check is in progress, false if
+     * not.
      */
     private boolean ischecking;
 
@@ -103,7 +104,7 @@ public class SecondQueueParse implements RunnableTask {
             }
         }
     }
-    
+
     /**
      * Initiates the process for downloading a file.
      * @param f The file to download.

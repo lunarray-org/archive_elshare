@@ -276,7 +276,7 @@ public class DownloadSettings {
         }
         settings.flush();
     }
-    
+
     /**
      * Sets a source for a file.
      * @param k The key of the file.

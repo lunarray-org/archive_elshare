@@ -1,7 +1,7 @@
 package org.lunarray.lshare.protocol.state.download;
 
 /**
- * The status of a queued  item.
+ * The status of a queued item.
  * @author Pal Hargitai
  */
 public enum QueueStatus {
