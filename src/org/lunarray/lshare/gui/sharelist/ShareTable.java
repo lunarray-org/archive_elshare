@@ -9,29 +9,23 @@ import javax.swing.table.TableModel;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 
-/**
- * The table model to contain share information.
+/** The table model to contain share information.
  * @author Pal Hargitai
  */
 public class ShareTable implements TableModel {
-	
-	/**
-	 * The listeners of this model.
+	/** The listeners of this model.
 	 */
 	private ArrayList<TableModelListener> listeners;
 	
-	/**
-	 * The shared directories that are to be shown here.
+	/** The shared directories that are to be shown here.
 	 */
 	private ArrayList<ShareEntry> dirs;
 	
-	/**
-	 * The instance of the protocol to use.
+	/** The instance of the protocol to use.
 	 */
 	private LShare lshare;
 	
-	/**
-	 * Constructs the table model.
+	/** Constructs the table model.
 	 * @param ls The instance of the protocol to use.
 	 */
 	public ShareTable(LShare ls) {
@@ -41,8 +35,7 @@ public class ShareTable implements TableModel {
 		init();
 	}
 	
-	/**
-	 * Refreshes the model and loads new shares.
+	/** Refreshes the model and loads new shares.
 	 */
 	public void refresh() {
 		dirs.clear();
@@ -53,24 +46,21 @@ public class ShareTable implements TableModel {
 		}
 	}
 
-	/**
-	 * Adds a listener.
+	/** Adds a listener.
 	 * @param arg0 The listener to add.
 	 */
 	public void addTableModelListener(TableModelListener arg0) {
 		listeners.add(arg0);		
 	}
 	
-	/**
-	 * Removes a listener.
+	/** Removes a listener.
 	 * @param arg0 The listener to remove.
 	 */
 	public void removeTableModelListener(TableModelListener arg0) {
 		listeners.remove(arg0);
 	}
 	
-	/**
-	 * Gets the class of a specified column.
+	/** Gets the class of a specified column.
 	 * @param arg0 The index of the column.
 	 * @return The class of the colum, generally String.class.
 	 */
@@ -78,16 +68,14 @@ public class ShareTable implements TableModel {
 		return String.class;
 	}
 	
-	/**
-	 * The amount of columns.
+	/** The amount of columns.
 	 * @return Generally two.
 	 */
 	public int getColumnCount() {
 		return 2;
 	}
 	
-	/**
-	 * Get the name of a specified column.
+	/** Get the name of a specified column.
 	 * @param arg0 The index of the column.
 	 * @return The name of the specified column.
 	 */
@@ -102,16 +90,14 @@ public class ShareTable implements TableModel {
 		}
 	}
 	
-	/**
-	 * Get the amount of rows.
+	/** Get the amount of rows.
 	 * @return The amount of rows.
 	 */
 	public int getRowCount() {
 		return dirs.size();
 	}
 	
-	/**
-	 * Gets the value of a specific cell.
+	/** Gets the value of a specific cell.
 	 * @param arg0 The row of the cell.
 	 * @param arg1 The column of the cell.
 	 * @return The value of the cell.
@@ -131,8 +117,7 @@ public class ShareTable implements TableModel {
 		}
 	}
 
-	/**
-	 * Checks if a cell is editable.
+	/** Checks if a cell is editable.
 	 * @param arg0 The column.
 	 * @param arg1 The row.
 	 * @return False, cells are not generally editable.
@@ -141,8 +126,7 @@ public class ShareTable implements TableModel {
 		return false;
 	}
 	
-	/**
-	 * Sets the value of a cell. Generally ignored.
+	/** Sets the value of a cell. Generally ignored.
 	 * @param arg0 The value to set a cell to.
 	 * @param arg1 The row of the cell.
 	 * @param arg2 The column of the cell.
@@ -151,8 +135,7 @@ public class ShareTable implements TableModel {
 		// Ignore
 	}
 	
-	/**
-	 * Get the name of the share at the specified row.
+	/** Get the name of the share at the specified row.
 	 * @param i The row number.
 	 * @return The name of the share.
 	 */
@@ -164,8 +147,7 @@ public class ShareTable implements TableModel {
 		}
 	}
 	
-	/**
-	 * Initialises or reloads the model.
+	/** Initialises or reloads the model.
 	 */
 	private void init() {
 		dirs.addAll(lshare.getShareList().getBaseEntries());

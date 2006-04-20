@@ -7,8 +7,7 @@ import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.PacketOut;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 
-/**
- * An outgoing signon packet.<br>
+/** An outgoing signon packet.<br>
  * Purpose:<br>
  * Signon packet.<br>
  * UDP broadcast.<br>
@@ -24,9 +23,7 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
  * @author Pal Hargitai
  */
 public class SignOnOut extends PacketOut {
-	
-	/**
-	 * Constructs an outgoing sign on packet.
+	/** Constructs an outgoing sign on packet.
 	 * @param c The controls to the rest of the protocol.
 	 */
 	public SignOnOut(Controls c) {
@@ -51,8 +48,7 @@ public class SignOnOut extends PacketOut {
 	}
 	
 	@Override
-	/**
-	 * Gets the target to which this packet is intended.
+	/** Gets the target to which this packet is intended.
 	 * @return The address to which this packet is targeted.
 	 */
 	public InetAddress getTarget() {

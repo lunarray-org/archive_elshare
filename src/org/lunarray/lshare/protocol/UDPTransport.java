@@ -18,43 +18,35 @@ import org.lunarray.lshare.protocol.packets.search.SearchIn;
 import org.lunarray.lshare.protocol.packets.user.SignOffIn;
 import org.lunarray.lshare.protocol.packets.user.SignOnIn;
 
-/**
- * The UDP transport to send and receive packets.
+/** The UDP transport to send and receive packets.
  * @author Pal Hargitai
  */
 public class UDPTransport extends Thread {
-	/**
-	 * The listen timeout.	 
+	/** The listen timeout. This is {@value} seconds.	 
 	 */
-	public static int LISTEN_TO = 5;
+	public final static int LISTEN_TO = 5;
 	
-	/**
-	 * Manages the running of the transport.
+	/** Manages the running of the transport.
 	 */
 	private boolean run;
 	
-	/**
-	 * The UDP socket for sending and receiving.
+	/** The UDP socket for sending and receiving.
 	 */
 	private DatagramSocket socket;
 	
-	/**
-	 * The list of packets to be sent.
+	/** The list of packets to be sent.
 	 */
 	private LinkedBlockingQueue<DatagramPacket> sendlist;
 	
-	/**
-	 * The semaphore for synchronising the shutdown.
+	/** The semaphore for synchronising the shutdown.
 	 */
 	private Semaphore shutdownsem;
 	
-	/**
-	 * The controls for communicating with the rest of the protocol.
+	/** The controls for communicating with the rest of the protocol.
 	 */
 	private Controls controls;
 
-	/**
-	 * Constructs the UDP transport.
+	/** Constructs the UDP transport.
 	 * @param c The controls for the protocol.
 	 */
 	public UDPTransport(Controls c) {
@@ -65,8 +57,7 @@ public class UDPTransport extends Thread {
 		controls = c;
 	}
 
-	/**
-	 * Initialises the transport and makes it run.
+	/** Initialises the transport and makes it run.
 	 */
 	public void init() {
 		// Sets up the socket
@@ -85,8 +76,7 @@ public class UDPTransport extends Thread {
 		Controls.getLogger().fine("Started UDP transport");
 	}
 	
-	/**
-	 * The running code for the UDP transport.
+	/** The running code for the UDP transport.
 	 */
 	public void run() {
 		run: {
@@ -171,8 +161,7 @@ public class UDPTransport extends Thread {
 		shutdownsem.release();
 	}
 	
-	/**
-	 * Neatly closes the socket. After this call, the UDP transport should be
+	/** Neatly closes the socket. After this call, the UDP transport should be
 	 * stopped.
 	 */
 	public void close() {
@@ -191,8 +180,7 @@ public class UDPTransport extends Thread {
 		Controls.getLogger().fine("Stopped UDP transport");
 	}
 	
-	/**
-	 * Enqueues a packet for sending.
+	/** Enqueues a packet for sending.
 	 * @param p The packet to be sent.
 	 */
 	public void send(PacketOut p) {

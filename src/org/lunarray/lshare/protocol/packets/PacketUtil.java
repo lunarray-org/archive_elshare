@@ -10,14 +10,11 @@ import java.nio.charset.CodingErrorAction;
 
 import org.lunarray.lshare.protocol.Controls;
 
-/**
- * Standard utilities for packet data.
+/** Standard utilities for packet data.
  * @author Pal Hargitai
  */
 public final class PacketUtil {
-	
-	/**
-	 * Injects the byte array source of length length into the target
+	/** Injects the byte array source of length length into the target
 	 * byte array at the offset offset.
 	 * @param source The source array.
 	 * @param length The length of the source array.
@@ -31,8 +28,7 @@ public final class PacketUtil {
 		}
 	}
 	
-	/**
-	 * Copies a part of a byte array to a new byte array.
+	/** Copies a part of a byte array to a new byte array.
 	 * @param source Source byte array.
 	 * @param length The amount of bytes to copy.
 	 * @param offset The offset to start copying at.
@@ -47,8 +43,7 @@ public final class PacketUtil {
 		return target;
 	}
 	
-	/**
-	 * Decoes a byte string encoded in ascii to a java string.
+	/** Decoes a byte string encoded in ascii to a java string.
 	 * @param data The data to convert.
 	 * @return The converted data.
 	 */
@@ -68,8 +63,7 @@ public final class PacketUtil {
 		return cb.toString();
 	}
 	
-	/**
-	 * Encode a string to a ascii byte array.
+	/** Encode a string to a ascii byte array.
 	 * @param message The message to encode.
 	 * @return The byte array.
 	 */
@@ -89,8 +83,7 @@ public final class PacketUtil {
 		return bytes.array();
 	}
 		
-	/**
-	 * Place an short in a byte array at a given offset.
+	/** Place an short in a byte array at a given offset.
 	 * @param value The value to convert.
 	 * @param array The array to put it in.
 	 * @param offset The offset to put it at.
@@ -101,8 +94,7 @@ public final class PacketUtil {
 		array[offset + 1] = (byte) value;
 	}
 
-	/**
-	 * Place an unsigned short in a byte array at a given offset.
+	/** Place an unsigned short in a byte array at a given offset.
 	 * @param value The value to convert.
 	 * @param array The array to put it in.
 	 * @param offset The offset to put it at.
@@ -113,8 +105,7 @@ public final class PacketUtil {
 		array[offset + 1] = (byte) value;
 	}
     
-	/**
-	 * Place a long in a byte array at a given offset.
+	/** Place a long in a byte array at a given offset.
 	 * @param value The value to convert.
 	 * @param array The array to put it in.
 	 * @param offset The offset to put it at.
@@ -131,8 +122,7 @@ public final class PacketUtil {
 		array[offset + 7] = (byte) value;
 	}
     
-    /**
-     * Get a long from a byte array.
+    /** Get a long from a byte array.
      * @param array The array to get it from.
      * @param offset The offset of the array.
      * @return The long that comes from the array. 
@@ -149,8 +139,7 @@ public final class PacketUtil {
 		(long)(array[offset + 7] & 0xFFL));
     }
 
-    /**
-     * Get an short from a byte array.
+    /** Get an short from a byte array.
      * @param array The array to get it from.
      * @param offset The offset of the array.
      * @return The short that comes from the array. 
@@ -160,8 +149,7 @@ public final class PacketUtil {
 			(array[offset + 1] & 0xFF));
     }
     
-    /**
-     * Get an unsigned short from a byte array.
+    /** Get an unsigned short from a byte array.
      * @param array The array to get it from.
      * @param offset The offset of the array.
      * @return The short that comes from the array. 
@@ -171,8 +159,7 @@ public final class PacketUtil {
 			(array[offset + 1] & 0xFF));
     }
     
-    /**
-     * Place an integer in a byte array at a given offset.
+    /** Place an integer in a byte array at a given offset.
      * @param val The value to convert.
      * @param array The array to put it in.
      * @param offset The offset to put it at.
@@ -184,8 +171,7 @@ public final class PacketUtil {
     	array[offset + 3] = (byte) val;
     }
     
-    /**
-     * Gets an int from a byte array.
+    /** Gets an int from a byte array.
      * @param array The array to get it from.
      * @param offset The offset to get it from.
      * @return The rebuilt int.

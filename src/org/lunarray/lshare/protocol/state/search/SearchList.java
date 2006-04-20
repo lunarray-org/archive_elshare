@@ -10,24 +10,19 @@ import org.lunarray.lshare.protocol.packets.search.SearchOut;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
-/**
- * The search list for handling searching.
+/** The search list for handling searching.
  * @author Pal Hargitai
  */
 public class SearchList implements ExternalSearchList {
-
-	/**
-	 * The registered listeners.
+	/** The registered listeners.
 	 */
 	private ArrayList<SearchListener> listeners;
 	
-	/**
-	 * The controls for the rest of the protocol.
+	/** The controls for the rest of the protocol.
 	 */
 	private Controls controls;
 	
-	/**
-	 * Constructs the search list.
+	/** Constructs the search list.
 	 * @param c The controls to the protocol.
 	 */
 	public SearchList(Controls c) {
@@ -35,24 +30,21 @@ public class SearchList implements ExternalSearchList {
 		controls = c;
 	}
 
-	/**
-	 * Registeres a listener for search results.
+	/** Registeres a listener for search results.
 	 * @param lis The listener to register.
 	 */
 	public void addListener(SearchListener lis) {
 		listeners.add(lis);
 	}
 	
-	/**
-	 * Unregisteres a listener for search results.
+	/** Unregisteres a listener for search results.
 	 * @param lis The listener to unregister.
 	 */
 	public void removeListener(SearchListener lis) {
 		listeners.remove(lis);
 	}
 	
-	/**
-	 * Process a search result.
+	/** Process a search result.
 	 * @param e A single search result to handle.
 	 */
 	public void processResult(SearchResult e) {
@@ -72,8 +64,7 @@ public class SearchList implements ExternalSearchList {
 		}
 	}
 	
-	/**
-	 * Search for a specific search string.
+	/** Search for a specific search string.
 	 * @param s The search string to search for.
 	 */
 	public void searchForString(String s) {
@@ -81,8 +72,7 @@ public class SearchList implements ExternalSearchList {
 		controls.getUDPTransport().send(so);
 	}
 	
-	/**
-	 * Search for a specific file hash.
+	/** Search for a specific file hash.
 	 * @param h The hash to search for.
 	 */
 	public void searchForHash(Hash h) {

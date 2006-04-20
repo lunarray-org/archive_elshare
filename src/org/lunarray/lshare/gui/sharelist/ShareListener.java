@@ -5,29 +5,23 @@ import javax.swing.event.ListSelectionListener;
 
 import org.lunarray.lshare.LShare;
 
-/**
- * The list selection listener to selection in the sharelist model.
+/** The list selection listener to selection in the sharelist model.
  * @author Pal Hargitai
  */
 public class ShareListener implements ListSelectionListener {
-	
-	/**
-	 * The model that is associated with this listener.
+	/** The model that is associated with this listener.
 	 */
 	private ShareTable model;
 	
-	/**
-	 * The name of the share to remove, if any.
+	/** The name of the share to remove, if any.
 	 */
 	private String name;
 	
-	/**
-	 * The instance of the protocol to communicate with.
+	/** The instance of the protocol to communicate with.
 	 */
 	private LShare lshare;
 	
-	/**
-	 * Constructs a share listener.
+	/** Constructs a share listener.
 	 * @param st The table model to get data from.
 	 * @param ls The instance of the procotol to use.
 	 */
@@ -37,24 +31,21 @@ public class ShareListener implements ListSelectionListener {
 		lshare = ls;
 	}
 	
-	/**
-	 * A selection has occured.
+	/** A selection has occured.
 	 * @param arg0 The selection event.
 	 */
 	public void valueChanged(ListSelectionEvent arg0) {
 		name = model.getNameAtRow(arg0.getFirstIndex());
 	}
 	
-	/**
-	 * Get the name of the share of the selected row.
+	/** Get the name of the share of the selected row.
 	 * @return The name of the selected row.
 	 */
 	public String getSelectedName() {
 		return name;
 	}
 	
-	/**
-	 * Remove the selected row.
+	/** Remove the selected row.
 	 */
 	public void removeSelected() {
 		if (name.length() > 0) {

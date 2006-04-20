@@ -9,30 +9,25 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-/**
- * A tree selection listener that listens to the contactlist.
+/** A tree selection listener that listens to the contactlist.
  * Updates the panels popup menu.
  * @author Pal Hargitai
  */
 public class Selecter implements TreeSelectionListener, ActionListener {
 	
-	/**
-	 * The tree to edit the popup menu of.
+	/** The tree to edit the popup menu of.
 	 */
 	private JTree panel;
 	
-	/**
-	 * The model to trigger incase of a buddy change.
+	/** The model to trigger incase of a buddy change.
 	 */
 	private Model model;
 	
-	/**
-	 * The currently selected node.
+	/** The currently selected node.
 	 */
 	private UserNode selected;
 
-	/**
-	 * Constructs the selection listener.
+	/** Constructs the selection listener.
 	 * @param t The tree that it listens to.
 	 * @param m The model that it can use.
 	 */
@@ -41,8 +36,7 @@ public class Selecter implements TreeSelectionListener, ActionListener {
 		model = m;
 	}
 
-	/**
-	 * Triggered in case of a select or unselect.
+	/** Triggered in case of a select or unselect.
 	 * @param arg0 The event that triggered.
 	 */
 	public void valueChanged(TreeSelectionEvent arg0) {
@@ -85,8 +79,7 @@ public class Selecter implements TreeSelectionListener, ActionListener {
 		}
 	}
 	
-	/**
-	 * The action triggered if an item on the menu is clicked.
+	/** The action triggered if an item on the menu is clicked.
 	 * @param arg0 The action that triggered the call of this event.
 	 */
 	public void actionPerformed(ActionEvent arg0) {

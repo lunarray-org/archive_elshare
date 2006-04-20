@@ -7,8 +7,7 @@ import org.lunarray.lshare.protocol.packets.PacketOut;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 
-/**
- * An outgoing result.<br>
+/** An outgoing result.<br>
  * Packet 4:<br>
  * Purpose:<br>
  * Search for a filename.<br>
@@ -20,14 +19,11 @@ import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
  * @author Pal Hargitai
  */
 public class ResultOut extends PacketOut {
-
-	/**
-	 * The address to which the result is directed.
+	/** The address to which the result is directed.
 	 */
 	private InetAddress to;
 	
-	/**
-	 * Constructs an outgoing result.
+	/** Constructs an outgoing result.
 	 * @param t The address to which the result is directed.
 	 * @param f The entry to send.
 	 */
@@ -64,8 +60,7 @@ public class ResultOut extends PacketOut {
 	}
 	
 	@Override
-	/**
-	 * Get the address to where the data is directed.
+	/** Get the address to where the data is directed.
 	 * @return The address to send the result to.
 	 */
 	public InetAddress getTarget() {

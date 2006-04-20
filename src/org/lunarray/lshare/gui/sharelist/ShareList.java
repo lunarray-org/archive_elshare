@@ -20,39 +20,31 @@ import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
 
-/**
- * Shows a list of currently shared directories.
+/** Shows a list of currently shared directories.
  * @author Pal Hargitai
  */
 public class ShareList extends GUIFrame implements ActionListener {
-
-	/**
-	 * The textfield for setting the name of the share.
+	/** The textfield for setting the name of the share.
 	 */
 	private JTextField name;
 	
-	/**
-	 * The textfield for setting the location of the share.
+	/** The textfield for setting the location of the share.
 	 */
 	private JTextField loc;
 	
-	/**
-	 * The instance of the protocol to communicate with.
+	/** The instance of the protocol to communicate with.
 	 */
 	private LShare lshare;
 	
-	/**
-	 * The table model representing all known shares.
+	/** The table model representing all known shares.
 	 */
 	private ShareTable model;
 	
-	/**
-	 * The selection listener for selecting a share for removal.
+	/** The selection listener for selecting a share for removal.
 	 */
 	private ShareListener slis;
 
-	/**
-	 * Constructs a sharelist frame.
+	/** Constructs a sharelist frame.
 	 * @param ls The instance of the protocol to assocate with.
 	 * @param mg The window this frame resides in.
 	 */
@@ -140,8 +132,7 @@ public class ShareList extends GUIFrame implements ActionListener {
 		frame.setTitle(getTitle());
 	}
 	
-	/**
-	 * The action listener to respond to the button presses.
+	/** The action listener to respond to the button presses.
 	 * @param arg0 The event that triggered this.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
@@ -167,15 +158,13 @@ public class ShareList extends GUIFrame implements ActionListener {
 	}
 	
 	@Override
-	/**
-	 * Hides the frame.
+	/** Hides the frame.
 	 */
 	public void close() {
 		frame.setVisible(false);
 	}
 	
-	/**
-	 * Gets the title of the frame.
+	/** Gets the title of the frame.
 	 * @return The title of the frame.
 	 */
 	public String getTitle() {

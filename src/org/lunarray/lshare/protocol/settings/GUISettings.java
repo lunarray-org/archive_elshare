@@ -2,14 +2,12 @@ package org.lunarray.lshare.protocol.settings;
 
 import org.lunarray.lshare.protocol.Settings;
 
-/**
- * The user interface settings.
+/** The user interface settings.
  * @author Pal Hargitai
  */
 public class GUISettings {
 	
-	/**
-	 * The default location for userinterface settings. Usually {@value}.
+	/** The default location for userinterface settings. Usually {@value}.
 	 */
 	public final static String DEFAULT_LOC = Settings.DEFAULT_LOC + "/gui";
 	
@@ -18,16 +16,14 @@ public class GUISettings {
 	 */
 	private RawSettings rs;
 	
-	/**
-	 * Constructs the user interface settings.
+	/** Constructs the user interface settings.
 	 * @param r The raw settings.
 	 */
 	public GUISettings(RawSettings r) {
 		rs = r;
 	}
 
-	/**
-	 * Remove the key and value at the given location.
+	/** Remove the key and value at the given location.
 	 * @param loc The location.
 	 * @param key They key.
 	 */
@@ -35,16 +31,14 @@ public class GUISettings {
 		rs.remove(DEFAULT_LOC + loc, key);
 	}
 	
-	/**
-	 * Removes the node, and it's child nodes, at the given location.
+	/** Removes the node, and it's child nodes, at the given location.
 	 * @param loc The location.
 	 */
 	public void removeNode(String loc) {
 		rs.removeNode(DEFAULT_LOC + loc);
 	}
 
-	/**
-	 * Get the keys of the node.
+	/** Get the keys of the node.
 	 * @param loc The location of the node.
 	 * @return The keys of the node.
 	 */
@@ -52,8 +46,7 @@ public class GUISettings {
 		return rs.getKeys(DEFAULT_LOC + loc); 
 	}
 	
-	/**
-	 * Get a value specified by a given key.
+	/** Get a value specified by a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get value of.
 	 * @param def The default value if key doesn't exist.
@@ -63,8 +56,7 @@ public class GUISettings {
 		return rs.getString(DEFAULT_LOC + loc, key, def);
 	}
 
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -73,8 +65,7 @@ public class GUISettings {
 		rs.setString(DEFAULT_LOC + loc, key, val);
 	}
 	
-	/**
-	 * Get the int at the given key.
+	/** Get the int at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -84,8 +75,7 @@ public class GUISettings {
 		return rs.getInt(DEFAULT_LOC, key, def);
 	}
 	
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -94,8 +84,7 @@ public class GUISettings {
 		rs.setInt(DEFAULT_LOC + loc, key, val);
 	}
 	
-	/**
-	 * Get the bool at the given key.
+	/** Get the bool at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -105,8 +94,7 @@ public class GUISettings {
 		return rs.getBool(DEFAULT_LOC + loc, key, def);
 	}
 	
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -115,8 +103,7 @@ public class GUISettings {
 		rs.setBool(DEFAULT_LOC + loc, key, val);
 	}
 	
-	/**
-	 * Get the bytearray at the given key.
+	/** Get the bytearray at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -126,8 +113,7 @@ public class GUISettings {
 		return rs.getByteArray(DEFAULT_LOC + loc, key, def);
 	}
 	
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -136,8 +122,7 @@ public class GUISettings {
 		rs.setByteArray(DEFAULT_LOC + loc, key, val);
 	}
 
-	/**
-	 * Get the  at the given key.
+	/** Get the  at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -147,8 +132,7 @@ public class GUISettings {
 		return rs.getLong(DEFAULT_LOC + loc, key, def);	
 	}
 
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.

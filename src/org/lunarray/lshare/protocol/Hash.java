@@ -9,9 +9,11 @@ import java.security.NoSuchAlgorithmException;
 
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
 
+/** A hash class for handling all hash related functions.
+ * @author Pal Hargitai
+ */
 public class Hash {
-	/**
-	 * The hash if it is unset.
+	/** The hash if it is unset.
 	 */
 	public final static byte[] UNSET = {
 		0x00, 0x00, 0x00, 0x00,
@@ -20,78 +22,67 @@ public class Hash {
 		0x00, 0x00, 0x00, 0x00
 	};
 	
-	/**
-	 * The hash represented here.
+	/** The hash represented here.
 	 */
 	private byte[] hash;
 
-	/**
-	 * Constructs a hash by a given byte array.
+	/** Constructs a hash by a given byte array.
 	 * @param b The hash to represent.
 	 */
 	public Hash(byte[] b) {
 		hash = b;
 	}
 	
-	/**
-	 * Constracts a hash by a given string.
+	/** Constracts a hash by a given string.
 	 * @param s The string whose hash to represent.
 	 */
 	public Hash(String s) {
 		hash = hashName(s);
 	}
 	
-	/**
-	 * Constructs a hash by a given file.
+	/** Constructs a hash by a given file.
 	 * @param f The file whose hash to represent.
 	 */
 	public Hash(File f) {
 		hash = hash(f);
 	}
 
-	/**
-	 * Given a normal unset hash. 
+	/** Given a normal unset hash. 
 	 * @return A representation of an unset hash.
 	 */
 	public static Hash getUnset() {
 		return new Hash(UNSET);
 	}
 	
-	/**
-	 * The length of a hash.
+	/** The length of a hash.
 	 * @return The length of (any) hash.
 	 */
 	public static int length() {
 		return UNSET.length;
 	}
 	
-	/**
-	 * Gets the byte representation of the hash.
+	/** Gets the byte representation of the hash.
 	 * @return The bytes that represent this hash.
 	 */
 	public byte[] getBytes() {
 		return hash;
 	}
-	
 
-	/**
-	 * Gives a string representation of this hash.
+	/** Gives a string representation of this hash.
 	 * @return The string representation of this hash.
 	 */
 	public String toString() {
 		return hashToString(hash);
 	}
 		
-	/**
-	 * Checks wether the hash is an empty hash.
+	/** Checks wether the hash is an empty hash.
 	 * @return True if the given hash is an empty hash. False if not.
 	 */
 	public boolean isEmpty() {
 		return equals(new Hash(UNSET));
 	}
 	
-	/**
-	 * Checks if both hashes are equal.
+	/** Checks if both hashes are equal.
 	 * @param o The hash to compare to.
 	 * @return True if both hashes are equal, false if not.
 	 */
@@ -108,8 +99,7 @@ public class Hash {
 		}
 	}
 	
-	/**
-	 * Gets a hash of the given name.
+	/** Gets a hash of the given name.
 	 * @param name The name to hash.
 	 * @return The hash of the name.
 	 */
@@ -126,8 +116,7 @@ public class Hash {
 		return md5;
 	}
 	
-	/**
-	 * Gets the hash of a specified file.
+	/** Gets the hash of a specified file.
 	 * @param f The file to get the hash of.
 	 * @return The hash of the file.
 	 */
@@ -153,8 +142,7 @@ public class Hash {
 		return md5;
 	}
 	
-	/**
-	 * Converts a given hash to a readable string.
+	/** Converts a given hash to a readable string.
 	 * @param dat The hash to convert.
 	 * @return The string representation of the hash.
 	 */
@@ -166,8 +154,7 @@ public class Hash {
 		return ret;
 	}
 	
-	/**
-	 * Converts 4-bits to a certain string.
+	/** Converts 4-bits to a certain string.
 	 * @param b The int of which to get the representation of.
 	 * @return The string representation of the first 4-bits of the int.
 	 */

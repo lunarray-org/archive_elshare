@@ -4,34 +4,27 @@ import java.io.File;
 
 import org.lunarray.lshare.protocol.Hash;
 
-/**
- * A share entry.
+/** A share entry.
  * @author Pal Hargitai
  */
 public class ShareEntry {
-	
-	/**
-	 * The file in the share entry.
+	/** The file in the share entry.
 	 */
 	private File file;
 	
-	/**
-	 * The path in the entry.
+	/** The path in the entry.
 	 */
 	private String path;
 	
-	/**
-	 * The name of the entry.
+	/** The name of the entry.
 	 */
 	private String name;
 	
-	/**
-	 * The settings that are to be accessed.
+	/** The settings that are to be accessed.
 	 */
 	private ShareSettings settings;
 	
-	/**
-	 * Constructs a share entry.
+	/** Constructs a share entry.
 	 * @param f The file represented in the entry.
 	 * @param n The name of the entry.
 	 * @param p The path in which the entry resides.
@@ -44,40 +37,35 @@ public class ShareEntry {
 		settings = s;
 	}
 	
-	/**
-	 * Checks wether the given entry is a file.
+	/** Checks wether the given entry is a file.
 	 * @return True if the entry is a file, false if not.
 	 */
 	public boolean isFile() {
 		return file.isFile();
 	}
 	
-	/**
-	 * Checks wether the given entry is a directory.
+	/** Checks wether the given entry is a directory.
 	 * @return True if the entry is a directory, false if not.
 	 */
 	public boolean isDirectory() {
 		return !isFile();
 	}
 	
-	/**
-	 * Gets the name of the entry.
+	/** Gets the name of the entry.
 	 * @return The name of the entry.
 	 */
 	public String getName() {
 		return name;
 	}
 	
-	/**
-	 * Gets the path of the entry.
+	/** Gets the path of the entry.
 	 * @return The path of the entry.
 	 */
 	public String getPath() {
 		return path;
 	}
 	
-	/**
-	 * Gets the last modified date of the entry.
+	/** Gets the last modified date of the entry.
 	 * @return The last modified date of the entry.
 	 */
 	public long getLastModified() {
@@ -92,8 +80,7 @@ public class ShareEntry {
 		}
 	}
 
-	/**
-	 * Gets the size of the entry.
+	/** Gets the size of the entry.
 	 * @return The size of the entry.
 	 */
 	public long getSize() {
@@ -108,8 +95,7 @@ public class ShareEntry {
 		}
 	}
 	
-	/**
-	 * Gets the hash of the entry.
+	/** Gets the hash of the entry.
 	 * @return The hash of the entry.
 	 */
 	public Hash getHash() {
@@ -120,8 +106,7 @@ public class ShareEntry {
 		}		
 	}
 	
-	/**
-	 * Gets the file represented in this entry.
+	/** Gets the file represented in this entry.
 	 * @return The file.
 	 */
 	public File getFile() {

@@ -9,7 +9,7 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
-/**
+/** An outgoing request for a file transfer.<br>
  * Packet 6:<br>
  * Purpose:<br>
  * Request for file transfer.<br>
@@ -29,9 +29,16 @@ import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
  * @author Pal Hargitai
  */
 public class RequestOut extends PacketOut {
-	
+	/** The user this request is meant for.
+	 */
 	private User user;
-	
+
+	/** Constructs an outgoing request for a filetransfer.
+	 * @param u The user it is meant for.
+	 * @param f The remote entry requested.
+	 * @param offset The offset of the entry where downloading should commence.
+	 * @throws UserNotFound Thrown if a user isn't logged in.
+	 */
 	public RequestOut(User u, RemoteFile f, long offset) throws UserNotFound {
 		if (u.getAddress() == null) {
 			throw new UserNotFound();
@@ -42,7 +49,8 @@ public class RequestOut extends PacketOut {
 		byte[] name = PacketUtil.encode(f.getName());
 		byte nlen = (byte)Math.min(name.length, 255);
 		
-		data = new byte[1 + 8 + 8 + Hash.length() + 2 + path.length + 1 + nlen];
+		data = new byte[1 + 8 + 8 + Hash.length() + 2 + path.length + 1 + 
+		                nlen];
 		
 		data[0] = RequestIn.getType();
 		
@@ -51,7 +59,7 @@ public class RequestOut extends PacketOut {
 		PacketUtil.injectByteArrayIntoByteArray(f.getHash().getBytes(), Hash.
 				length(), data, 17);
 		PacketUtil.shortUToByteArray(path.length, data, 17 + Hash.length());
-		PacketUtil.injectByteArrayIntoByteArray(path, path.length, data, 19 + 
+		PacketUtil.injectByteArrayIntoByteArray(path, path.length, data, 19 +
 				Hash.length());
 		data[19 + Hash.length() + path.length] = nlen;
 		PacketUtil.injectByteArrayIntoByteArray(name, nlen, data, 20 + Hash.
@@ -59,6 +67,9 @@ public class RequestOut extends PacketOut {
 	}
 	
 	@Override
+	/** Gets the target of the packet.
+	 * @return The target of the packet.
+	 */
 	public InetAddress getTarget() {
 		return user.getAddress();
 	}

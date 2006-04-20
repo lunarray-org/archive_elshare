@@ -28,56 +28,46 @@ import org.lunarray.lshare.gui.search.StringFilter;
 import org.lunarray.lshare.gui.sharelist.ShareList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
-/**
- * The main user interface.
+/** The main user interface.
  * @author Pal Hargitai
  */
 public class MainGUI implements ActionListener {
 	
-	/**
-	 * The amount of frame padding given for kicking back an internal frame
+	/** The amount of frame padding given for kicking back an internal frame
 	 * when it goes beyond the bounds of the viewport of the desktop. This is
 	 * {@value} pixels.
 	 */
 	public final static int FRAME_PAD = 30;
 	
-	/**
-	 * The abstraction of the protocol.
+	/** The abstraction of the protocol.
 	 */
 	private LShare lshare;
 	
-	/**
-	 * The main frame of the gui. 
+	/** The main frame of the gui. 
 	 */
 	private JFrame frame;
 	
-	/**
-	 * The main menubar of the gui.
+	/** The main menubar of the gui.
 	 */
 	private JMenuBar menu;
 	
-	/**
-	 * The desktop pane that contains all internal frames.
+	/** The desktop pane that contains all internal frames.
 	 */
 	private JDesktopPane desktop;
 	
-	/**
-	 * The window menu that gets updated when a frame comes or disappears.
+	/** The window menu that gets updated when a frame comes or disappears.
 	 */
 	private JMenu winmenu;
 	
-	/**
-	 * The contact list.
+	/** The contact list.
 	 */
 	private ContactList contactlist;
 	
-	/**
-	 * The list of shared directories.
+	/** The list of shared directories.
 	 */
 	private ShareList sharelist;
 
-	/**
-	 * Instanciates the main user interface.
+	/** Instanciates the main user interface.
 	 * @param l The instance of the protocol that it may use.
 	 */
 	public MainGUI(LShare l) {
@@ -141,8 +131,7 @@ public class MainGUI implements ActionListener {
 		});
 	}
 	
-	/**
-	 * Updates the window menu with all visible windows.
+	/** Updates the window menu with all visible windows.
 	 */
 	public synchronized void updateMenu() {
 		winmenu.removeAll();
@@ -153,8 +142,7 @@ public class MainGUI implements ActionListener {
 		}
 	}
 	
-	/**
-	 * Initialises the menu.
+	/** Initialises the menu.
 	 */
 	public void initMenu() {
 		menu = new JMenuBar();
@@ -178,8 +166,7 @@ public class MainGUI implements ActionListener {
 		menu.add(winmenu);
 	}
 	
-	/**
-	 * The main action handler for menu actions.
+	/** The main action handler for menu actions.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		String ac = arg0.getActionCommand();
@@ -199,8 +186,8 @@ public class MainGUI implements ActionListener {
 			}
 		} else if (ac.equals("nick")) {
 			// Allow a user to enter a new nickname.
-			String nn = JOptionPane.showInternalInputDialog(desktop, "Please " +
-					"enter a new nickname: ", lshare.getSettings().
+			String nn = JOptionPane.showInternalInputDialog(desktop,
+					"Please enter a new nickname: ", lshare.getSettings().
 					getUsername(), JOptionPane.QUESTION_MESSAGE);
 			if (nn != null) {
 				lshare.getSettings().setUsername(nn);
@@ -219,24 +206,21 @@ public class MainGUI implements ActionListener {
 		}
 	}
 	
-	/**
-	 * Shows the contact list
+	/** Shows the contact list
 	 */
 	public void addContactList() {
 		contactlist.getFrame().setVisible(true);
 		updateMenu();
 	}
 	
-	/**
-	 * Shows the shared directories list
+	/** Shows the shared directories list
 	 */
 	public void addShareList() {
 		sharelist.getFrame().setVisible(true);
 		updateMenu();
 	}
 	
-	/**
-	 * Shows the file list for a specified user.
+	/** Shows the file list for a specified user.
 	 * @param u The user to show the filelist of.
 	 */
 	public void addFileList(User u) {
@@ -245,8 +229,7 @@ public class MainGUI implements ActionListener {
 		updateMenu();
 	}
 	
-	/**
-	 * Shows a window with search results.
+	/** Shows a window with search results.
 	 * @param f The filter to apply to the search results.
 	 */
 	public void addSearchList(SearchFilter f) {
@@ -255,16 +238,13 @@ public class MainGUI implements ActionListener {
 		updateMenu();
 	}
 	
-	/**
-	 * Shows the user interface
+	/** Shows the user interface
 	 */
 	public void start() {
 		frame.setVisible(true);
 	}
 	
-	/**
-	 * Stops the user interface and the underlying protocol.
-	 *
+	/** Stops the user interface and the underlying protocol.
 	 */
 	public void stop() {
 		frame.setVisible(false);
@@ -273,8 +253,7 @@ public class MainGUI implements ActionListener {
 		System.exit(0);
 	}
 
-	/**
-	 * Created a standard menu item with a given label and action command.
+	/** Created a standard menu item with a given label and action command.
 	 * @param title The label of the menu item.
 	 * @param command The action command triggered when the item is clicked on.
 	 * @return A menu item with the given title and action command.
@@ -286,8 +265,7 @@ public class MainGUI implements ActionListener {
 		return mi;
 	}
 	
-	/**
-	 * Updates the desktop to a new given dimension.
+	/** Updates the desktop to a new given dimension.
 	 * @param framedim The new dimension of the desktop.
 	 */
 	private synchronized void updateDesktop(Dimension framedim) {
@@ -311,8 +289,7 @@ public class MainGUI implements ActionListener {
 		}
 	}
 
-	/**
-	 * Adds a frame to the desktop.
+	/** Adds a frame to the desktop.
 	 * @param f The frame to add to the desktop.
 	 */
 	private synchronized void addFrame(GUIFrame f) {

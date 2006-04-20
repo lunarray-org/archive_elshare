@@ -5,19 +5,15 @@ import java.net.InetAddress;
 import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
 
-/**
- * A search result.
+/** A search result.
  * @author Pal Hargitai
  */
 public class SearchResult extends RemoteFile {
-
-	/**
-	 * The address the search result came from.
+	/** The address the search result came from.
 	 */
 	private InetAddress address;
 	
-	/**
-	 * Constructs a search result.
+	/** Constructs a search result.
 	 * @param a The address from where the result originated.
 	 * @param p The path of the result.
 	 * @param n The name of the result.
@@ -31,8 +27,7 @@ public class SearchResult extends RemoteFile {
 		address = a;
 	}
 	
-	/**
-	 * Gets the address from where the result came.
+	/** Gets the address from where the result came.
 	 * @return The address from where the result came.
 	 */
 	public InetAddress getAddress() {

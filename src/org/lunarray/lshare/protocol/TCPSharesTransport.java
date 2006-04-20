@@ -7,39 +7,31 @@ import java.util.ArrayList;
 
 import org.lunarray.lshare.protocol.filelist.FilelistSender;
 
-/**
- * A server socket for sharing a filelist.
+/** A server socket for sharing a filelist.
  * @author Pal Hargitai
  */
 public class TCPSharesTransport extends Thread {
-	
-	/**
-	 * The server sockets that accepts connections.
+	/** The server sockets that accepts connections.
 	 */
 	private ServerSocket server;
 	
-	/**
-	 * The running variable to control behavior of the server.
+	/** The running variable to control behavior of the server.
 	 */
 	private boolean run;
 	
-	/**
-	 * The threadgroup in which client threads will reside.
+	/** The threadgroup in which client threads will reside.
 	 */
 	private ThreadGroup tgroup;
 	
-	/**
-	 * The client threads.
+	/** The client threads.
 	 */
 	private ArrayList<FilelistSender> senders;
 	
-	/**
-	 * Access to the protocol.
+	/** Access to the protocol.
 	 */
 	private Controls controls;
 
-	/**
-	 * Instanciates the transport.
+	/** Instanciates the transport.
 	 * @param c The controlls for access to the protocol.
 	 */
 	public TCPSharesTransport(Controls c) {
@@ -50,8 +42,7 @@ public class TCPSharesTransport extends Thread {
 		tgroup = new ThreadGroup(c.getThreadGroup(), "filelisters");
 	}
 	
-	/**
-	 * Initialises the socket and sets up the thread.
+	/** Initialises the socket and sets up the thread.
 	 */
 	public void init() {
 		try {
@@ -64,8 +55,7 @@ public class TCPSharesTransport extends Thread {
 		}
 	}
 	
-	/**
-	 * Handling connections.
+	/** Handling connections.
 	 */
 	public void run() {
 		if (server.isBound()) {
@@ -86,8 +76,7 @@ public class TCPSharesTransport extends Thread {
 		}
 	}
 	
-	/**
-	 * Close down the clients and clean up the socket.
+	/** Close down the clients and clean up the socket.
 	 */
 	public void close() {
 		for (FilelistSender l: senders) {

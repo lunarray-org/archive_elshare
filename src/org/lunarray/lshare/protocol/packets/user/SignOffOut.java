@@ -5,8 +5,7 @@ import java.net.UnknownHostException;
 
 import org.lunarray.lshare.protocol.packets.PacketOut;
 
-/**
- * An outgoing signoff packet.<br>
+/** An outgoing signoff packet.<br>
  * Packet 2:<br>
  * Purpose:<br>
  * Signoff packet.<br>
@@ -16,9 +15,7 @@ import org.lunarray.lshare.protocol.packets.PacketOut;
  * @author Pal Hargitai
  */
 public class SignOffOut extends PacketOut {
-
-	/**
-	 * Constructs a signoff packet.
+	/** Constructs a signoff packet.
 	 */
 	public SignOffOut() {
 		data = new byte[1];
@@ -26,8 +23,7 @@ public class SignOffOut extends PacketOut {
 	}
 	
 	@Override
-	/**
-	 * Gets the packet target.
+	/** Gets the packet target.
 	 * @return The address to which this packet is targeted.
 	 */
 	public InetAddress getTarget() {

@@ -6,24 +6,19 @@ import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.state.sharing.ShareList;
 
-/**
- * A file entry recieved over a tcp connection.
+/** A file entry recieved over a tcp connection.
  * @author Pal Hargitai
  */
 public class FilelistEntry extends RemoteFile {
-
-	/**
-	 * The filelist receiver for populating file entries.
+	/** The filelist receiver for populating file entries.
 	 */
 	private FilelistReceiver receiver;
 	
-	/**
-	 * True if the root is a root node for populating the correct children.
+	/** True if the root is a root node for populating the correct children.
 	 */
 	private boolean isroot;
 	
-	/**
-	 * Constructs a file entry.
+	/** Constructs a file entry.
 	 * @param fr The list receiver for getting child entries.
 	 * @param p The path that this entry resides in.
 	 * @param n The name of this entry.
@@ -39,15 +34,13 @@ public class FilelistEntry extends RemoteFile {
 		isroot = root;
 	}
 	
-	/**
-	 * Close down the receiver.
+	/** Close down the receiver.
 	 */
 	public void closeReceiver() {
 		receiver.close();
 	}
 	
-	/**
-	 * Get all children in this entry.
+	/** Get all children in this entry.
 	 * @return The child entries in this entry.
 	 */
 	public List<FilelistEntry> getEntries() {

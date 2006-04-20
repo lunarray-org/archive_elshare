@@ -10,7 +10,7 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.download.FileResponse;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
-/**
+/** An incoming response for a request for a file transfer.<br>
  * Packet 7:<br>
  * Purpose:<br>
  * Response to file transfer, transfer details<br>
@@ -28,32 +28,29 @@ import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
  * @author Pal Hargitai
  */
 public class ResponseIn extends PacketIn {
-
-	/**
-	 * The recieved packet.
+	/** The recieved packet.
 	 */
 	private DatagramPacket packet;
 	
+	/** The response represented in this packet.
+	 */
 	private FileResponse response;
 	
-	/**
-	 * Constructs an incoming result.
+	/** Constructs an incoming result.
 	 * @param p The datagram packet in which the search results resides.
 	 */
 	public ResponseIn(DatagramPacket p) {
 		packet = p;
 	}
 	
-	/**
-	 * Get the type of the packet.
+	/** Get the type of the packet.
 	 * @return The type of the packet.
 	 */
 	public static byte getType() {
 		return (byte)0x21;
 	}
 	
-	/**
-	 * Asks wether the given data is of a given result type.
+	/** Asks wether the given data is of a given result type.
 	 * @param data The data to check on if it's of a result type.
 	 * @return True if the given data is a result. False if not.
 	 */
@@ -62,6 +59,10 @@ public class ResponseIn extends PacketIn {
 	}
 	
 	@Override
+	/** Parses the packet.
+	 * @throws MalformedPacketException Thrown if packet is of an invalid
+	 * format.
+	 */
 	public void parse() throws MalformedPacketException {
 		try {
 			byte[] data = packet.getData();
@@ -84,12 +85,16 @@ public class ResponseIn extends PacketIn {
 			byte[] nbytes = PacketUtil.getByteArrayFromByteArray(data, nsize,
 					Hash.length() + 22 + psize);
 			String name = PacketUtil.decode(nbytes).trim();
-			response = new FileResponse(path, name, new Hash(hash), size, offset, port);
+			response = new FileResponse(path, name, new Hash(hash), size,
+					offset, port);
 		} catch (Exception e) {
 			throw new MalformedPacketException();
 		}
 	}
 
+	/** Handles the response.
+	 * @param c The controls of the protocol.
+	 */
 	public void runTask(Controls c) {
 		try {
 			c.getState().getDownloadManager().handleResponse(response, c.

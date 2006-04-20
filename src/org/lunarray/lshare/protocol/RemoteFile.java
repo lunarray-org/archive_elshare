@@ -1,38 +1,31 @@
 package org.lunarray.lshare.protocol;
 
-/**
- * A remote file or directory representation.
+/** A remote file or directory representation.
  * @author Pal Hargitai
  */
 public abstract class RemoteFile implements Comparable<RemoteFile> {
 
-	/**
-	 * The remote path in which this file or directory resides. 
+	/** The remote path in which this file or directory resides. 
 	 */
 	private String path;
 	
-	/**
-	 * The name of this file or directory.
+	/** The name of this file or directory.
 	 */
 	private String name;
 	
-	/**
-	 * The hash of this file or none if it's a directory.
+	/** The hash of this file or none if it's a directory.
 	 */
 	private Hash hash;
 	
-	/**
-	 * The last modified date of this file. (Epoch)
+	/** The last modified date of this file. (Epoch)
 	 */
 	private long lastmodified;
 	
-	/**
-	 * The size of this file.
+	/** The size of this file.
 	 */
 	private long size;
 	
-	/**
-	 * Constructs a remote file or directory representation.
+	/** Constructs a remote file or directory representation.
 	 * @param p The path in which the file or directory resides.
 	 * @param n The name of the file or directory.
 	 * @param h The hash of the file or directory.
@@ -47,32 +40,28 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
 		size = s;
 	}
 
-	/**
-	 * The path in which the file or directory resides.
+	/** The path in which the file or directory resides.
 	 * @return The path.
 	 */
 	public String getPath() {
 		return path;
 	}
 	
-	/**
-	 * The name of the file or directory.
+	/** The name of the file or directory.
 	 * @return The name.
 	 */
 	public String getName() {
 		return name;
 	}
 	
-	/**
-	 * The hash of the file or unset if for the directory.
+	/** The hash of the file or unset if for the directory.
 	 * @return The hash of the file or unset if for the directory.
 	 */
 	public Hash getHash() {
 		return hash;
 	}
 	
-	/**
-	 * The last modified date or directory.
+	/** The last modified date or directory.
 	 * @return The last modified epcoh date of this file. 0 if this is a
 	 * directory. 
 	 */
@@ -80,32 +69,28 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
 		return lastmodified;
 	}
 	
-	/**
-	 * The size of the file or directory.
+	/** The size of the file or directory.
 	 * @return Thie file of the size. <0 if this is a directory.
 	 */
 	public long getSize() {
 		return size;
 	}
 	
-	/**
-	 * Asks wether this is a directory.
+	/** Asks wether this is a directory.
 	 * @return True if this is a directory, false if not.
 	 */
 	public boolean isDirectory() {
 		return size < 0;
 	}
 	
-	/**
-	 * Asks wether this is a file.
+	/** Asks wether this is a file.
 	 * @return True if this is a file, false if not.
 	 */
 	public boolean isFile() {
 		return size >= 0;
 	}
 	
-	/**
-	 * Checks if this file has a hash.
+	/** Checks if this file has a hash.
 	 * @return True if this file has a hash. False if this file does not have
 	 * a hash or if this is a directory.
 	 */
@@ -117,12 +102,12 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
 		}
 	}
 	
-	/**
-	 * Compares this remote file to another.
+	/** Compares this remote file to another.
+	 * Returns < 0 if the given remote file is smaller.
+	 * Returns > 0 if the given remote file is bigger.
+	 * Returns = 0 if they are equal.
 	 * @param arg0 The remote file to compare to.
-	 * @return Returns < 0 if the given remote file is smaller.
-	 * > 0 if the given remote file is bigger.
-	 * = 0 if they are equal.
+	 * @return Returns as specified above.
 	 */
 	public int compareTo(RemoteFile arg0) {
 		if (isDirectory() && arg0.isFile()) {

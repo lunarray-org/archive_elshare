@@ -5,38 +5,31 @@ import java.net.InetAddress;
 
 import org.lunarray.lshare.protocol.Controls;
 
-/**
- * An outbound packet.
+/** An outbound packet.
  * @author Pal Hargitai
  */
 public abstract class PacketOut {
-
-	/**
-	 * The address used for broadcasting packets.
+	/** The address used for broadcasting packets.
 	 */
 	public final static String BROADCAST = "255.255.255.255";
 	
-	/**
-	 * The data of the packet.
+	/** The data of the packet.
 	 */
 	protected byte[] data;
 	
-	/**
-	 * Get the address that this packet is designated for. 
+	/** Get the address that this packet is designated for. 
 	 * @return The address that the packet is for.
 	 */
 	public abstract InetAddress getTarget();
 	
-	/**
-	 * Get the data of this packet.
+	/** Get the data of this packet.
 	 * @return The data.
 	 */
 	public byte[] getData() {
 		return data;
 	}
 	
-	/**
-	 * Get the packet that is to be sent.
+	/** Get the packet that is to be sent.
 	 * @return The packet.
 	 */
 	public DatagramPacket getPacket() {

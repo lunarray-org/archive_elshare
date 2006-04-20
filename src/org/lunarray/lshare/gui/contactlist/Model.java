@@ -14,29 +14,24 @@ import org.lunarray.lshare.protocol.events.UserEvent;
 import org.lunarray.lshare.protocol.events.UserListener;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
-/**
- * A tree model that associates itself to a given instance of the protocol.
+/** A tree model that associates itself to a given instance of the protocol.
  * It will listen to all user events and update itself accordingly.
  * @author Pal Hargitai
  */
 public class Model implements TreeModel,UserListener {
-	/**
-	 * The root node of this tree model.
+	/** The root node of this tree model.
 	 */
 	private Root root;
 	
-	/**
-	 * The listeners that listen to events on this model.
+	/** The listeners that listen to events on this model.
 	 */
 	private ArrayList<TreeModelListener> listener;
 	
-	/**
-	 * The main user interface to be triggered if a userlist is requested.
+	/** The main user interface to be triggered if a userlist is requested.
 	 */
 	private MainGUI gui;
 	
-	/**
-	 * Instanciates the mdoela nd associates itself with it.
+	/** Instanciates the mdoela nd associates itself with it.
 	 * @param ls The instance of the protocol to use.
 	 * @param mg The main user interface.
 	 */
@@ -46,16 +41,14 @@ public class Model implements TreeModel,UserListener {
 		listener = new ArrayList<TreeModelListener>();
 	}
 
-	/**
-	 * Get the root node of this model.
+	/** Get the root node of this model.
 	 * @return The root node.
 	 */
 	public Root getRoot() {
 		return root;
 	}
 
-	/**
-	 * Get the child at the specified inject of the specified object.
+	/** Get the child at the specified inject of the specified object.
 	 * @param arg0 The object to get the child of.
 	 * @param arg1 The index of the child.
 	 * @return The node at the specified index in the specified parent.
@@ -72,8 +65,7 @@ public class Model implements TreeModel,UserListener {
 		return null;
 	}
 
-	/**
-	 * Get the amount of children the object has.
+	/** Get the amount of children the object has.
 	 * @param arg0 The object to get the child count of.
 	 * @return The amount of children of the node.
 	 */
@@ -89,8 +81,7 @@ public class Model implements TreeModel,UserListener {
 		return 0;
 	}
 
-	/**
-	 * Checks wether the given object is a leaf.
+	/** Checks wether the given object is a leaf.
 	 * @param arg0 The object to check wether it's a leaf.
 	 * @return True if the node is a leaf, false if not.
 	 */
@@ -102,15 +93,13 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 
-	/**
-	 * Model requires this, ignore.
+	/** Model requires this, ignore.
 	 */
 	public void valueForPathChanged(TreePath arg0, Object arg1) {
 		// Ignore
 	}
 
-	/**
-	 * Get the index of the given child.
+	/** Get the index of the given child.
 	 * @param arg0 The parent.
 	 * @param arg1 The child node to get the index of.
 	 * @return The index of the child in the given parent.
@@ -131,24 +120,21 @@ public class Model implements TreeModel,UserListener {
 		return -1;
 	}
 
-	/**
-	 * Registers a listener.
+	/** Registers a listener.
 	 * @param arg0 The listener to register.
 	 */
 	public void addTreeModelListener(TreeModelListener arg0) {
 		listener.add(arg0);
 	}
 
-	/**
-	 * Removes a listener.
+	/** Removes a listener.
 	 * @param arg0 The listener to remove.
 	 */
 	public void removeTreeModelListener(TreeModelListener arg0) {
 		listener.remove(arg0);
 	}
 	
-	/**
-	 * A user signoff event.
+	/** A user signoff event.
 	 * @param e The user event.
 	 */
 	public void signoff(UserEvent e) {
@@ -164,8 +150,7 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 	
-	/**
-	 * A user signon event.
+	/** A user signon event.
 	 * @param e The user event.
 	 */
 	public void signon(UserEvent e) {
@@ -179,8 +164,7 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 	
-	/**
-	 * A user update event.
+	/** A user update event.
 	 * @param e The user event.
 	 */
 	public void update(UserEvent e) {
@@ -197,8 +181,7 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 
-	/**
-	 * Toggle the status of a buddy. That is, a buddy gets unset and a regular
+	/** Toggle the status of a buddy. That is, a buddy gets unset and a regular
 	 * user becomes a buddy.
 	 * @param u The user to toggle.
 	 */
@@ -228,8 +211,7 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 
-	/**
-	 * Triggers showing of a filelist of a user.
+	/** Triggers showing of a filelist of a user.
 	 * @param u The user to show the filelist of.
 	 */
 	protected void showUserList(User u) {
@@ -248,8 +230,7 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 	
-	/**
-	 * Fires an insert of a node to the models listeners.
+	/** Fires an insert of a node to the models listeners.
 	 * @param n The node that has been inserted.
 	 */
 	private void fireInsert(UserNode n) {
@@ -260,8 +241,7 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 	
-	/**
-	 * Fires a remove of a node to the models listeners.
+	/** Fires a remove of a node to the models listeners.
 	 * @param n The node that has been removed.
 	 * @param i The nodes former index.
 	 */
@@ -279,8 +259,7 @@ public class Model implements TreeModel,UserListener {
 		}
 	}
 	
-	/**
-	 * Generates a TreeModelEvent.
+	/** Generates a TreeModelEvent.
 	 * @param n The node for the event.
 	 * @param i The index of the event.
 	 * @return The event that can be fired to the listeners.

@@ -2,24 +2,19 @@ package org.lunarray.lshare.protocol.tasks;
 
 import org.lunarray.lshare.protocol.Controls;
 
-/**
- * A seperate thread for performing a task.
+/** A seperate thread for performing a task.
  * @author Pal Hargitai
  */
 public class TaskThread extends Thread {
-
-	/**
-	 * The task that is to be run.
+	/** The task that is to be run.
 	 */
 	private RunnableTask task;
 	
-	/**
-	 * The controls to the protocol.
+	/** The controls to the protocol.
 	 */
 	private Controls controls;
 	
-	/**
-	 * Constructs a task thread.
+	/** Constructs a task thread.
 	 * @param g The group that the thread should reside in.
 	 * @param r The task that should be run.
 	 * @param c The controls to the protocol.
@@ -30,8 +25,7 @@ public class TaskThread extends Thread {
 		controls = c;
 	}
 	
-	/**
-	 * Runs the task.
+	/** Runs the task.
 	 */
 	public void run() {
 		task.runTask(controls);

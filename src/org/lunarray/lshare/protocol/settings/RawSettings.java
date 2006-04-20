@@ -5,26 +5,21 @@ import java.util.prefs.Preferences;
 
 import org.lunarray.lshare.protocol.Controls;
 
-/**
- * The raw settings to be used by the other settings.
+/** The raw settings to be used by the other settings.
  * @author Pal Hargitai
  */
 public class RawSettings {
-	
-	/**
-	 * The java preferences to use.
+	/** The java preferences to use.
 	 */
 	private Preferences prefs;
 	
-	/**
-	 * The constructor, gets the settings for the package.
+	/** The constructor, gets the settings for the package.
 	 */
 	public RawSettings() {
 		prefs = Preferences.userNodeForPackage(this.getClass());
 	}
 	
-	/**
-	 * Handles quitting, flushes settings to backstore.
+	/** Handles quitting, flushes settings to backstore.
 	 */
 	public void quit() {
 		try {
@@ -34,8 +29,7 @@ public class RawSettings {
 		}
 	}
 	
-	/**
-	 * Remove the key and value at the given location.
+	/** Remove the key and value at the given location.
 	 * @param loc The location.
 	 * @param key They key.
 	 */
@@ -44,8 +38,7 @@ public class RawSettings {
 		n.remove(key);
 	}
 	
-	/**
-	 * Removes the node, and it's child nodes, at the given location.
+	/** Removes the node, and it's child nodes, at the given location.
 	 * @param loc The location.
 	 */
 	public void removeNode(String loc) {
@@ -57,8 +50,7 @@ public class RawSettings {
 		}
 	}
 	
-	/**
-	 * Get the keys of the node.
+	/** Get the keys of the node.
 	 * @param loc The location of the node.
 	 * @return The keys of the node.
 	 */
@@ -74,8 +66,7 @@ public class RawSettings {
 		return new String[0];
 	}
 	
-	/**
-	 * Get a value specified by a given key.
+	/** Get a value specified by a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get value of.
 	 * @param def The default value if key doesn't exist.
@@ -86,8 +77,7 @@ public class RawSettings {
 		return n.get(key, def);
 	}
 
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -102,8 +92,7 @@ public class RawSettings {
 		}
 	}
 	
-	/**
-	 * Get the int at the given key.
+	/** Get the int at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -114,8 +103,7 @@ public class RawSettings {
 		return n.getInt(key, def);
 	}
 	
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -130,8 +118,7 @@ public class RawSettings {
 		}
 	}
 	
-	/**
-	 * Get the bool at the given key.
+	/** Get the bool at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -142,8 +129,7 @@ public class RawSettings {
 		return n.getBoolean(key, def);
 	}
 	
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -158,8 +144,7 @@ public class RawSettings {
 		}
 	}
 	
-	/**
-	 * Get the bytearray at the given key.
+	/** Get the bytearray at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -170,8 +155,7 @@ public class RawSettings {
 		return n.getByteArray(key, def);
 	}
 	
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -186,8 +170,7 @@ public class RawSettings {
 		}
 	}
 	
-	/**
-	 * Get the long at the given key.
+	/** Get the long at the given key.
 	 * @param loc The location of the node.
 	 * @param key The key to get the value of;
 	 * @param def The default value if none is set.
@@ -198,8 +181,7 @@ public class RawSettings {
 		return n.getLong(key, def);
 	}
 	
-	/**
-	 * Associate a value to a given key.
+	/** Associate a value to a given key.
 	 * @param loc The location of the node.
 	 * @param key The key to associate.
 	 * @param val The value.
@@ -214,8 +196,7 @@ public class RawSettings {
 		}
 	}
 	
-	/**
-	 * Gets the names of all children.
+	/** Gets the names of all children.
 	 * @param loc The location to get the children of.
 	 * @return The children of the specified location.
 	 */
@@ -228,6 +209,8 @@ public class RawSettings {
 		}
 	}
 	
+	/** Flush the settings to the backing store.
+	 */
 	public void flush() {
 		try {
 			prefs.flush();

@@ -5,35 +5,28 @@ import java.util.concurrent.Semaphore;
 
 import org.lunarray.lshare.protocol.Controls;
 
-/**
- * A lazy thread whose job have no priority and only cares about getting them
+/** A lazy thread whose job have no priority and only cares about getting them
  * done 'some time'.
  * @author Pal Hargitai
  */
 public class LazyThread extends Thread {
-
-	/**
-	 * The queue of tasks to be done.
+	/** The queue of tasks to be done.
 	 */
 	private LinkedBlockingQueue<RunnableTask> queue;
 	
-	/**
-	 * The controls to the protocol.
+	/** The controls to the protocol.
 	 */
 	private Controls controls;
 	
-	/**
-	 * Wether this should run.
+	/** Wether this should run.
 	 */
 	private boolean shouldrun;
 	
-	/**
-	 * The semaphore to synchronise shutdown.
+	/** The semaphore to synchronise shutdown.
 	 */
 	private Semaphore running;
 	
-	/**
-	 * Constructs the lazy thread.
+	/** Constructs the lazy thread.
 	 * @param c The controls to the protocol.
 	 */
 	public LazyThread(Controls c) {
@@ -43,16 +36,14 @@ public class LazyThread extends Thread {
 		running = new Semaphore(1);
 	}
 	
-	/**
-	 * Enqueue a task to be run.
+	/** Enqueue a task to be run.
 	 * @param r The task to run.
 	 */
 	public void enqueue(RunnableTask r) {
 		queue.add(r);
 	}
 	
-	/**
-	 * Close down this thread.
+	/** Close down this thread.
 	 */
 	public void close() {
 		shouldrun = false;
@@ -64,8 +55,7 @@ public class LazyThread extends Thread {
 		interrupt();
 	}
 	
-	/**
-	 * Run the thread and perform all queued tasks.
+	/** Run the thread and perform all queued tasks.
 	 */
 	public void run() {
 		run: {

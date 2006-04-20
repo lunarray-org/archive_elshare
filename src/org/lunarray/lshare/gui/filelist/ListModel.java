@@ -16,19 +16,15 @@ import com.sun.swing.TreeTableModel;
 
 public class ListModel extends AbstractTreeTableModel implements 
 		TreeTableModel {
-	
-	/**
-	 * The model listeners.
+	/** The model listeners.
 	 */
 	private ArrayList<TreeModelListener> listeners;
 	
-	/**
-	 * The file list that this model is used in.
+	/** The file list that this model is used in.
 	 */
 	private FileList list;
 	
-	/**
-	 * Constructs a list.
+	/** Constructs a list.
 	 * @param l The userlist that the filelisti s fetched from.
 	 * @param u The user that the filelist is to be fetched from.
 	 * @param f The file list that this model is used in.
@@ -41,24 +37,21 @@ public class ListModel extends AbstractTreeTableModel implements
 		list = f;
 	}
 	
-	/**
-	 * Removes a model listener.
+	/** Removes a model listener.
 	 * @param arg0 The listener to be removed.
 	 */
 	public void removeTreeModelListener(TreeModelListener arg0) {
 		listeners.remove(arg0);
 	}
 	
-	/**
-	 * Adds a model listener.
+	/** Adds a model listener.
 	 * @param arg0 The listener to be added.
 	 */
 	public void addTreeModelListener(TreeModelListener arg0) {
 		listeners.add(arg0);
 	}
 	
-	/**
-	 * Gets a the child at of the specified node at the specified index.
+	/** Gets a the child at of the specified node at the specified index.
 	 * @param arg0 The parent.
 	 * @param arg1 The index of the child.
 	 * @return The child.
@@ -71,8 +64,7 @@ public class ListModel extends AbstractTreeTableModel implements
 		}
 	}
 	
-	/**
-	 * Gets the amount of children the node has.
+	/** Gets the amount of children the node has.
 	 * @param arg0 The node to get the count of.
 	 */
 	public int getChildCount(Object arg0) {
@@ -83,8 +75,7 @@ public class ListModel extends AbstractTreeTableModel implements
 		}
 	}
 	
-	/**
-	 * Gets the index of the child in the parent.
+	/** Gets the index of the child in the parent.
 	 * @param arg0 The parent.
 	 * @param arg1 The child.
 	 * @return The index of the child in the parent.
@@ -98,8 +89,7 @@ public class ListModel extends AbstractTreeTableModel implements
 		}
 	}
 	
-	/**
-	 * Gets the class of the spcified column.
+	/** Gets the class of the spcified column.
 	 * @param column The column whose class to get.
 	 * @return The class of the specified column.
 	 */
@@ -112,16 +102,14 @@ public class ListModel extends AbstractTreeTableModel implements
 		}
 	}
 	
-	/**
-	 * Gets the amount of columns.
+	/** Gets the amount of columns.
 	 * @return The amount of columns. (Generally 4)
 	 */
 	public int getColumnCount() {
 		return 4;
 	}
 	
-	/**
-	 * Gets the name of the specified column.
+	/** Gets the name of the specified column.
 	 * @param column The column index.
 	 * @return The name of the specified column.
 	 */
@@ -140,8 +128,7 @@ public class ListModel extends AbstractTreeTableModel implements
 		}	
 	}
 	
-	/**
-	 * Gets the value of the node in the specific column.
+	/** Gets the value of the node in the specific column.
 	 * @param node The node to get the value of.
 	 * @param column The column to get the value of.
 	 * @return The value at the specified node and column.
@@ -174,8 +161,7 @@ public class ListModel extends AbstractTreeTableModel implements
 		}
 	}
 	
-	/**
-	 * Checks wether the specified node is a leaf.
+	/** Checks wether the specified node is a leaf.
 	 * @param arg0 The node to check.
 	 * @return True if the node is a leaf, false if not.
 	 */
@@ -187,8 +173,7 @@ public class ListModel extends AbstractTreeTableModel implements
 		}
 	}
 	
-	/**
-	 * Updates the given node, ie. tells listeners that children have bene
+	/** Updates the given node, ie. tells listeners that children have bene
 	 * inserted.
 	 * @param n The node to update.
 	 */
@@ -203,8 +188,7 @@ public class ListModel extends AbstractTreeTableModel implements
 		list.updatedModel();
 	}
 	
-	/**
-	 * Gets the path from this node to the root node.
+	/** Gets the path from this node to the root node.
 	 * @param node The node to get the path of.
 	 * @param depth The current depth.
 	 * @return The path from the given node to the root.

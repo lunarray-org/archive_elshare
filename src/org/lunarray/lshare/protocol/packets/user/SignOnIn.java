@@ -8,8 +8,7 @@ import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 
-/**
- * An incoming signon packet.<br>
+/** An incoming signon packet.<br>
  * Purpose:<br>
  * Signon packet.<br>
  * UDP broadcast.<br>
@@ -25,37 +24,30 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
  * @author Pal Hargitai
  */
 public class SignOnIn extends PacketIn {
-	
-	/**
-	 * The packet that is to be handled.
+	/** The packet that is to be handled.
 	 */
 	private DatagramPacket packet;
 	
-	/**
-	 * The source of the packet.
+	/** The source of the packet.
 	 */
 	private InetAddress source;
 	
-	/**
-	 * The username from the packet.
+	/** The username from the packet.
 	 */
 	private String username;
 	
-	/**
-	 * The challenge from the packet.
+	/** The challenge from the packet.
 	 */
 	private String challenge;
 	
-	/**
-	 * Gets the type of this packet.
+	/** Gets the type of this packet.
 	 * @return The packet identifier.
 	 */
 	public static byte getType() {
 		return (byte)0x00;
 	}
 	
-	/**
-	 * Checks if the given data of this type.
+	/** Checks if the given data of this type.
 	 * @param data The data to check.
 	 * @return True if the data is of the given type. False if not.
 	 */
@@ -63,8 +55,7 @@ public class SignOnIn extends PacketIn {
 		return data[0] == getType();
 	}
 	
-	/**
-	 * Constructs an incoming signon packet.
+	/** Constructs an incoming signon packet.
 	 * @param p The packet to constructs this data from.
 	 */
 	public SignOnIn(DatagramPacket p) {
@@ -72,8 +63,7 @@ public class SignOnIn extends PacketIn {
 	}
 	
 	@Override
-	/**
-	 * Parses the packet.
+	/** Parses the packet.
 	 * @throws MalformedPacketException Thrown if the packet data is corrupt.
 	 */
 	public void parse() throws MalformedPacketException {
@@ -100,8 +90,7 @@ public class SignOnIn extends PacketIn {
 		}
 	}
 
-	/**
-	 * Handles the packet.
+	/** Handles the packet.
 	 * @param c The controls to the rest of the protocol.
 	 */
 	public void runTask(Controls c) {

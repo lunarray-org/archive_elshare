@@ -9,8 +9,7 @@ import org.lunarray.lshare.protocol.packets.PacketIn;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.search.StringSearchHandler;
 
-/**
- * An incoming search request.<br>
+/** An incoming search request.<br>
  * Packet 4:<br>
  * Purpose:<br>
  * Search for a filename.<br>
@@ -22,40 +21,33 @@ import org.lunarray.lshare.protocol.state.search.StringSearchHandler;
  * @author Pal Hargitai
  */
 public class SearchIn extends PacketIn {
-	
-	/**
-	 * The incoming search request.
+	/** The incoming search request.
 	 */
 	private String query;
 	
-	/**
-	 * The datagram packet that has been received.
+	/** The datagram packet that has been received.
 	 */
 	private DatagramPacket packet;
 	
-	/**
-	 * The s
+	/** The source of the search.
 	 */
 	private InetAddress source;
 	
-	/**
-	 * Constructs an incoming search request.
+	/** Constructs an incoming search request.
 	 * @param p The packet that came in.
 	 */
 	public SearchIn(DatagramPacket p) {
 		packet = p;
 	}
 	
-	/**
-	 * Gets the type of the packet.
+	/** Gets the type of the packet.
 	 * @return The type of the packet.
 	 */
 	public static byte getType() {
 		return (byte)0x11;
 	}
 	
-	/**
-	 * Checks if the data is of this type.
+	/** Checks if the data is of this type.
 	 * @param data The data to check the type of.
 	 * @return True if the given data is of this type, false if not.
 	 */
@@ -64,8 +56,7 @@ public class SearchIn extends PacketIn {
 	}
 	
 	@Override
-	/**
-	 * Parse the current packet.
+	/** Parse the current packet.
 	 * @throws MalformedPacketException Thrown if the packet is not readable.
 	 */
 	public void parse() throws MalformedPacketException {
@@ -81,8 +72,7 @@ public class SearchIn extends PacketIn {
 		}
 	}
 
-	/**
-	 * Runs the task of parsing the packet.
+	/** Runs the task of parsing the packet.
 	 * @param c The controls to the protocol.
 	 */
 	public void runTask(Controls c) {

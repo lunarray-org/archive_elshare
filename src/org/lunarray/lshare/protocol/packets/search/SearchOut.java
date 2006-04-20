@@ -6,8 +6,7 @@ import java.net.UnknownHostException;
 import org.lunarray.lshare.protocol.packets.PacketOut;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 
-/**
- * An outgoing search request.<br>
+/** An outgoing search request.<br>
  * Packet 4:<br>
  * Purpose:<br>
  * Search for a filename.<br>
@@ -19,9 +18,7 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
  * @author Pal Hargitai
  */
 public class SearchOut extends PacketOut {
-	
-	/**
-	 * Constructs an outgoing search request.
+	/** Constructs an outgoing search request.
 	 * @param q The query to search for.
 	 */
 	public SearchOut(String q) {
@@ -38,8 +35,7 @@ public class SearchOut extends PacketOut {
 	}
 
 	@Override
-	/**
-	 * Gets the target of the packet.
+	/** Gets the target of the packet.
 	 * @return The address where to packet is designated for.
 	 */
 	public InetAddress getTarget() {

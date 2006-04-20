@@ -11,29 +11,23 @@ import org.lunarray.lshare.protocol.events.UserListener;
 import org.lunarray.lshare.protocol.filelist.FilelistEntry;
 import org.lunarray.lshare.protocol.filelist.FilelistReceiver;
 
-/**
- * Manages the user list.
+/** Manages the user list.
  * @author Pal Hargitai
  */
 public class UserList implements ExternalUserList {
-	
-	/**
-	 * The current list of users.
+	/** The current list of users.
 	 */
 	private LinkedList<User> userlist;
 	
-	/**
-	 * The listeners for user events.
+	/** The listeners for user events.
 	 */
 	private ArrayList<UserListener> listeners;
 	
-	/**
-	 * The controls to the protocol.
+	/** The controls to the protocol.
 	 */
 	private Controls controls;
 	
-	/**
-	 * Constructs a user list.
+	/** Constructs a user list.
 	 * @param c The controls to the protocol.
 	 */
 	public UserList(Controls c) {
@@ -43,8 +37,7 @@ public class UserList implements ExternalUserList {
 		initList();
 	}
 	
-	/**
-	 * Find a specified user by his challenge.
+	/** Find a specified user by his challenge.
 	 * @param challenge The challenge to find the user by.
 	 * @return The user associated with this challenge, or null.
 	 * @throws UserNotFound Thrown if the user cannot be found.
@@ -58,8 +51,7 @@ public class UserList implements ExternalUserList {
 		throw new UserNotFound();
 	}
 	
-	/**
-	 * Find a user by his address.
+	/** Find a user by his address.
 	 * @param a The address to find the user by.
 	 * @return The user with the specified address.
 	 * @throws UserNotFound Thrown if the user cannot be found.
@@ -75,16 +67,14 @@ public class UserList implements ExternalUserList {
 		throw new UserNotFound();
 	}
 	
-	/**
-	 * Get the userlist.
+	/** Get the userlist.
 	 * @return The current userlist.
 	 */
 	public synchronized List<User> getUserList() {
 		return userlist;
 	}
 	
-	/**
-	 * Handle a user signon.
+	/** Handle a user signon.
 	 * @param challenge The challenge of the user.
 	 * @param a The address of the user.
 	 * @param name The name of the user.
@@ -135,8 +125,7 @@ public class UserList implements ExternalUserList {
 		}
 	}
 	
-	/**
-	 * Handle a user signoff.
+	/** Handle a user signoff.
 	 * @param a The address of the user to sign off.
 	 */
 	public synchronized void signoffUser(InetAddress a) {
@@ -155,24 +144,21 @@ public class UserList implements ExternalUserList {
 		}
 	}
 
-	/**
-	 * Adds a listener for user events.
+	/** Adds a listener for user events.
 	 * @param lis The listener to register for user events.
 	 */
 	public synchronized void addListener(UserListener lis) {
 		listeners.add(lis);
 	}
 
-	/**
-	 * Removes a listener for user events.
+	/** Removes a listener for user events.
 	 * @param lis The listener to unregister from user events.
 	 */
 	public synchronized void removeListener(UserListener lis) {
 		listeners.remove(lis);
 	}
 	
-	/**
-	 * Get the specified users file list.
+	/** Get the specified users file list.
 	 * @param u The user to get the filelist of.
 	 * @return The users filelist.
 	 */
@@ -181,8 +167,7 @@ public class UserList implements ExternalUserList {
 		return flr.getRoot();
 	}
 	
-	/**
-	 * Unregister a user as a buddy.
+	/** Unregister a user as a buddy.
 	 * @param u The user to unbuddy.
 	 */
 	protected void removeBuddy(User u) {
@@ -191,8 +176,7 @@ public class UserList implements ExternalUserList {
 		update(new UserEvent(u, this));
 	}
 
-	/**
-	 * Registers a user as a buddy.
+	/** Registers a user as a buddy.
 	 * @param u The user to buddify.
 	 */
 	protected void addBuddy(User u) {
@@ -202,8 +186,7 @@ public class UserList implements ExternalUserList {
 		update(new UserEvent(u, this));
 	}
 	
-	/**
-	 * Inits the user list
+	/** Inits the user list
 	 */
 	private void initList() {
 		for (String k: controls.getSettings().getUserSettings().
@@ -214,8 +197,7 @@ public class UserList implements ExternalUserList {
 		}
 	}
 	
-	/**
-	 * Trigger listeners with a signon.
+	/** Trigger listeners with a signon.
 	 * @param e The event to give the listeners.
 	 */
 	private void signon(UserEvent e) {
@@ -227,8 +209,7 @@ public class UserList implements ExternalUserList {
 		}
 	}
 	
-	/**
-	 * Trigger listeners with a signoff.
+	/** Trigger listeners with a signoff.
 	 * @param e The event to give the listeners.
 	 */
 	private void signoff(UserEvent e) {
@@ -240,8 +221,7 @@ public class UserList implements ExternalUserList {
 		}
 	}	
 
-	/**
-	 * Trigger listeners with an update.
+	/** Trigger listeners with an update.
 	 * @param e The event to give the listeners.
 	 */
 	private void update(UserEvent e) {

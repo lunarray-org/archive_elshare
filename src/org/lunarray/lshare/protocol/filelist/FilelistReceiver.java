@@ -14,8 +14,7 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
-/**
- * A class for receiving file lists from users.
+/** A class for receiving file lists from users.<br>
  * Stream 1:<br>
  * Purpose:<br>
  * File browsing.<br>
@@ -49,34 +48,27 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
  * @author Pal Hargitai
  */
 public class FilelistReceiver {
-
-	/**
-	 * The user that this file list is requested from.
+	/** The user that this file list is requested from.
 	 */
 	private User user;
 	
-	/**
-	 * The socket for receiving a users file list.
+	/** The socket for receiving a users file list.
 	 */
 	private Socket socket;
 	
-	/**
-	 * The output stream for writing data.
+	/** The output stream for writing data.
 	 */
 	private OutputStream ostream;
 	
-	/**
-	 * The input stream for reading data.
+	/** The input stream for reading data.
 	 */
 	private InputStream istream;
 	
-	/**
-	 * Controls to the protocol.
+	/** Controls to the protocol.
 	 */
 	private Controls controls;
 	
-	/**
-	 * Constructs a file list receiver for receiving a users file list.
+	/** Constructs a file list receiver for receiving a users file list.
 	 * @param c The controls of the protocol.
 	 * @param u The user whose file list to get.
 	 */
@@ -94,8 +86,7 @@ public class FilelistReceiver {
 		
 	}
 	
-	/**
-	 * Gets entries for a specific path.
+	/** Gets entries for a specific path.
 	 * @param path The path to get the entries of.
 	 * @param isroot True if the root entry is requested.
 	 * @return The entries to be gotten.
@@ -147,8 +138,7 @@ public class FilelistReceiver {
 		return ret;
 	}
 	
-	/**
-	 * Close the connection and cleanup the socket.
+	/** Close the connection and cleanup the socket.
 	 */
 	public void close() {
 		try {
@@ -160,8 +150,7 @@ public class FilelistReceiver {
 
 	}
 
-	/**
-	 * Get the root node for the entries.
+	/** Get the root node for the entries.
 	 * @return The root entry.
 	 */
 	public FilelistEntry getRoot() {
@@ -169,8 +158,7 @@ public class FilelistReceiver {
 				0, -1, true);
 	}
 	
-	/**
-	 * Geet a specified number of bytes.
+	/** Get a specified number of bytes.
 	 * @param a The amount of bytes to get.
 	 * @return The bytes gotten.
 	 * @throws IOException If the socket could not be read from.
@@ -188,8 +176,7 @@ public class FilelistReceiver {
 		return dat;
 	}
 	
-	/**
-	 * Get a single file entry in a given path.
+	/** Get a single file entry in a given path.
 	 * @param p The path the entry is from.
 	 * @return A single file entry from a given path.
 	 * @throws IOException If the socket could not be read from.
@@ -207,59 +194,48 @@ public class FilelistReceiver {
 				false);
 	}
 	
-	/**
-	 * A timeout thread to ensure that a get does not go on indefinitely.
+	/** A timeout thread to ensure that a get does not go on indefinitely.
 	 * @author Pal Hargitai
 	 */
 	private class RecTO implements RunnableTask {
-		
-		/**
-		 * The allocated time to get a single item.
+		/** The allocated time to get a single item.
 		 */
 		public int NEXT = 1000;
 		
-		/**
-		 * The timestamp at which a socket is concidered corrupt.
+		/** The timestamp at which a socket is concidered corrupt.
 		 */
 		private long nextstamp;
 		
-		/**
-		 * True if there are items to be gotten, false if not.
+		/** True if there are items to be gotten, false if not.
 		 */
 		private boolean shouldget;
 		
-		/**
-		 * Constructs a timeout type thread.
+		/** Constructs a timeout type thread.
 		 */
 		public RecTO() {
 			nextstamp = System.currentTimeMillis() + NEXT;
 			shouldget = false;
 		}
 		
-		/**
-		 * Bumps the timestamp.
+		/** Bumps the timestamp.
 		 */
 		public void bump() {
 			nextstamp = System.currentTimeMillis() + NEXT;
 		}
 		
-		/**
-		 * Allow this thread to check for validity of the socket.
+		/** Allow this thread to check for validity of the socket.
 		 */
 		public void startGet() {
 			shouldget = true;
 		}
 		
-		/**
-		 * Disallows this thread from checking socket validity.
-		 *
+		/** Disallows this thread from checking socket validity.
 		 */
 		public void stopGet() {
 			shouldget = false;
 		}
 		
-		/**
-		 * Checks the socket for validity.
+		/** Checks the socket for validity.
 		 */
 		public void runTask(Controls c) {
 			run: {

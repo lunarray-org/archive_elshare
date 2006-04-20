@@ -10,7 +10,7 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.download.DownloadRequest;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
-/**
+/** An incoming request for a file transfer.<br>
  * Packet 6:<br>
  * Purpose:<br>
  * Request for file transfer.<br>
@@ -30,32 +30,29 @@ import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
  * @author Pal Hargitai
  */
 public class RequestIn extends PacketIn {
-
-	/**
-	 * The recieved packet.
+	/** The recieved packet.
 	 */
 	private DatagramPacket packet;
 	
+	/** The download requeste represented in the packet.
+	 */
 	private DownloadRequest request;
 	
-	/**
-	 * Constructs an incoming result.
+	/** Constructs an incoming result.
 	 * @param p The datagram packet in which the search results resides.
 	 */
 	public RequestIn(DatagramPacket p) {
 		packet = p;
 	}
 	
-	/**
-	 * Get the type of the packet.
+	/** Get the type of the packet.
 	 * @return The type of the packet.
 	 */
 	public static byte getType() {
 		return (byte)0x20;
 	}
 	
-	/**
-	 * Asks wether the given data is of a given result type.
+	/** Asks wether the given data is of a given result type.
 	 * @param data The data to check on if it's of a result type.
 	 * @return True if the given data is a result. False if not.
 	 */
@@ -64,6 +61,10 @@ public class RequestIn extends PacketIn {
 	}
 	
 	@Override
+	/** Parse this packet
+	 * @throws MalformedPacketException Thrown if the packet is of an invalid
+	 * format.
+	 */
 	public void parse() throws MalformedPacketException {
 		try {
 			byte[] data = packet.getData();
@@ -91,6 +92,9 @@ public class RequestIn extends PacketIn {
 		}
 	}
 	
+	/** Handles the request.
+	 * @param c The controls of the protocol.
+	 */
 	public void runTask(Controls c) {
 		try {
 			c.getState().getUploadManager().processRequest(c.getState().

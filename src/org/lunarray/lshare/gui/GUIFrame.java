@@ -6,24 +6,20 @@ import javax.swing.JInternalFrame;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-/**
- * An abstract class to provide some standard functionality for an internal
+/** An abstract class to provide some standard functionality for an internal
  * frame in the application.
  * @author Pal Hargitai
  */
 public abstract class GUIFrame extends InternalFrameAdapter {
-	/**
-	 * The internal frame that this class abstracts functionality for.
+	/** The internal frame that this class abstracts functionality for.
 	 */
 	protected JInternalFrame frame;
 	
-	/**
-	 * The main user interface, to update in case of events.
+	/** The main user interface, to update in case of events.
 	 */
 	private MainGUI main;
 	
-	/**
-	 * Instanciates the frame with some default values.
+	/** Instanciates the frame with some default values.
 	 * @param mg The main GUI.
 	 */
 	public GUIFrame(MainGUI mg) {
@@ -46,23 +42,20 @@ public abstract class GUIFrame extends InternalFrameAdapter {
 		frame.addInternalFrameListener(this);
 	}
 
-	/**
-	 * Gets the frame that is set up.
+	/** Gets the frame that is set up.
 	 * @return The setup frame.
 	 */
 	public JInternalFrame getFrame() {
 		return frame;
 	}
 	
-	/**
-	 * Should provide the actions on close.
+	/** Should provide the actions on close.
 	 * This may be to dispose the frame, or just hide it.
 	 */
 	public abstract void close();
 	
 	@Override
-	/**
-	 * Gives some functionality required for closing this frame.
+	/** Gives some functionality required for closing this frame.
 	 * @param arg0 The frame event that triggered this call.
 	 */
 	public void internalFrameClosing(InternalFrameEvent arg0) {

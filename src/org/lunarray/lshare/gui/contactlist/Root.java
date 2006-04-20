@@ -3,34 +3,27 @@ package org.lunarray.lshare.gui.contactlist;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
-/**
- * The root node of a model.
+/** The root node of a model.
  * @author Pal Hargitai
  */
 public class Root {
-	
-	/**
-	 * The group of online buddies.
+	/** The group of online buddies.
 	 */
 	private Group buddies;
 	
-	/**
-	 * The group of online users.
+	/** The group of online users.
 	 */
 	private Group online;
 
-	/**
-	 * The group of offline buddies.
+	/** The group of offline buddies.
 	 */
 	private Group offline;
 	
-	/**
-	 * The instance of the protocol that is accessed by this node.
+	/** The instance of the protocol that is accessed by this node.
 	 */
 	private LShare lshare;
 	
-	/**
-	 * Instanciates the node and it's direct children.
+	/** Instanciates the node and it's direct children.
 	 * @param ls The instance of the protocol to use.
 	 */
 	public Root(LShare ls) {
@@ -41,8 +34,7 @@ public class Root {
 		initTree();
 	}
 
-	/**
-	 * Gets the group at a specified index.
+	/** Gets the group at a specified index.
 	 * @param arg0 The index of the group to get.
 	 * @return The group at the index.
 	 */
@@ -59,16 +51,14 @@ public class Root {
 		}
 	}
 
-	/**
-	 * Gets the amount of children.
+	/** Gets the amount of children.
 	 * @return The amount of children in this node. (Generally 3)
 	 */
 	public int getChildCount() {
 		return 3;
 	}
 
-	/**
-	 * Gets the index of a specified child.
+	/** Gets the index of a specified child.
 	 * @param arg0 The object to get the index of.
 	 * @return The index of the child.
 	 */
@@ -84,40 +74,35 @@ public class Root {
 		}
 	}
 
-	/**
-	 * Gives a string representation of this root.
+	/** Gives a string representation of this root.
 	 * @return The string representation of this root.
 	 */
 	public String toString() {
 		return "Contact List";
 	}
 	
-	/**
-	 * Gets the online buddies group.
+	/** Gets the online buddies group.
 	 * @return The buddies group.
 	 */
 	protected Group getOnlineBuddies() {
 		return buddies;
 	}
 	
-	/**
-	 * Gets the offline buddies group.
+	/** Gets the offline buddies group.
 	 * @return The offline group.
 	 */
 	protected Group getOfflineBuddies() {
 		return offline;
 	}
 	
-	/**
-	 * Gets the other online group.
+	/** Gets the other online group.
 	 * @return The online group.
 	 */
 	protected Group getOnlineMisc() {
 		return online;
 	}
 
-	/**
-	 * Populating the groups with nodes.
+	/** Populating the groups with nodes.
 	 */
 	private void initTree() {
 		for (User u: lshare.getUserList().getUserList()) {

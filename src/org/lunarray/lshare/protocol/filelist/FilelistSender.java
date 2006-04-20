@@ -13,8 +13,7 @@ import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 
-/**
- * A class for sending file entries.<br>
+/** A class for sending file entries.<br>
  * Stream 1:<br>
  * Purpose:<br>
  * File browsing.<br>
@@ -48,29 +47,23 @@ import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
  * @author Pal Hargitai
  */
 public class FilelistSender extends Thread {
-
-	/**
-	 * The client socket for sending file entries.
+	/** The client socket for sending file entries.
 	 */
 	private Socket socket;
 	
-	/**
-	 * Access to the protocol.
+	/** Access to the protocol.
 	 */
 	private Controls controls;
 	
-	/**
-	 * The input stream from which data is read.
+	/** The input stream from which data is read.
 	 */
 	private InputStream istream;
 	
-	/**
-	 * The output stream to which data is written.
+	/** The output stream to which data is written.
 	 */
 	private OutputStream ostream;
 	
-	/**
-	 * The constructor for the file sender.
+	/** The constructor for the file sender.
 	 * @param g The thread group in which this thread will run.
 	 * @param c The controls for the protocol.
 	 * @param s The socket that this is to communicate to.
@@ -81,8 +74,7 @@ public class FilelistSender extends Thread {
 		socket = s;
 	}
 
-	/**
-	 * The main code for sending file entries.
+	/** The main code for sending file entries.
 	 */
 	public void run() {
 		run: {
@@ -148,8 +140,7 @@ public class FilelistSender extends Thread {
 		}
 	}
 	
-	/**
-	 * Closes the socket.
+	/** Closes the socket.
 	 */
 	public void close() {
 		try {
@@ -159,8 +150,7 @@ public class FilelistSender extends Thread {
 		}
 	}
 
-	/**
-	 * Send a file entry over the socket.
+	/** Send a file entry over the socket.
 	 * @param d The entry to send.
 	 * @throws IOException Incase a transferring an entry fails.
 	 */
@@ -188,8 +178,7 @@ public class FilelistSender extends Thread {
 		ostream.write(data);
 	}
 	
-	/**
-	 * Gets a certain amount of bytes.
+	/** Gets a certain amount of bytes.
 	 * @param a The amount of bytes to get.
 	 * @return An a amount of bytes in an array.
 	 * @throws IOException In case recieving an file fails.

@@ -10,8 +10,7 @@ import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.search.ResultHandler;
 import org.lunarray.lshare.protocol.state.search.SearchResult;
 
-/**
- * An incoming result.<br>
+/** An incoming result.<br>
  * Packet 4:<br>
  * Purpose:<br>
  * Search for a filename.<br>
@@ -23,35 +22,29 @@ import org.lunarray.lshare.protocol.state.search.SearchResult;
  * @author Pal Hargitai
  */
 public class ResultIn extends PacketIn {
-
-	/**
-	 * The recieved packet.
+	/** The recieved packet.
 	 */
 	private DatagramPacket packet;
 	
-	/**
-	 * The constructed search result.
+	/** The constructed search result.
 	 */
 	private SearchResult result;
 	
-	/**
-	 * Constructs an incoming result.
+	/** Constructs an incoming result.
 	 * @param p The datagram packet in which the search results resides.
 	 */
 	public ResultIn(DatagramPacket p) {
 		packet = p;
 	}
 	
-	/**
-	 * Get the type of the packet.
+	/** Get the type of the packet.
 	 * @return The type of the packet.
 	 */
 	public static byte getType() {
 		return (byte)0x10;
 	}
 	
-	/**
-	 * Asks wether the given data is of a given result type.
+	/** Asks wether the given data is of a given result type.
 	 * @param data The data to check on if it's of a result type.
 	 * @return True if the given data is a result. False if not.
 	 */
@@ -60,8 +53,7 @@ public class ResultIn extends PacketIn {
 	}
 	
 	@Override
-	/**
-	 * Parse the result data and construct a result.
+	/** Parse the result data and construct a result.
 	 * @throws MalformedPacketException Thrown if the packet is not readable.
 	 */
 	public void parse() throws MalformedPacketException {
@@ -91,8 +83,7 @@ public class ResultIn extends PacketIn {
 		}
 	}
 
-	/**
-	 * Enqueues the result to be parsed elsewhere.
+	/** Enqueues the result to be parsed elsewhere.
 	 * @param c The controls of the protocol.
 	 */
 	public void runTask(Controls c) {

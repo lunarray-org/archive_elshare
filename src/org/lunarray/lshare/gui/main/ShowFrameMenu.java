@@ -11,29 +11,23 @@ import javax.swing.JMenuItem;
 
 import org.lunarray.lshare.gui.MainGUI;
 
-/**
- * A class to provide the functionality of 'popping' a window to the front.
+/** A class to provide the functionality of 'popping' a window to the front.
  * @author Pal Hargitai
  */
 public class ShowFrameMenu extends JMenuItem implements ActionListener {
-
-	/**
-	 * The serial ID.
+	/** The serial ID.
 	 */
 	private static final long serialVersionUID = -5480412008853738195L;
 	
-	/**
-	 * The internal frame to show when this is clicked.
+	/** The internal frame to show when this is clicked.
 	 */
 	private JInternalFrame frame;
 	
-	/**
-	 * The desktop pane where the frame associated with this menuitem.
+	/** The desktop pane where the frame associated with this menuitem.
 	 */
 	private JDesktopPane parent;
 	
-	/**
-	 * Constructs the menu item.
+	/** Constructs the menu item.
 	 * @param f The frame to show if this item is clicked.
 	 * @param fr The desktop pane this frame is contained in.
 	 */
@@ -44,8 +38,7 @@ public class ShowFrameMenu extends JMenuItem implements ActionListener {
 		addActionListener(this);
 	}
 
-	/**
-	 * The action performed when this item is clicked on.
+	/** The action performed when this item is clicked on.
 	 * @param arg0 The action associated with the calling of this function.
 	 */
 	public void actionPerformed(ActionEvent arg0) {

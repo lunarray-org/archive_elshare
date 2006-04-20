@@ -15,29 +15,23 @@ import org.lunarray.lshare.protocol.RemoteFile;
  * @author Pal Hargitai
  */
 public class ShareList implements ExternalShareList {
-	
-	/**
-	 * The separator of the path elements, this is: {@value}.
+	/** The separator of the path elements, this is: {@value}.
 	 */
 	public final static String SEPARATOR = "/";
 	
-	/**
-	 * The named shares.
+	/** The named shares.
 	 */
 	private TreeMap<String, File> shares;
 	
-	/**
-	 * The settings that this list has access to.
+	/** The settings that this list has access to.
 	 */
 	private ShareSettings settings;
 	
-	/**
-	 * True if hashing is going on, false if not.
+	/** True if hashing is going on, false if not.
 	 */
 	private boolean ishashing;
 	
-	/**
-	 * Constructs the share list.
+	/** Constructs the share list.
 	 * @param c The coontrols for access to the protocol.
 	 */
 	public ShareList(Controls c) {
@@ -47,8 +41,7 @@ public class ShareList implements ExternalShareList {
 		init();
 	}
 	
-	/**
-	 * Registers a share.
+	/** Registers a share.
 	 * @param sname The name of the path to register.
 	 * @param fpath The path to register.
 	 */
@@ -59,8 +52,7 @@ public class ShareList implements ExternalShareList {
 		}
 	}
 	
-	/**
-	 * Unregisteres a share.
+	/** Unregisteres a share.
 	 * @param sname The name of the path to unregister.
 	 */
 	public void removeShare(String sname) {
@@ -70,8 +62,7 @@ public class ShareList implements ExternalShareList {
 		}
 	}
 	
-	/**
-	 * Gets the entry representing the specified file.
+	/** Gets the entry representing the specified file.
 	 * @param f The file to get the entry for.
 	 * @return The entry for the file.
 	 * @throws FileNotFoundException Thrown if a file is not found or shared.
@@ -90,8 +81,7 @@ public class ShareList implements ExternalShareList {
 		throw new FileNotFoundException();
 	}
 	
-	/**
-	 * Gets the entries matching the specified search string.
+	/** Gets the entries matching the specified search string.
 	 * @param s The search string to get entries from.
 	 * @return The entries matching the specified search string.
 	 */
@@ -104,8 +94,7 @@ public class ShareList implements ExternalShareList {
 		return entries;
 	}
 	
-	/**
-	 * Gets all children in a certain path.
+	/** Gets all children in a certain path.
 	 * @param path The path to get the entries of.
 	 * @return The list of entries in the given path.
 	 * @throws FileNotFoundException Thrown if the path is not found.
@@ -136,8 +125,7 @@ public class ShareList implements ExternalShareList {
 		return entries;
 	}
 	
-	/**
-	 * Gets all the base entries.
+	/** Gets all the base entries.
 	 * @return The entries representing the root entries.
 	 */
 	public List<ShareEntry> getBaseEntries() {
@@ -148,6 +136,11 @@ public class ShareList implements ExternalShareList {
 		return entries;
 	}
 	
+	/** Gets a file for a given remote entry.
+	 * @param f The entry to get the file for.
+	 * @return The file presented in the entry.
+	 * @throws FileNotFoundException Thrown if the file is not found.
+	 */
 	public File getFileForEntry(RemoteFile f) throws FileNotFoundException {
 		List<ShareEntry> shares = getChildrenIn(f.getPath());
 		
@@ -161,12 +154,10 @@ public class ShareList implements ExternalShareList {
 				}
 			}
 		}
-		
 		throw new FileNotFoundException();
 	}
 	
-	/**
-	 * Cleans up all shared files and rechecks all hashes.
+	/** Cleans up all shared files and rechecks all hashes.
 	 * @param sset The share settings to use.
 	 */
 	protected synchronized void hash(ShareSettings sset) {
@@ -192,8 +183,7 @@ public class ShareList implements ExternalShareList {
 		ishashing = false;
 	}
 	
-	/**
-	 * Gets all entries in the given path.
+	/** Gets all entries in the given path.
 	 * @param path The path to check for.
 	 * @param depth The depth the path is currently recursed in.
 	 * @param f The file whose entries are to be checked or given.
@@ -224,8 +214,7 @@ public class ShareList implements ExternalShareList {
 		}
 	}
 	
-	/**
-	 * Initialises the shares.
+	/** Initialises the shares.
 	 */
 	private void init() {
 		for (String s: settings.getShareNames()) {
@@ -238,8 +227,7 @@ public class ShareList implements ExternalShareList {
 		}
 	}
 	
-	/**
-	 * Checks if a given file is in the share.
+	/** Checks if a given file is in the share.
 	 * @param f The file to check.
 	 * @return True if the file is shared.
 	 */
@@ -252,8 +240,7 @@ public class ShareList implements ExternalShareList {
 		return false;
 	}
 	
-	/**
-	 * Gets all entries in the given path to match the search string.
+	/** Gets all entries in the given path to match the search string.
 	 * @param s The search string to match.
 	 * @param f The directory to search in.
 	 * @param path The path these entries reside in.
@@ -274,8 +261,7 @@ public class ShareList implements ExternalShareList {
 		return entries;
 	}
 	
-	/**
-	 * Hashes the specified file or any child entries.
+	/** Hashes the specified file or any child entries.
 	 * @param f The file and it's children to hash.
 	 */
 	private void hash(File f) {
