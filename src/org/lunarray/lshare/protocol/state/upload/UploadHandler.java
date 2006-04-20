@@ -4,24 +4,44 @@ import java.io.IOException;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.download.ResponseOut;
-import org.lunarray.lshare.protocol.state.download.DownloadRequest;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
+/** Handles setting up of an upload.
+ * @author Pal Hargitai
+ */
 public class UploadHandler implements RunnableTask {
-
+    /** The upload manager
+     */
 	private UploadManager manager;
-	private DownloadRequest request;
+    
+    /** The request for upload to manage.
+     */
+	private UploadRequest request;
+    
+    /** The actual upload.
+     */
 	private UploadTransfer transfer;
+    
+    /** The user to upload to.
+     */
 	private User user;
 	
-	public UploadHandler(UploadManager m, DownloadRequest r, User u) {
+    /** Constructs an upload handler.
+     * @param m The upload manager.
+     * @param r The request to handle.
+     * @param u The user that requested the upload.
+     */
+	public UploadHandler(UploadManager m, UploadRequest r, User u) {
 		manager = m;
 		request = r;
 		user = u;
 	}
 	
+    /** Handles the request.
+     * @param c The controls to the protocol.
+     */
 	public void runTask(Controls c) {
 		try {
 			transfer = new UploadTransfer(c.getState().getShareList().
@@ -40,12 +60,13 @@ public class UploadHandler implements RunnableTask {
 				
 				// Sleep for a while
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 				} catch (InterruptedException ie) {
 					// Ignore
 				}
 				if (!transfer.isDone()) {
 					if (!transfer.isRunning()) {
+                        // If it's neither done nor running, stop.
 						Controls.getLogger().warning("Transfer not running.");
 						transfer.close();
 					}

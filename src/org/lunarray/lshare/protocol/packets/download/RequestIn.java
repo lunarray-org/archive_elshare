@@ -7,7 +7,7 @@ import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
-import org.lunarray.lshare.protocol.state.download.DownloadRequest;
+import org.lunarray.lshare.protocol.state.upload.UploadRequest;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
 /** An incoming request for a file transfer.<br>
@@ -36,7 +36,7 @@ public class RequestIn extends PacketIn {
 	
 	/** The download requeste represented in the packet.
 	 */
-	private DownloadRequest request;
+	private UploadRequest request;
 	
 	/** Constructs an incoming result.
 	 * @param p The datagram packet in which the search results resides.
@@ -85,7 +85,7 @@ public class RequestIn extends PacketIn {
 					Hash.length() + 1 + 8 + 8 + 2 + psize + 1);
 			String name = PacketUtil.decode(nbytes).trim();
 			
-			request = new DownloadRequest(path, name, new Hash(hash), size, 
+			request = new UploadRequest(path, name, new Hash(hash), size, 
 					offset);
 		} catch (Exception e) {
 			throw new MalformedPacketException();
