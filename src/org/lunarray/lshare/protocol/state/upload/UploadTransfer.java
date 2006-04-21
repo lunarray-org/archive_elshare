@@ -11,8 +11,6 @@ import java.net.Socket;
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
-// TODO bandwidth throttle
-// TODO give a state
 /**
  * Uploads a file from a specific offset onward.
  * @author Pal Hargitai
@@ -153,7 +151,14 @@ public class UploadTransfer implements RunnableTask {
                 OutputStream ostream = socket.getOutputStream();
 
                 // While there is stuff to transfer, transfer.
+                int tokenamount = manager.getTokenValue();
                 while (istream.available() > 0) {
+                    if (tokenamount <= 0) {
+                        manager.getToken();
+                        tokenamount = manager.getTokenValue();
+                    } else {
+                        tokenamount--;
+                    }              
                     int totrans = Math.min(1024, istream.available());
                     byte[] dat = new byte[totrans];
                     istream.read(dat);

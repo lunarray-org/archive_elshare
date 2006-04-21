@@ -119,7 +119,11 @@ public class DownloadFileManager {
             IncompleteFileSettings e = new IncompleteFileSettings(s, settings);
             IncompleteFile n = new IncompleteFile(e, controls);
             n.initFromSettings();
-            files.put(e.getLocalTarget(), n);
+            if (e.getLocalTarget().exists()) {
+                files.put(e.getLocalTarget(), n);
+            } else {
+                e.removeFile();
+            }
         }
     }
 }

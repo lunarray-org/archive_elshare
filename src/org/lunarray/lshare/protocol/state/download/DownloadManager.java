@@ -182,7 +182,6 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      * @param c The controls of the protocol.
      */
     public void runTask(Controls c) {
-        // TODO put in new class
         run: {
             while (true) {
                 try {
@@ -226,6 +225,19 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         }
     }
 
+    /**
+     * Checks if this file is the only one.
+     * @param f The incomplete file to find.
+     */
+    protected synchronized boolean soleFile(IncompleteFile f) {
+        for (DownloadHandler h: transfers) {
+            if (f.equals(h.getFile())) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     /**
      * Removes a file from the queue.
      * @param f The file to remove from the queue.

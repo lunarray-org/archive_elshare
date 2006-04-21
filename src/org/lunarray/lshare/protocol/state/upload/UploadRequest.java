@@ -23,6 +23,7 @@ public class UploadRequest extends RemoteFile {
      */
     public UploadRequest(String p, String n, Hash h, long s, long o) {
         super(p, n, h, 1, s);
+        offset = o;
     }
 
     /**

@@ -4,6 +4,7 @@ import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.settings.RawSettings;
 import org.lunarray.lshare.protocol.state.download.DownloadSettings;
 import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
+import org.lunarray.lshare.protocol.state.upload.UploadSettings;
 import org.lunarray.lshare.protocol.state.userlist.UserSettings;
 
 /**
@@ -71,6 +72,11 @@ public class Settings implements ExternalSettings {
     private DownloadSettings dsettings;
 
     /**
+     * The settings for upload management.
+     */
+    private UploadSettings lsettings;
+    
+    /**
      * Constructs the settings and all settings that are dependant on it.
      * @param c The protocol controls.
      */
@@ -79,6 +85,7 @@ public class Settings implements ExternalSettings {
         usettings = new UserSettings(rsettings);
         ssettings = new ShareSettings(rsettings);
         dsettings = new DownloadSettings(rsettings);
+        lsettings = new UploadSettings(rsettings);
         initSettings();
     }
 
@@ -155,6 +162,14 @@ public class Settings implements ExternalSettings {
         return dsettings;
     }
 
+    /**
+     * Gets the settings that are relevant to upload management.
+     * @return The upload settings.
+     */
+    public UploadSettings getUploadSettings() {
+        return lsettings;
+    }
+    
     /**
      * Initialises the standard settings.
      */

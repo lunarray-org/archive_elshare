@@ -14,6 +14,10 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import com.sun.swing.AbstractTreeTableModel;
 import com.sun.swing.TreeTableModel;
 
+/**
+ * A list model for showing a users file list.
+ * @author Pal Hargitai
+ */
 public class ListModel extends AbstractTreeTableModel implements TreeTableModel {
     /**
      * The model listeners.

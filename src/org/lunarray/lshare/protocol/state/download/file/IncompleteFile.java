@@ -191,6 +191,9 @@ public class IncompleteFile {
         }
     }
 
+    /**
+     * Initialise the file from known settings.
+     */
     protected void initFromSettings() {
         file.initFromBack();
         hash = settings.getHash();

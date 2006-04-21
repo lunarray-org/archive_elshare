@@ -10,7 +10,6 @@ import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
-// TODO when chunk is unlocked, check state of incoming file
 /**
  * A download handler for handling the setup and cleanup of a single transfer.
  * @author Pal Hargitai
@@ -108,19 +107,15 @@ public class DownloadHandler {
                             && f.getPath().equals(remote.getPath())) {
                         return true;
                     } else {
-                        System.out.println("name and path didn't match");
                         return false;
                     }
                 } else {
-                    System.out.println("offset didn't match");
                     return false;
                 }
             } else {
-                System.out.println("hash didn't match");
                 return false;
             }
         } else {
-            System.out.println("user didn't match");
             return false;
         }
     }
@@ -136,6 +131,7 @@ public class DownloadHandler {
             try {
                 transfer.init();
                 status = DownloadHandlerStatus.RUNNING;
+                incomplete.setStatus(QueueStatus.RUNNING);
                 controls.getTasks().backgroundTask(transfer);
             } catch (IOException ie) {
                 // Something went wrong, cleanup
@@ -165,6 +161,14 @@ public class DownloadHandler {
                 chunk = incomplete.getChunk();
                 RequestOut ro = new RequestOut(user, remote, chunk.getMark());
                 chunk.lock();
+                switch (incomplete.getStatus()) {
+                case QUEUED:
+                case STOPPED:
+                    incomplete.setStatus(QueueStatus.CONNECTING);
+                    break;
+                default:
+                    // let it be
+                }
                 controls.getUDPTransport().send(ro);
                 status = DownloadHandlerStatus.CONNECTING;
                 controls.getTasks().enqueueMultiTask(
@@ -189,12 +193,24 @@ public class DownloadHandler {
     }
 
     /**
+     * Gets the incomplete file that is transferring.
+     * @return The file.
+     */
+    public IncompleteFile getFile() {
+        return incomplete;
+    }
+    
+    /**
      * The transfer is done transferring. Clean up.
      */
     protected void done() {
         close();
         manager.removeDownloadHandler(this);
 
+        if (manager.soleFile(incomplete)) {
+            incomplete.setStatus(QueueStatus.STOPPED);
+        }
+        
         if (chunk.getFile().isFinished()) {
             // TODO Check hash
             manager.removeFromQueue(incomplete);

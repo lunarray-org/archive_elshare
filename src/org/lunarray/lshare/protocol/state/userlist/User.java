@@ -161,9 +161,18 @@ public class User implements Comparable<User> {
         }
     }
 
+    /**
+     * Get this users challenge.
+     * @return The users challenge.
+     */
+    public String getChallenge() {
+        return challenge;
+    }
+
     @Override
     /**
      * Checks if this equals another user.
+     * @param arg0 The object to compare to.
      * @return True if this user is another user, false if not.
      */
     public boolean equals(Object arg0) {
@@ -200,14 +209,6 @@ public class User implements Comparable<User> {
                 getName() + " bumped time " + "from "
                         + Long.valueOf(time).toString());
         time = 0;
-    }
-
-    /**
-     * Get this users challenge.
-     * @return The users challenge.
-     */
-    public String getChallenge() {
-        return challenge;
     }
 
     /**

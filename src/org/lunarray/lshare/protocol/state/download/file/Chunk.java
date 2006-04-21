@@ -102,7 +102,7 @@ public class Chunk {
      * @return True if the chunk is done, false if not.
      */
     public boolean isDone() {
-        return end >= mark;
+        return end <= mark;
     }
 
     /**

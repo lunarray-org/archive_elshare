@@ -67,7 +67,7 @@ public class UploadHandler implements RunnableTask {
 
                 // Sleep for a while
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException ie) {
                     // Ignore
                 }

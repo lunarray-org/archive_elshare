@@ -75,6 +75,7 @@ public class ResponseIn extends PacketIn {
             byte[] data = packet.getData();
 
             long offset = PacketUtil.byteArrayToLong(data, 1);
+            
             long size = PacketUtil.byteArrayToLong(data, 9);
 
             int port = PacketUtil.byteArrayToShortU(data, 17);

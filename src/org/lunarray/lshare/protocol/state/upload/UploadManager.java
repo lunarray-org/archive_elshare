@@ -2,26 +2,49 @@ package org.lunarray.lshare.protocol.state.upload;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
-// TODO slot limit
-// TODO add external list
 /**
  * A manager for handling uploads.
  * @author Pal Hargitai
  */
-public class UploadManager {
+public class UploadManager implements ExternalUploadManager {
     /**
-     * The first port to bind to.
+     * The first port to bind to. This is port ${value};
      */
     public final static int BEGIN_PORT = 7401;
 
     /**
-     * The last port to bind to.
+     * The last port to bind to. This is port ${value};
      */
     public final static int END_PORT = 7500;
+
+    /**
+     * The interval between token additions. This is {@value} millseconds. Note
+     * that INTERVAL * AMOUNT = 1000.
+     */
+    public final static int INTERVAL = 10;
+
+    /**
+     * The amount of tokens. This is {@value}. Note that INTERVAL * AMOUNT =
+     * 1000.
+     */
+    public final static int AMOUNT = 100;
+
+    /**
+     * Bandwidth limiting. This should give some kind of tokenbucket
+     * implementation.
+     */
+    private Semaphore ratesem;
+
+    /**
+     * Rate value. The amount of bytes available with one token.
+     */
+    private int rateval;
 
     /**
      * All registered uploads.
@@ -34,23 +57,72 @@ public class UploadManager {
     private Controls controls;
 
     /**
+     * The upload settings.
+     */
+    private UploadSettings settings;
+
+    /**
+     * A synchornisation variable for controlling running of the token adder.
+     */
+    private boolean shouldrun;
+    
+    /**
      * Constructs an upload manager.
      * @param c The controls to the protocol.
      */
     public UploadManager(Controls c) {
         uploads = new ArrayList<UploadTransfer>();
         controls = c;
+        settings = controls.getSettings().getUploadSettings();
+        ratesem = new Semaphore(AMOUNT);
+        rateval = settings.getUpRate() / AMOUNT;
+        shouldrun = true;
+        c.getTasks().backgroundTask(new TokenAdder());
+    }
+    
+    /**
+     * Sets the amount of available upload slots.
+     * @param s The new amount of upload slots.
+     */
+    public void setSlots(int s) {
+        settings.setSlots(s);
+    }
+    
+    /**
+     * Gets the amount of available upload slots.
+     * @return The amount of upload slots.
+     */
+    public int getSlots() {
+        return settings.getSlots();
+    }
+    
+    /**
+     * Set the download rate.
+     * @param r The new download rate.
+     */
+    public void setRate(int r) {
+        settings.setUpRate(r);
+        rateval = settings.getUpRate() / AMOUNT;
+    }
+    
+    /**
+     * Get the download rate.
+     * @return The download rate.
+     */
+    public int getRate() {
+        return settings.getUpRate();
     }
 
     /**
      * Closes all uploads.
      */
     public void close() {
+        shouldrun = false;
         for (UploadTransfer t : uploads) {
             t.close();
         }
     }
-
+    
     /**
      * Gets a list of all uploads.
      * @return All known uploads.
@@ -65,8 +137,10 @@ public class UploadManager {
      * @param f The request for a filetransfer.
      */
     public void processRequest(User u, UploadRequest f) {
-        UploadHandler h = new UploadHandler(this, f, u);
-        controls.getTasks().backgroundTask(h);
+        if (settings.getSlots() > uploads.size()) {
+            UploadHandler h = new UploadHandler(this, f, u);
+            controls.getTasks().backgroundTask(h);
+        }
     }
 
     /**
@@ -86,6 +160,53 @@ public class UploadManager {
     protected void removeTransfer(UploadTransfer t) {
         if (uploads.contains(t)) {
             uploads.remove(t);
+        }
+    }
+
+    /**
+     * Get a single token for upload.
+     */
+    protected void getToken() {
+        try {
+            ratesem.acquire();
+        } catch (InterruptedException ie) {
+            // Should not happen, but just continue.
+        }
+    }
+    
+    /**
+     * Get the value for a token.
+     * @return The value of the token in kbytes.
+     */
+    protected int getTokenValue() {
+        return rateval;
+    }
+    
+    /**
+     * The adder of tokens.
+     * @author Pal Hargitai
+     */
+    private class TokenAdder implements RunnableTask {
+        /**
+         * Regularly adds tokens.
+         * @param c The controls to the protocol.
+         */
+        public void runTask(Controls c) {
+            run: {
+                while (true) {
+                    if (ratesem.availablePermits() < AMOUNT) {
+                        ratesem.release();
+                    }
+                    try {
+                        Thread.sleep(INTERVAL);
+                    } catch (InterruptedException ie) {
+                        // Ignore
+                    }
+                    if (!shouldrun) {
+                        break run;
+                    }
+                }
+            }
         }
     }
 }

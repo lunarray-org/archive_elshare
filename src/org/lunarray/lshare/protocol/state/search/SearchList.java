@@ -86,6 +86,6 @@ public class SearchList implements ExternalSearchList {
      * @param h The hash to search for.
      */
     public void searchForHash(Hash h) {
-        // TODO
+        // TODO Search for hash
     }
 }

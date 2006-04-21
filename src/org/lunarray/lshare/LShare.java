@@ -5,6 +5,7 @@ import org.lunarray.lshare.protocol.ExternalSettings;
 import org.lunarray.lshare.protocol.state.download.ExternalDownloadManager;
 import org.lunarray.lshare.protocol.state.search.ExternalSearchList;
 import org.lunarray.lshare.protocol.state.sharing.ExternalShareList;
+import org.lunarray.lshare.protocol.state.upload.ExternalUploadManager;
 import org.lunarray.lshare.protocol.state.userlist.ExternalUserList;
 
 /**
@@ -69,6 +70,14 @@ public class LShare {
         return controls.getState().getDownloadManager();
     }
 
+    /**
+     * Provides access to an abstraction of the upload manager of the protocol.
+     * @return An abstractin of the upload manager of the protocol.
+     */
+    public ExternalUploadManager getUploadManager() {
+        return controls.getState().getUploadManager();
+    }
+    
     /**
      * Starts the protocol and all underlying layers. That provide it's
      * functionality.
