@@ -220,6 +220,7 @@ public class DownloadHandler {
         
         if (chunk.getFile().isFinished()) {
             // TODO Check hash
+            // TODO make an input listener
             manager.removeFromQueue(incomplete);
             Controls.getLogger().info("Transfer done.");
         } else {

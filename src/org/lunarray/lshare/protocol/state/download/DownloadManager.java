@@ -20,6 +20,8 @@ import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /*
  * TODO rewrite to handle a per user queue
+ * TODO rewrite to handle transfers per incomplete file ie. file may get all 
+ * of it's transfers
  1- add to queue
 
  2- handle prelim queue to perm queue
@@ -69,11 +71,6 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     private DownloadFileManager filemanager;
 
     /**
-     * A synchronisation variable. True if this class should run, false if not.
-     */
-    private boolean shouldrun;
-
-    /**
      * The known transfers.
      */
     private ArrayList<DownloadHandler> transfers;
@@ -83,9 +80,12 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      */
     private SecondQueueParse secondqueue;
 
+    private Thread firstqueuethread;
+
     private ArrayList<DownloadListener> tlisteners;
+
     private ArrayList<QueueListener> qlisteners;
-    
+
     /**
      * Constructs the download manager.
      * @param c The controls to the protocol.
@@ -98,7 +98,6 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         queue = new ArrayList<IncompleteFile>();
         filemanager = new DownloadFileManager(c);
         secondqueue = new SecondQueueParse(this);
-        shouldrun = true;
         tlisteners = new ArrayList<DownloadListener>();
         qlisteners = new ArrayList<QueueListener>();
 
@@ -107,7 +106,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
             secondqueue.directRequest(f);
         }
 
-        controls.getTasks().backgroundTask(this);
+        firstqueuethread = controls.getTasks().backgroundTask(this);
         controls.getTasks().backgroundTask(secondqueue);
     }
 
@@ -152,7 +151,8 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      * Close the manager.
      */
     public void close() {
-        shouldrun = false;
+        secondqueue.close();
+        firstqueuethread.interrupt();
         for (DownloadHandler t : transfers) {
             t.close();
         }
@@ -217,28 +217,27 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                             // If adding source fails, don't add to queue
                             if (!queue.contains(inc)) {
                                 queue.add(inc);
-                                
+
                                 QueueEvent e = new QueueEvent(inc, this);
-                                for (QueueListener lis: qlisteners) {
+                                for (QueueListener lis : qlisteners) {
                                     lis.queueAdded(e);
                                 }
                             }
                         }
                     }
                 } catch (InterruptedException ie) {
-                    // Ignore
+                    // This should occur
+                    Thread.interrupted();
+                    break run;
                 } catch (FileNotFoundException nffe) {
                     // Ignore, shouldn't happen
                 } catch (FileExistsException fee) {
                     // Ignore, we don't overwrite
                 }
-                if (!shouldrun) {
-                    break run;
-                }
             }
         }
     }
-    
+
     /**
      * Removes a file from the queue.
      * @param f The file to remove from the queue.
@@ -246,40 +245,40 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     public void removeFromQueue(IncompleteFile f) {
         if (queue.contains(f)) {
             queue.remove(f);
-            
+
             QueueEvent e = new QueueEvent(f, this);
-            for (QueueListener lis: qlisteners) {
+            for (QueueListener lis : qlisteners) {
                 lis.queueRemoved(e);
             }
         }
     }
-    
+
     public void addQueueListener(QueueListener lis) {
         qlisteners.add(lis);
     }
-    
+
     public void removeQueueListener(QueueListener lis) {
         qlisteners.remove(lis);
     }
-    
+
     public void addTransferListener(DownloadListener lis) {
         tlisteners.add(lis);
     }
-    
+
     public void removeTransferListener(DownloadListener lis) {
         tlisteners.remove(lis);
     }
-    
+
     protected void updatedFile(IncompleteFile f) {
         QueueEvent e = new QueueEvent(f, this);
-        for (QueueListener lis: qlisteners) {
+        for (QueueListener lis : qlisteners) {
             lis.queueUpdated(e);
         }
     }
-   
+
     protected void updatedTransfer(DownloadHandler h) {
         DownloadEvent e = new DownloadEvent(h, this);
-        for (DownloadListener lis: tlisteners) {
+        for (DownloadListener lis : tlisteners) {
             lis.downloadUpdated(e);
         }
     }
@@ -289,7 +288,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      * @param f The incomplete file to find.
      */
     protected synchronized boolean soleFile(IncompleteFile f) {
-        for (DownloadHandler h: transfers) {
+        for (DownloadHandler h : transfers) {
             if (f.equals(h.getFile())) {
                 return false;
             }
@@ -304,9 +303,9 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     protected void addDownloadHandler(DownloadHandler h) {
         if (!transfers.contains(h)) {
             transfers.add(h);
-            
+
             DownloadEvent e = new DownloadEvent(h, this);
-            for (DownloadListener lis: tlisteners) {
+            for (DownloadListener lis : tlisteners) {
                 lis.downloadAdded(e);
             }
         }
@@ -319,9 +318,9 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     protected void removeDownloadHandler(DownloadHandler h) {
         if (transfers.contains(h)) {
             transfers.remove(h);
-            
+
             DownloadEvent e = new DownloadEvent(h, this);
-            for (DownloadListener lis: tlisteners) {
+            for (DownloadListener lis : tlisteners) {
                 lis.downloadRemoved(e);
             }
         }

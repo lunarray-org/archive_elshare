@@ -12,6 +12,13 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
 /**
+ * TODO rewrite such that it's status may be derived.
+ * Ie. the following holds:
+ * There are one or more transfers going on => RUNNING else
+ * There is one transfer and it is not running => CONNECTING else
+ * isFinished => FINISHED else
+ * !isEmpty => STOPPED else
+ * => Queued
  * A single incomplete file.
  * @author Pal Hargitai
  */

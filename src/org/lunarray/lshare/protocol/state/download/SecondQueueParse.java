@@ -44,6 +44,8 @@ public class SecondQueueParse implements RunnableTask {
      */
     private DownloadManager manager;
 
+    private boolean shouldrun;
+    
     /**
      * Constructs the queue parser.
      * @param m The download manager.
@@ -52,6 +54,7 @@ public class SecondQueueParse implements RunnableTask {
         ischecking = false;
         manager = m;
         requests = new ArrayList<IncompleteFile>();
+        shouldrun = true;
     }
 
     /**
@@ -62,47 +65,56 @@ public class SecondQueueParse implements RunnableTask {
         requests.add(inc);
     }
 
-    // TODO make regular task to check
     /**
      * Runs the checks.
      * @param c The controls of the protocol.
      */
     public void runTask(Controls c) {
-        while (true) {
-            check: {
-                if (ischecking) {
-                    break check;
-                } else {
-                    ischecking = true;
-                }
-
-                TreeSet<User> available = new TreeSet<User>();
-                for (IncompleteFile i : manager.getQueue()) {
-                    available.addAll(i.getSources());
-                }
-                for (DownloadHandler t : manager.getTransfers()) {
-                    available.remove(t.getUser());
-                }
-
-                for (IncompleteFile f : requests) {
-                    download(f, c, available);
-                }
-                requests.clear();
-
-                for (IncompleteFile i : manager.getQueue()) {
-                    if (i.getStatus() == QueueStatus.QUEUED) {
-                        download(i, c, available);
+        run: {
+            while (true) {
+                check: {
+                    if (ischecking) {
+                        break check;
+                    } else {
+                        ischecking = true;
                     }
-                }
 
-                ischecking = false;
-            }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ie) {
-                // Ignore
+                    TreeSet<User> available = new TreeSet<User>();
+                    for (IncompleteFile i : manager.getQueue()) {
+                        available.addAll(i.getSources());
+                    }
+                    for (DownloadHandler t : manager.getTransfers()) {
+                        available.remove(t.getUser());
+                    }
+
+                    for (IncompleteFile f : requests) {
+                        download(f, c, available);
+                    }
+                    requests.clear();
+
+                    for (IncompleteFile i : manager.getQueue()) {
+                        if (i.getStatus() == QueueStatus.QUEUED) {
+                            download(i, c, available);
+                        }
+                    }
+
+                    ischecking = false;
+                }
+                if (!shouldrun) {
+                    break run;
+                }
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException ie) {
+                    // Acknowledge that it's been interrupted
+                    Thread.interrupted();
+                }
             }
         }
+    }
+    
+    public void close() {
+        shouldrun = false;
     }
 
     /**

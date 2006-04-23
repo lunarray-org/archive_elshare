@@ -105,9 +105,11 @@ public class Tasks {
      * A background task, this starts a thread in the background. This should be
      * used with caution and specifically, rarely.
      * @param r The task to run.
+     * @return The thread that is running the task.
      */
-    public void backgroundTask(RunnableTask r) {
+    public Thread backgroundTask(RunnableTask r) {
         TaskThread t = new TaskThread(tgroup, r, controls);
         t.start();
+        return t;
     }
 }
