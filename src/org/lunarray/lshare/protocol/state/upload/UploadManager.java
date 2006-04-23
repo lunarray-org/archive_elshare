@@ -145,6 +145,8 @@ public class UploadManager implements ExternalUploadManager {
         if (settings.getSlots() > uploads.size()) {
             UploadHandler h = new UploadHandler(this, f, u);
             controls.getTasks().backgroundTask(h);
+        } else {
+            // TODO send user busy
         }
     }
     

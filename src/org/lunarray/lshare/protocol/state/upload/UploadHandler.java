@@ -1,5 +1,6 @@
 package org.lunarray.lshare.protocol.state.upload;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.lunarray.lshare.protocol.Controls;
@@ -51,8 +52,12 @@ public class UploadHandler implements RunnableTask {
      */
     public void runTask(Controls c) {
         try {
-            transfer = new UploadTransfer(c.getState().getShareList()
-                    .getFileForEntry(request), request.getOffset(), manager);
+            try {
+                transfer = new UploadTransfer(c.getState().getShareList()
+                        .getFileForEntry(request), request.getOffset(), manager);
+            } catch (FileNotFoundException fnfe) {
+                // TODO send file not found
+            }
 
             int port = transfer.init();
             Controls.getLogger().finer(
