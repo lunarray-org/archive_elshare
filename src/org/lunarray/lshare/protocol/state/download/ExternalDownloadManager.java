@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 
 import org.lunarray.lshare.protocol.RemoteFile;
+import org.lunarray.lshare.protocol.events.DownloadListener;
+import org.lunarray.lshare.protocol.events.QueueListener;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -41,4 +43,9 @@ public interface ExternalDownloadManager {
      * @param u The user to download from.
      */
     public void enqueue(RemoteFile f, User u);
+    
+    public void addTransferListener(DownloadListener lis);
+    public void removeTransferListener(DownloadListener lis);
+    public void addQueueListener(QueueListener lis);
+    public void removeQueueListener(QueueListener lis);
 }

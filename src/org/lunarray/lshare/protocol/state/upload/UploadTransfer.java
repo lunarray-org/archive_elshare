@@ -150,6 +150,8 @@ public class UploadTransfer implements RunnableTask {
                 socket = server.accept();
                 OutputStream ostream = socket.getOutputStream();
 
+                manager.statusUpdate(this);
+                
                 // While there is stuff to transfer, transfer.
                 int tokenamount = manager.getTokenValue();
                 while (istream.available() > 0) {

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.events.UploadEvent;
+import org.lunarray.lshare.protocol.events.UploadListener;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
@@ -66,6 +68,8 @@ public class UploadManager implements ExternalUploadManager {
      */
     private boolean shouldrun;
     
+    private ArrayList<UploadListener> listeners;
+    
     /**
      * Constructs an upload manager.
      * @param c The controls to the protocol.
@@ -78,6 +82,7 @@ public class UploadManager implements ExternalUploadManager {
         rateval = settings.getUpRate() / AMOUNT;
         shouldrun = true;
         c.getTasks().backgroundTask(new TokenAdder());
+        listeners = new ArrayList<UploadListener>();
     }
     
     /**
@@ -142,6 +147,23 @@ public class UploadManager implements ExternalUploadManager {
             controls.getTasks().backgroundTask(h);
         }
     }
+    
+    public void addListener(UploadListener lis) {
+        listeners.add(lis);
+    }
+    
+    public void removeListener(UploadListener lis) {
+        listeners.remove(lis);
+    }
+    
+    protected void statusUpdate(UploadTransfer t) {
+        if (uploads.contains(t)) {
+            UploadEvent e = new UploadEvent(t, this);
+            for (UploadListener lis: listeners) {
+                lis.uploadUpdated(e);
+            }
+        }
+    }
 
     /**
      * Adds an upload.
@@ -150,6 +172,11 @@ public class UploadManager implements ExternalUploadManager {
     protected void addTransfer(UploadTransfer t) {
         if (!uploads.contains(t)) {
             uploads.add(t);
+
+            UploadEvent e = new UploadEvent(t, this);
+            for (UploadListener lis: listeners) {
+                lis.uploadAdded(e);
+            }
         }
     }
 
@@ -160,6 +187,11 @@ public class UploadManager implements ExternalUploadManager {
     protected void removeTransfer(UploadTransfer t) {
         if (uploads.contains(t)) {
             uploads.remove(t);
+            
+            UploadEvent e = new UploadEvent(t, this);
+            for (UploadListener lis: listeners) {
+                lis.uploadRemoved(e);
+            }
         }
     }
 

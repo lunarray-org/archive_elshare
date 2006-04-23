@@ -2,6 +2,8 @@ package org.lunarray.lshare.protocol.state.upload;
 
 import java.util.List;
 
+import org.lunarray.lshare.protocol.events.UploadListener;
+
 /**
  * An external interface for upload management.
  * @author Pal Hargitai
@@ -36,4 +38,7 @@ public interface ExternalUploadManager {
      * @return All known uploads.
      */
     public List<UploadTransfer> getUploads();
+    
+    public void addListener(UploadListener lis);
+    public void removeListener(UploadListener lis);
 }

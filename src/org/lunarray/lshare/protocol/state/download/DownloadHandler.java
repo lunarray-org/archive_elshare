@@ -132,6 +132,10 @@ public class DownloadHandler {
                 transfer.init();
                 status = DownloadHandlerStatus.RUNNING;
                 incomplete.setStatus(QueueStatus.RUNNING);
+                
+                manager.updatedFile(incomplete);
+                manager.updatedTransfer(this);
+                
                 controls.getTasks().backgroundTask(transfer);
             } catch (IOException ie) {
                 // Something went wrong, cleanup
@@ -165,12 +169,14 @@ public class DownloadHandler {
                 case QUEUED:
                 case STOPPED:
                     incomplete.setStatus(QueueStatus.CONNECTING);
+                    manager.updatedFile(incomplete);
                     break;
                 default:
                     // let it be
                 }
                 controls.getUDPTransport().send(ro);
                 status = DownloadHandlerStatus.CONNECTING;
+                manager.updatedTransfer(this);
                 controls.getTasks().enqueueMultiTask(
                         new DownloadTimeout(this, ro));
                 manager.addDownloadHandler(this);
@@ -209,6 +215,7 @@ public class DownloadHandler {
 
         if (manager.soleFile(incomplete)) {
             incomplete.setStatus(QueueStatus.STOPPED);
+            manager.updatedFile(incomplete);
         }
         
         if (chunk.getFile().isFinished()) {
@@ -216,7 +223,8 @@ public class DownloadHandler {
             manager.removeFromQueue(incomplete);
             Controls.getLogger().info("Transfer done.");
         } else {
-            init(); // I'm guessing this state should allow this, unsure.
+            //init(); <- I'm guessing this state should allow this, unsure.
+            // It would be better to introduce a queuing mechanism to rerequest this again
         }
     }
 }

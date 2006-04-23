@@ -8,6 +8,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.RemoteFile;
+import org.lunarray.lshare.protocol.events.DownloadEvent;
+import org.lunarray.lshare.protocol.events.DownloadListener;
+import org.lunarray.lshare.protocol.events.QueueEvent;
+import org.lunarray.lshare.protocol.events.QueueListener;
 import org.lunarray.lshare.protocol.state.download.file.DownloadFileManager;
 import org.lunarray.lshare.protocol.state.download.file.FileExistsException;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
@@ -79,6 +83,9 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      */
     private SecondQueueParse secondqueue;
 
+    private ArrayList<DownloadListener> tlisteners;
+    private ArrayList<QueueListener> qlisteners;
+    
     /**
      * Constructs the download manager.
      * @param c The controls to the protocol.
@@ -92,6 +99,8 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         filemanager = new DownloadFileManager(c);
         secondqueue = new SecondQueueParse(this);
         shouldrun = true;
+        tlisteners = new ArrayList<DownloadListener>();
+        qlisteners = new ArrayList<QueueListener>();
 
         for (IncompleteFile f : filemanager.getIncompleteFiles()) {
             queue.add(f);
@@ -208,6 +217,11 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                             // If adding source fails, don't add to queue
                             if (!queue.contains(inc)) {
                                 queue.add(inc);
+                                
+                                QueueEvent e = new QueueEvent(inc, this);
+                                for (QueueListener lis: qlisteners) {
+                                    lis.queueAdded(e);
+                                }
                             }
                         }
                     }
@@ -224,6 +238,51 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
             }
         }
     }
+    
+    /**
+     * Removes a file from the queue.
+     * @param f The file to remove from the queue.
+     */
+    public void removeFromQueue(IncompleteFile f) {
+        if (queue.contains(f)) {
+            queue.remove(f);
+            
+            QueueEvent e = new QueueEvent(f, this);
+            for (QueueListener lis: qlisteners) {
+                lis.queueRemoved(e);
+            }
+        }
+    }
+    
+    public void addQueueListener(QueueListener lis) {
+        qlisteners.add(lis);
+    }
+    
+    public void removeQueueListener(QueueListener lis) {
+        qlisteners.remove(lis);
+    }
+    
+    public void addTransferListener(DownloadListener lis) {
+        tlisteners.add(lis);
+    }
+    
+    public void removeTransferListener(DownloadListener lis) {
+        tlisteners.remove(lis);
+    }
+    
+    protected void updatedFile(IncompleteFile f) {
+        QueueEvent e = new QueueEvent(f, this);
+        for (QueueListener lis: qlisteners) {
+            lis.queueUpdated(e);
+        }
+    }
+   
+    protected void updatedTransfer(DownloadHandler h) {
+        DownloadEvent e = new DownloadEvent(h, this);
+        for (DownloadListener lis: tlisteners) {
+            lis.downloadUpdated(e);
+        }
+    }
 
     /**
      * Checks if this file is the only one.
@@ -237,16 +296,6 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         }
         return true;
     }
-    
-    /**
-     * Removes a file from the queue.
-     * @param f The file to remove from the queue.
-     */
-    protected void removeFromQueue(IncompleteFile f) {
-        if (queue.contains(f)) {
-            queue.remove(f);
-        }
-    }
 
     /**
      * Adds a handler.
@@ -255,6 +304,11 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     protected void addDownloadHandler(DownloadHandler h) {
         if (!transfers.contains(h)) {
             transfers.add(h);
+            
+            DownloadEvent e = new DownloadEvent(h, this);
+            for (DownloadListener lis: tlisteners) {
+                lis.downloadAdded(e);
+            }
         }
     }
 
@@ -265,6 +319,11 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     protected void removeDownloadHandler(DownloadHandler h) {
         if (transfers.contains(h)) {
             transfers.remove(h);
+            
+            DownloadEvent e = new DownloadEvent(h, this);
+            for (DownloadListener lis: tlisteners) {
+                lis.downloadRemoved(e);
+            }
         }
     }
 }
