@@ -90,7 +90,8 @@ public class SecondQueueParse implements RunnableTask {
                             }
 
                             // No transfers from user, get do a normal request.
-                            for (IncompleteFile f : manager.getQueueFromUser(u)) {
+                            while (!manager.getQueueFromUser(u).isEmpty()) {
+                                IncompleteFile f = manager.getQueueFromUser(u).get(0);
                                 switch (f.getStatus()) {
                                 case FINISHED:
                                     manager.removeFromQueue(f);
@@ -99,9 +100,10 @@ public class SecondQueueParse implements RunnableTask {
                                 case RUNNING:
                                 case STOPPED:
                                     download(f, c, u);
-                                    break;
+                                    break request;
                                 default:
-                                // Ignore
+                                    // Ignore
+                                    break request;
                                 }
                             }
                         }
