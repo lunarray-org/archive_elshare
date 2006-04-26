@@ -3,7 +3,10 @@ package org.lunarray.lshare.protocol.state.download;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.lunarray.lshare.protocol.Controls;
@@ -18,33 +21,6 @@ import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
-/*
- * TODO rewrite to handle a per user queue
- * TODO rewrite to handle transfers per incomplete file ie. file may get all 
- * of it's transfers
- 1- add to queue
-
- 2- handle prelim queue to perm queue
-
- 3- check for transfferables
-
- 4- start transfers
-
- 5- transfer
-
- 6- transfer done/canceled
-
- 7- cleanup transfer
-
- 8- check for what has been done
-
- 9- notify listeners
-
- 10- do 3
-
- 11- cleanup when kicked
- */
-
 /**
  * A manager for downloads.
  * @author Pal Hargitai
@@ -58,7 +34,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     /**
      * The queue that may be directly processed.
      */
-    private ArrayList<IncompleteFile> queue;
+    private TreeMap<User, ArrayList<IncompleteFile>> queue;
 
     /**
      * The controls of the protocol.
@@ -95,14 +71,19 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
 
         transfers = new ArrayList<DownloadHandler>();
         tempqueue = new LinkedBlockingQueue<QueuedItem>();
-        queue = new ArrayList<IncompleteFile>();
+        queue = new TreeMap<User, ArrayList<IncompleteFile>>();
         filemanager = new DownloadFileManager(c);
         secondqueue = new SecondQueueParse(this);
         tlisteners = new ArrayList<DownloadListener>();
         qlisteners = new ArrayList<QueueListener>();
 
         for (IncompleteFile f : filemanager.getIncompleteFiles()) {
-            queue.add(f);
+            for (User u: f.getSources()) {
+                if (!queue.containsKey(u)) {
+                    queue.put(u, new ArrayList<IncompleteFile>());
+                }
+                queue.get(u).add(f);
+            }
             secondqueue.directRequest(f);
         }
 
@@ -140,11 +121,16 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         return transfers;
     }
 
-    /**
-     * Gets all queued files.
-     */
-    public List<IncompleteFile> getQueue() {
-        return queue;
+    public Set<User> getQueuedUsers() {
+        return queue.keySet();
+    }
+    
+    public List<IncompleteFile> getQueueFromUser(User u) {
+        if (queue.containsKey(u)) {
+            return queue.get(u);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -215,8 +201,12 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                                 // Ignore this
                             }
                             // If adding source fails, don't add to queue
-                            if (!queue.contains(inc)) {
-                                queue.add(inc);
+                            if (!queue.containsKey(i.getUser())) {
+                                queue.put(i.getUser(), new ArrayList<IncompleteFile>());
+                            }
+                            
+                            if (!queue.get(i.getUser()).contains(inc)) {
+                                queue.get(i.getUser()).add(inc);
 
                                 QueueEvent e = new QueueEvent(inc, this);
                                 for (QueueListener lis : qlisteners) {
@@ -243,13 +233,15 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      * @param f The file to remove from the queue.
      */
     public void removeFromQueue(IncompleteFile f) {
-        if (queue.contains(f)) {
-            queue.remove(f);
-
-            QueueEvent e = new QueueEvent(f, this);
-            for (QueueListener lis : qlisteners) {
-                lis.queueRemoved(e);
+        for (User u: queue.keySet()) {
+            if (queue.get(u).contains(f)) {
+                queue.get(u).remove(f);
             }
+        }
+        
+        QueueEvent e = new QueueEvent(f, this);
+        for (QueueListener lis : qlisteners) {
+            lis.queueRemoved(e);
         }
     }
 

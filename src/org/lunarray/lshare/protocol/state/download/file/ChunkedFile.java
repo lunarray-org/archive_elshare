@@ -70,7 +70,25 @@ public class ChunkedFile {
     public boolean isFinished() {
         return getTodo() == 0;
     }
+    
+    public boolean inProgress() {
+        for (Chunk c: chunks.values()) {
+            if (c.isLocked()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public boolean isEmpty() {
+        for (Chunk c: chunks.values()) {
+            if (!c.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     /**
      * Initialise the file from the backend.
      */

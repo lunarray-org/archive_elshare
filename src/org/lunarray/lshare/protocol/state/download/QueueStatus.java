@@ -21,7 +21,7 @@ public enum QueueStatus {
     STOPPED,
 
     /**
-     * Item is connecting.
+     * Item is done.
      */
-    CONNECTING
+    FINISHED
 }

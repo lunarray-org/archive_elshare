@@ -2,6 +2,7 @@ package org.lunarray.lshare.protocol.state.download;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.events.DownloadListener;
@@ -21,10 +22,12 @@ public interface ExternalDownloadManager {
     public List<DownloadHandler> getTransfers();
 
     /**
-     * Gets a list with all queued files.
+     * Gets a list of users who have queued files.
      * @return The queued files.
      */
-    public List<IncompleteFile> getQueue();
+    public Set<User> getQueuedUsers();
+    
+    public List<IncompleteFile> getQueueFromUser(User u);
 
     /**
      * Enqueues a file to a target directory.

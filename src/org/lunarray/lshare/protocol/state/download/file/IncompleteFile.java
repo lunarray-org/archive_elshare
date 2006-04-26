@@ -12,13 +12,6 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
 /**
- * TODO rewrite such that it's status may be derived.
- * Ie. the following holds:
- * There are one or more transfers going on => RUNNING else
- * There is one transfer and it is not running => CONNECTING else
- * isFinished => FINISHED else
- * !isEmpty => STOPPED else
- * => Queued
  * A single incomplete file.
  * @author Pal Hargitai
  */
@@ -48,10 +41,7 @@ public class IncompleteFile {
      */
     private TreeMap<User, RemoteFile> sources;
 
-    /**
-     * The sources to this file.
-     */
-    private QueueStatus status;
+    private boolean corrupt;
 
     /**
      * Constructs an incomplete file.
@@ -63,24 +53,41 @@ public class IncompleteFile {
         controls = c;
         sources = new TreeMap<User, RemoteFile>();
         file = new ChunkedFile(settings);
-        status = QueueStatus.QUEUED;
         hash = Hash.getUnset();
+        corrupt = false;
     }
-
+    
+    public boolean isCorrupt() {
+        return corrupt;
+    }
+    
+    public void checkIntegrity() {
+        if (hash.isEmpty()) {
+            Hash h = new Hash(settings.getLocalTarget());
+            corrupt = !hash.equals(h);
+        }
+    }
+    
+    public void delete() {
+        settings.removeFile();
+        file.close();
+        settings.getLocalTarget().delete();
+    }
+    
     /**
      * Gets the status of this file.
      * @return The status of this file.
      */
     public QueueStatus getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the status of this file.
-     * @param s The new status of this files.
-     */
-    public void setStatus(QueueStatus s) {
-        status = s;
+        if (file.isFinished()) {
+            return QueueStatus.FINISHED;
+        } else if (file.inProgress()) {
+            return QueueStatus.RUNNING;
+        } else if (file.isEmpty()) {
+            return QueueStatus.QUEUED;
+        } else {
+            return QueueStatus.STOPPED;
+        }
     }
 
     /**

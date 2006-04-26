@@ -131,7 +131,6 @@ public class DownloadHandler {
             try {
                 transfer.init();
                 status = DownloadHandlerStatus.RUNNING;
-                incomplete.setStatus(QueueStatus.RUNNING);
                 
                 manager.updatedFile(incomplete);
                 manager.updatedTransfer(this);
@@ -168,7 +167,6 @@ public class DownloadHandler {
                 switch (incomplete.getStatus()) {
                 case QUEUED:
                 case STOPPED:
-                    incomplete.setStatus(QueueStatus.CONNECTING);
                     manager.updatedFile(incomplete);
                     break;
                 default:
@@ -214,13 +212,11 @@ public class DownloadHandler {
         manager.removeDownloadHandler(this);
 
         if (manager.soleFile(incomplete)) {
-            incomplete.setStatus(QueueStatus.STOPPED);
             manager.updatedFile(incomplete);
         }
         
         if (chunk.getFile().isFinished()) {
-            // TODO Check hash
-            // TODO make an input listener
+            incomplete.checkIntegrity();
             manager.removeFromQueue(incomplete);
             Controls.getLogger().info("Transfer done.");
         } else {
