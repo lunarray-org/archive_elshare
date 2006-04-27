@@ -19,7 +19,9 @@ public class UploadItem implements TransferItem {
         upload = dh;
         progressbar = new JProgressBar();
 
+        progressbar.setStringPainted(true);
         progressbar.setBackground(Color.RED);
+        progressbar.setForeground(Color.RED.darker());
         
         progressbar.setMinimum(0);
         if (getSize() > Integer.MAX_VALUE) {

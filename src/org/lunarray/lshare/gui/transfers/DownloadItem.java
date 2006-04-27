@@ -19,7 +19,9 @@ public class DownloadItem implements TransferItem {
         transfer = dh;
         progressbar = new JProgressBar();
 
+        progressbar.setStringPainted(true);
         progressbar.setBackground(Color.GREEN);
+        progressbar.setForeground(Color.GREEN.darker());
         
         progressbar.setMinimum(0);
         if (getSize() > Integer.MAX_VALUE) {

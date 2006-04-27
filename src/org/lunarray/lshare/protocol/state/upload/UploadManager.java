@@ -128,7 +128,7 @@ public class UploadManager implements ExternalUploadManager {
     /**
      * Closes all uploads.
      */
-    public void close() {
+    public synchronized void close() {
         shouldrun = false;
         for (UploadTransfer t : uploads) {
             t.close();
