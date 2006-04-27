@@ -1,6 +1,6 @@
 package org.lunarray.lshare.gui;
 
-import org.lunarray.lshare.protocol.state.sharing.ShareList;
+import org.lunarray.lshare.protocol.RemoteFile;
 
 /**
  * Some standard functions to allow an more appealing representation of the data
@@ -32,8 +32,8 @@ public class GUIUtil {
      * @return The path with the last path element stripped.
      */
     public static String stripDirPath(String path) {
-        if (path.contains(ShareList.SEPARATOR)) {
-            return path.substring(0, path.lastIndexOf(ShareList.SEPARATOR));
+        if (path.contains(RemoteFile.SEPARATOR)) {
+            return path.substring(0, path.lastIndexOf(RemoteFile.SEPARATOR));
         } else {
             return "";
         }

@@ -47,7 +47,7 @@ public class UserNode implements Comparable<User> {
      * Gets a string representation of this node.
      */
     public String toString() {
-        return user.getName() + " (" + user.getHostname() + ")";
+        return user.toString();
     }
 
     /**

@@ -72,6 +72,10 @@ public class DownloadHandler {
         manager = m;
         status = DownloadHandlerStatus.INIT;
     }
+    
+    public RemoteFile getRemoteEntry() {
+        return remote;
+    }
 
     /**
      * Close down the handler and transfer.
@@ -172,7 +176,7 @@ public class DownloadHandler {
                 default:
                     // let it be
                 }
-                controls.getUDPTransport().send(ro);
+                //controls.getUDPTransport().send(ro);
                 status = DownloadHandlerStatus.CONNECTING;
                 manager.updatedTransfer(this);
                 controls.getTasks().enqueueMultiTask(

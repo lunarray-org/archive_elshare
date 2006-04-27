@@ -15,10 +15,6 @@ import org.lunarray.lshare.protocol.RemoteFile;
  * @author Pal Hargitai
  */
 public class ShareList implements ExternalShareList {
-    /**
-     * The separator of the path elements, this is: {@value}.
-     */
-    public final static String SEPARATOR = "/";
 
     /**
      * The named shares.
@@ -79,12 +75,12 @@ public class ShareList implements ExternalShareList {
         for (String skey : shares.keySet()) {
             if (f.getPath().startsWith(shares.get(skey).getPath())) {
                 String rewritten = "."
-                        + SEPARATOR
+                        + RemoteFile.SEPARATOR
                         + skey
                         + f.getPath().substring(
                                 shares.get(skey).getPath().length()).replace(
-                                File.separator, SEPARATOR);
-                int i = rewritten.lastIndexOf(SEPARATOR);
+                                File.separator, RemoteFile.SEPARATOR);
+                int i = rewritten.lastIndexOf(RemoteFile.SEPARATOR);
                 rewritten = rewritten.substring(0, i);
                 return new ShareEntry(f, f.getName(), rewritten, settings);
             }
@@ -101,7 +97,7 @@ public class ShareList implements ExternalShareList {
         ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
         for (String skey : shares.keySet()) {
             entries.addAll(getEntriesMatching(s, shares.get(skey), "."
-                    + SEPARATOR + skey));
+                    + RemoteFile.SEPARATOR + skey));
         }
         return entries;
     }
@@ -115,7 +111,7 @@ public class ShareList implements ExternalShareList {
     public List<ShareEntry> getChildrenIn(String path)
             throws FileNotFoundException {
         ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
-        String[] split = path.split(SEPARATOR);
+        String[] split = path.split(RemoteFile.SEPARATOR);
 
         if (split.length > 0) {
             if (split[0].equals(".")) {
@@ -273,8 +269,8 @@ public class ShareList implements ExternalShareList {
                 entries.add(new ShareEntry(e, e.getName(), path, settings));
             }
             if (e.isDirectory()) {
-                entries.addAll(getEntriesMatching(s, e, path + SEPARATOR
-                        + e.getName()));
+                entries.addAll(getEntriesMatching(s, e, path
+                        + RemoteFile.SEPARATOR + e.getName()));
             }
         }
         return entries;

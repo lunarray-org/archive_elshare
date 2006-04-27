@@ -26,16 +26,16 @@ public class UploadManager implements ExternalUploadManager {
     public final static int END_PORT = 7500;
 
     /**
-     * The interval between token additions. This is {@value} millseconds. Note
-     * that INTERVAL * AMOUNT = 1000.
+     * TODO Fix, this isn't right
+     * The interval between token additions.
      */
-    public final static int INTERVAL = 10;
+    public int interval;
 
     /**
-     * The amount of tokens. This is {@value}. Note that INTERVAL * AMOUNT =
-     * 1000.
+     * TODO Fix, this isn't right
+     * The amount of tokens.
      */
-    public final static int AMOUNT = 100;
+    public static final int AMOUNT = 100;
 
     /**
      * Bandwidth limiting. This should give some kind of tokenbucket
@@ -78,8 +78,15 @@ public class UploadManager implements ExternalUploadManager {
         uploads = new ArrayList<UploadTransfer>();
         controls = c;
         settings = controls.getSettings().getUploadSettings();
+        if (settings.getUpRate() > 1000) {
+            interval = 10;
+        } else if (settings.getUpRate() > 100){
+            interval = 100;
+        } else {
+            interval = 1000;
+        }
+        rateval = settings.getUpRate() / (1000 / interval);
         ratesem = new Semaphore(AMOUNT);
-        rateval = settings.getUpRate() / AMOUNT;
         shouldrun = true;
         c.getTasks().backgroundTask(new TokenAdder());
         listeners = new ArrayList<UploadListener>();
@@ -232,7 +239,7 @@ public class UploadManager implements ExternalUploadManager {
                         ratesem.release();
                     }
                     try {
-                        Thread.sleep(INTERVAL);
+                        Thread.sleep(interval);
                     } catch (InterruptedException ie) {
                         // Ignore
                     }

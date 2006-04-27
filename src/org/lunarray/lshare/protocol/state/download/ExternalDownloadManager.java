@@ -1,6 +1,7 @@
 package org.lunarray.lshare.protocol.state.download;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -51,4 +52,6 @@ public interface ExternalDownloadManager {
     public void removeTransferListener(DownloadListener lis);
     public void addQueueListener(QueueListener lis);
     public void removeQueueListener(QueueListener lis);
+    
+    public Collection<IncompleteFile> getIncompleteFiles();
 }

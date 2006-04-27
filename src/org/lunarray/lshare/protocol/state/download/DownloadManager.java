@@ -3,6 +3,7 @@ package org.lunarray.lshare.protocol.state.download;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     private SecondQueueParse secondqueue;
 
     private Thread firstqueuethread;
-
+    
     private ArrayList<DownloadListener> tlisteners;
 
     private ArrayList<QueueListener> qlisteners;
@@ -91,6 +92,10 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         controls.getTasks().backgroundTask(secondqueue);
     }
 
+    public Collection<IncompleteFile> getIncompleteFiles() {
+        return filemanager.getIncompleteFiles();
+    }
+    
     /**
      * Handle a response from a user.
      * @param f The response.

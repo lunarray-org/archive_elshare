@@ -57,13 +57,17 @@ public class IncompleteFile {
         corrupt = false;
     }
     
+    public File getFile() {
+        return file.getFile();
+    }
+    
     public boolean isCorrupt() {
         return corrupt;
     }
     
     public void checkIntegrity() {
         if (hash.isEmpty()) {
-            Hash h = new Hash(settings.getLocalTarget());
+            Hash h = new Hash(file.getFile());
             corrupt = !hash.equals(h);
         }
     }
@@ -71,7 +75,7 @@ public class IncompleteFile {
     public void delete() {
         settings.removeFile();
         file.close();
-        settings.getLocalTarget().delete();
+        file.getFile().delete();
     }
     
     /**

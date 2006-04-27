@@ -5,6 +5,10 @@ package org.lunarray.lshare.protocol;
  * @author Pal Hargitai
  */
 public abstract class RemoteFile implements Comparable<RemoteFile> {
+    /**
+     * The separator of the path elements, this is: {@value}.
+     */
+    public final static String SEPARATOR = "/";
 
     /**
      * The remote path in which this file or directory resides.
@@ -47,6 +51,10 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
         size = s;
     }
 
+    public String toString() {
+        return path + SEPARATOR + name;
+    }
+    
     /**
      * The path in which the file or directory resides.
      * @return The path.

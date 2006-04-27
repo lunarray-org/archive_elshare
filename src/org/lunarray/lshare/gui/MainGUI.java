@@ -26,9 +26,13 @@ import org.lunarray.lshare.gui.search.SearchFilter;
 import org.lunarray.lshare.gui.search.SearchList;
 import org.lunarray.lshare.gui.search.StringFilter;
 import org.lunarray.lshare.gui.sharelist.ShareList;
+import org.lunarray.lshare.gui.transfers.TransferList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
+ * TODO transfers
+ * TODO queues
+ * TODO incompletes
  * The main user interface.
  * @author Pal Hargitai
  */
@@ -76,6 +80,8 @@ public class MainGUI implements ActionListener {
      */
     private ShareList sharelist;
 
+    private TransferList transferlist;
+    
     /**
      * Instanciates the main user interface.
      * @param l The instance of the protocol that it may use.
@@ -101,6 +107,10 @@ public class MainGUI implements ActionListener {
         sharelist = new ShareList(lshare, this);
         sharelist.getFrame().setVisible(false);
         addFrame(sharelist);
+        
+        transferlist = new TransferList(lshare, this);
+        transferlist.getFrame().setVisible(false);
+        addFrame(transferlist);
 
         // Init of the menu bar.
         initMenu();
@@ -172,6 +182,7 @@ public class MainGUI implements ActionListener {
         JMenu windowm = new JMenu("Window");
         windowm.add(addMenuItem("Show contactlist", "contactlist"));
         windowm.add(addMenuItem("Show sharelist", "sharelist"));
+        windowm.add(addMenuItem("Show transfers", "transferlist"));
         menu.add(windowm);
         // Winlist
         winmenu = new JMenu("View");
@@ -216,9 +227,17 @@ public class MainGUI implements ActionListener {
                 addSearchList(new StringFilter(nn));
                 lshare.getSearchList().searchForString(nn);
             }
+        } else if (ac.equals("transferlist")) {
+            // Show the transferlist
+            addTransferList();
         }
     }
 
+    public void addTransferList() {
+        transferlist.getFrame().setVisible(true);
+        updateMenu();
+    }
+    
     /**
      * Shows the contact list
      */

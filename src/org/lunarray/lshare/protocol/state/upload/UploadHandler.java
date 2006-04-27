@@ -54,7 +54,8 @@ public class UploadHandler implements RunnableTask {
         try {
             try {
                 transfer = new UploadTransfer(c.getState().getShareList()
-                        .getFileForEntry(request), request.getOffset(), manager);
+                        .getFileForEntry(request), request.getOffset(),
+                        manager, request, user);
             } catch (FileNotFoundException fnfe) {
                 // TODO send file not found
             }

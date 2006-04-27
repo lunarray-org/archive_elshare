@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
-import org.lunarray.lshare.protocol.state.sharing.ShareList;
 
 /**
  * A file entry recieved over a tcp connection.
@@ -50,7 +49,7 @@ public class FilelistEntry extends RemoteFile {
      * @return The child entries in this entry.
      */
     public List<FilelistEntry> getEntries() {
-        return receiver.getEntries(getPath() + ShareList.SEPARATOR + getName(),
+        return receiver.getEntries(getPath() + RemoteFile.SEPARATOR + getName(),
                 isroot);
     }
 }

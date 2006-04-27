@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.lunarray.lshare.protocol.Controls;
+import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.tasks.RunnableTask;
 
 /**
@@ -52,17 +53,26 @@ public class UploadTransfer implements RunnableTask {
      */
     private boolean done;
 
+    private long size;
+    private long todo;
+    private UploadRequest req;
+    private User user;
+    
     /**
      * Contructs a file upload.
      * @param f The file to upload.
      * @param o The offset to uplaod at.
      * @param m The manager that manages this upload.
      */
-    public UploadTransfer(File f, long o, UploadManager m) {
+    public UploadTransfer(File f, long o, UploadManager m, UploadRequest r, User u) {
+        user = u;
+        req = r;
         file = f;
         manager = m;
         offset = o;
         done = false;
+        size = file.length();
+        todo = size - offset;
     }
 
     /**
@@ -137,7 +147,31 @@ public class UploadTransfer implements RunnableTask {
 
         Controls.getLogger().fine("Closed transfer.");
     }
+    
+    public File getFile() {
+        return file;
+    }
+    
+    public long getSize() {
+        return size;
+    }
+    
+    public long getTodo() {
+        return todo;
+    }
+    
+    public long getDone() {
+        return size - todo;
+    }
 
+    public UploadRequest getRequest() {
+        return req;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+    
     /**
      * Runs the actual transfer.
      * @param c The controls to the protocol.
@@ -160,11 +194,13 @@ public class UploadTransfer implements RunnableTask {
                         tokenamount = manager.getTokenValue();
                     } else {
                         tokenamount--;
-                    }              
+                    }
                     int totrans = Math.min(1024, istream.available());
                     byte[] dat = new byte[totrans];
                     istream.read(dat);
                     ostream.write(dat);
+                    
+                    todo -= totrans;
                 }
             } catch (IOException ie) {
                 // Failed..

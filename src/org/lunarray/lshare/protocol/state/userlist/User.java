@@ -190,6 +190,14 @@ public class User implements Comparable<User> {
         }
         return false;
     }
+    
+    public String toString() {
+        if (isOnline()) {
+            return getName() + "(" + getHostname() + ")";
+        } else {
+            return getName() + "(<not logged in>)";
+        }
+    }
 
     /**
      * Adds to this users timeout.

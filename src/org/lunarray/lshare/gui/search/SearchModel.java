@@ -41,7 +41,6 @@ public class SearchModel implements TableModel {
      */
     public void processEvent(SearchEvent e) {
         search: {
-            System.out.println(e.getEntry().getName());
             for (SearchEvent ev : events) {
                 if (e.getEntry().getName().equals(ev.getEntry().getName())
                         && e.getEntry().getPath().equals(

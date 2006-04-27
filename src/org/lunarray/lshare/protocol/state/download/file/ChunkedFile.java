@@ -331,4 +331,8 @@ public class ChunkedFile {
 
         fsem.release();
     }
+    
+    public File getFile() {
+        return file;
+    }
 }
