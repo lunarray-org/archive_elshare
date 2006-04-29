@@ -1,7 +1,19 @@
 package org.lunarray.lshare.gui.search;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
@@ -13,7 +25,8 @@ import org.lunarray.lshare.protocol.events.SearchListener;
  * A frame for showing search results in.
  * @author Pal Hargitai
  */
-public class SearchList extends GUIFrame implements SearchListener {
+public class SearchList extends GUIFrame implements SearchListener,
+        ActionListener, ListSelectionListener {
     /**
      * The filter that represents the kind of search going on.
      */
@@ -28,6 +41,16 @@ public class SearchList extends GUIFrame implements SearchListener {
      * The model that represents this frames search results.
      */
     private SearchModel model;
+
+    private JButton download;
+
+    private JButton downloadto;
+
+    private ArrayList<SearchEvent> selected;
+
+    private boolean isnewevent;
+
+    private JTable restable;
 
     /**
      * Constructs a search frame.
@@ -45,13 +68,79 @@ public class SearchList extends GUIFrame implements SearchListener {
 
         // Setup model
         model = new SearchModel();
-        JTable restable = new JTable(model);
+        restable = new JTable(model);
         JScrollPane sp = new JScrollPane(restable);
+        restable.getSelectionModel().addListSelectionListener(this);
 
-        // Setup
-        frame.addInternalFrameListener(this);
-        frame.add(sp);
+        // Set the toolbar
+        JToolBar bar = new JToolBar();
+        download = new JButton();
+        download.setActionCommand("download");
+        download.addActionListener(this);
+        download.setEnabled(false);
+        // download.setText("Download"); <- Use icon
+        download.setIcon(new ImageIcon("icons/document-save.png"));
+        bar.add(download);
+        downloadto = new JButton();
+        downloadto.setActionCommand("downloadto");
+        downloadto.addActionListener(this);
+        downloadto.setEnabled(false);
+        // downloadto.setText("Download To"); <- Use icon
+        downloadto.setIcon(new ImageIcon("icons/document-save-as.png"));
+        bar.add(downloadto);
+
+        // Set the main panel
+        JPanel mp = new JPanel(new BorderLayout());
+        mp.add(bar, BorderLayout.NORTH);
+        mp.add(sp, BorderLayout.CENTER);
+
+        // Setup frame
         frame.setTitle(getTitle());
+        frame.getContentPane().add(mp);
+
+        isnewevent = true;
+        selected = new ArrayList<SearchEvent>();
+    }
+
+    public void valueChanged(ListSelectionEvent arg0) {
+        if (isnewevent) {
+            selected.clear();
+        }
+        if (restable.getSelectionModel().getValueIsAdjusting()) {
+            isnewevent = false;
+        } else {
+            isnewevent = true;
+        }
+        if (arg0.getFirstIndex() >= 0
+                && arg0.getLastIndex() < model.getRowCount()) {
+            for (int i = arg0.getFirstIndex(); i < arg0.getLastIndex(); i++) {
+                selected.add(model.getRow(i));
+            }
+        }
+        setButtonsEnabled(!selected.isEmpty());
+    }
+
+    private void setButtonsEnabled(boolean enabled) {
+        download.setEnabled(enabled);
+        downloadto.setEnabled(enabled);
+    }
+    
+    public void actionPerformed(ActionEvent arg0) {
+        if (arg0.getActionCommand().equals("download")) {
+            for (SearchEvent e : selected) {
+                lshare.getDownloadManager().enqueue(e.getEntry(), e.getUser());
+            }
+        } else if (arg0.getActionCommand().equals("downloadto")) {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int res = fc.showDialog(frame, "Download to directory...");
+            if (res == JFileChooser.APPROVE_OPTION) {
+                for (SearchEvent e : selected) {
+                    lshare.getDownloadManager().enqueue(e.getEntry(),
+                            e.getUser(), fc.getSelectedFile());
+                }
+            }
+        }
     }
 
     /**

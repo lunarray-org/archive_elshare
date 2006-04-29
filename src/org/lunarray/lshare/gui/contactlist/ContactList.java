@@ -1,7 +1,17 @@
 package org.lunarray.lshare.gui.contactlist;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -13,16 +23,26 @@ import org.lunarray.lshare.gui.MainGUI;
  * A standard contact list. Shows all known users in a treelike form.
  * @author Pal Hargitai
  */
-public class ContactList extends GUIFrame {
+public class ContactList extends GUIFrame implements ActionListener, TreeSelectionListener {
     /**
      * The protocol to access.
      */
     private LShare lshare;
 
     /**
+     * The currently selected node.
+     */
+    private UserNode selected;
+    
+    /**
      * The tree model holding data on the contacts.
      */
     private Model model;
+    
+    private JButton buttonrembuddy;
+    private JButton buttonaddbuddy;
+    private JButton buttonfilelist;
+    private JTree panel;
 
     /**
      * Instanciates the contact list. Sets up the model and the frame.
@@ -37,8 +57,10 @@ public class ContactList extends GUIFrame {
         model = new Model(lshare, mg);
         ls.getUserList().addListener(model);
 
+        JPanel mp = new JPanel(new BorderLayout());
+        
         // Setup tree
-        JTree panel = new JTree(model);
+        panel = new JTree(model);
         JScrollPane scroller = new JScrollPane(panel);
         scroller
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -53,14 +75,86 @@ public class ContactList extends GUIFrame {
         panel.setSelectionModel(new DefaultTreeSelectionModel());
         panel.getSelectionModel().setSelectionMode(
                 TreeSelectionModel.SINGLE_TREE_SELECTION);
-        panel.getSelectionModel().addTreeSelectionListener(
-                new Selecter(panel, model));
+        panel.getSelectionModel().addTreeSelectionListener(this);
 
+        // Set buttons
+        buttonrembuddy = new JButton();
+        buttonrembuddy.setActionCommand("buddy");
+        buttonrembuddy.addActionListener(this);
+        buttonrembuddy.setEnabled(false);
+        //buttonrembuddy.setText("Remove Buddy"); <- Use icon
+        buttonrembuddy.setIcon(new ImageIcon("icons/list-remove.png"));
+        buttonaddbuddy = new JButton();
+        buttonaddbuddy.setActionCommand("buddy");
+        buttonaddbuddy.addActionListener(this);
+        buttonaddbuddy.setEnabled(false);
+        //buttonaddbuddy.setText("Add Buddy"); <- Use icon
+        buttonaddbuddy.setIcon(new ImageIcon("icons/list-add.png"));
+        buttonfilelist = new JButton();
+        buttonfilelist.setActionCommand("filelist");
+        buttonfilelist.addActionListener(this);
+        buttonfilelist.setEnabled(false);
+        //buttonfilelist.setText("Get filelist"); <- Use icon
+        buttonfilelist.setIcon(new ImageIcon("icons/folder-remote.png"));
+        
+        // Set toolbar
+        JToolBar bar = new JToolBar();
+        bar.setFloatable(false);
+        bar.add(buttonaddbuddy);
+        bar.add(buttonrembuddy);
+        bar.addSeparator();
+        bar.add(buttonfilelist);
+        
+        
+        // Set panel
+        mp.add(bar, BorderLayout.NORTH);
+        mp.add(scroller, BorderLayout.CENTER);
+        
         // The frame
         frame.setTitle(getTitle());
-        frame.getContentPane().add(scroller);
+        frame.getContentPane().add(mp);
     }
-
+    
+    public void valueChanged(TreeSelectionEvent arg0) {
+        // See if anything is selected.
+        if (panel.getSelectionCount() > 0) {
+            // Checks if the component is a user
+            if (!arg0.getPath().getLastPathComponent().getClass().equals(
+                    UserNode.class)) {
+                panel.getSelectionModel().clearSelection();
+                selected = null;
+            } else {
+                // It's a usernode
+                selected = (UserNode) arg0.getPath().getLastPathComponent();
+            }
+        } else {
+            // Unselect
+            selected = null;
+        }
+        if (selected == null) {
+            disableButtons();
+        } else {
+            enableButtons(selected.getUser().isBuddy());
+        }
+    }
+    
+    /**
+     * The action triggered if an item on the menu is clicked.
+     * @param arg0 The action that triggered the call of this event.
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        String ac = arg0.getActionCommand();
+        if (ac.equals("filelist")) {
+            if (selected != null) {
+                model.showUserList(selected.getUser());
+            }
+        } else if (ac.equals("buddy")) {
+            if (selected != null) {
+                model.toggleBuddy(selected);
+            }
+        }
+    }
+    
     @Override
     /**
      * The close action for the frame. Just makes the frame invisible.
@@ -75,5 +169,17 @@ public class ContactList extends GUIFrame {
      */
     public String getTitle() {
         return "Contact List";
+    }
+    
+    private void disableButtons() {
+        buttonaddbuddy.setEnabled(false);
+        buttonrembuddy.setEnabled(false);
+        buttonfilelist.setEnabled(false);
+    }
+    
+    private void enableButtons(boolean isbuddy) {
+        buttonfilelist.setEnabled(true);
+        buttonaddbuddy.setEnabled(!isbuddy);
+        buttonrembuddy.setEnabled(isbuddy);
     }
 }

@@ -201,4 +201,8 @@ public class SearchModel implements TableModel {
     public void removeTableModelListener(TableModelListener arg0) {
         listeners.remove(arg0);
     }
+    
+    protected SearchEvent getRow(int i) {
+        return events.get(i);
+    }
 }

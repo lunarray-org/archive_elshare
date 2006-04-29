@@ -1,5 +1,6 @@
 package org.lunarray.lshare.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
@@ -10,6 +11,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -17,6 +20,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.contactlist.ContactList;
@@ -82,6 +87,8 @@ public class MainGUI implements ActionListener {
 
     private TransferList transferlist;
     
+    private JToolBar bar;
+    
     /**
      * Instanciates the main user interface.
      * @param l The instance of the protocol that it may use.
@@ -115,7 +122,15 @@ public class MainGUI implements ActionListener {
         // Init of the menu bar.
         initMenu();
         frame.setJMenuBar(menu);
-        frame.setContentPane(desktop);
+        
+        // Init of the toolbar
+        initToolBar();
+        
+        // Set the panel
+        JPanel mp = new JPanel(new BorderLayout());
+        frame.setContentPane(mp);
+        mp.add(desktop, BorderLayout.CENTER);
+        mp.add(bar, BorderLayout.NORTH);
 
         // Size setting
         desktop.setMinimumSize(new Dimension(340, 240));
@@ -163,6 +178,25 @@ public class MainGUI implements ActionListener {
         }
     }
 
+    public JButton addToolButton(String name, String icon, String action) {
+        JButton but = new JButton();
+        //but.setText(name); <- Use icon
+        but.setIcon(new ImageIcon(icon));
+        but.addActionListener(this);
+        but.setActionCommand(action);
+        return but;
+    }
+    
+    public void initToolBar() {
+        bar = new JToolBar();
+        bar.setFloatable(false);
+        bar.add(addToolButton("Contact List", "icons/system-users.png", "contactlist"));
+        bar.add(addToolButton("Share list", "icons/system-file-manager.png", "sharelist"));
+        bar.add(addToolButton("Transfer list", "icons/network-transmit-receive.png", "transferlist"));
+        bar.addSeparator();
+        bar.add(addToolButton("Search", "icons/edit-find.png", "search"));
+    }
+    
     /**
      * Initialises the menu.
      */

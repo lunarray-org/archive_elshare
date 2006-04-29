@@ -65,21 +65,30 @@ public class SecondQueueParse implements RunnableTask {
                         ischecking = true;
                     }
 
-                    for (IncompleteFile f : requests) {
-                        for (User u : f.getSources()) {
-                            request: {
-                                for (DownloadHandler t : manager.getTransfers()) {
-                                    if (t.getUser().equals(u)) {
-                                        break request;
+                    // Check if there are requests, and request files if there
+                    // are not already transfers with the user going on.
+                    if (!requests.isEmpty()) {
+                        ArrayList<IncompleteFile> toremove = new ArrayList<IncompleteFile>();
+                        for (IncompleteFile f : requests) {
+                            for (User u : f.getSources()) {
+                                request: {
+                                    for (DownloadHandler t : manager
+                                            .getTransfers()) {
+                                        if (t.getUser().equals(u)) {
+                                            break request;
+                                        }
                                     }
+
+                                    // We can request now
+                                    download(f, c, u);
+                                    toremove.add(f);
                                 }
-                                
-                                // We can request now
-                                download(f, c, u);
                             }
                         }
+                        for (IncompleteFile f : toremove) {
+                            requests.remove(f);
+                        }
                     }
-                    requests.clear();
 
                     for (User u : manager.getQueuedUsers()) {
                         request: {
@@ -91,7 +100,8 @@ public class SecondQueueParse implements RunnableTask {
 
                             // No transfers from user, get do a normal request.
                             while (!manager.getQueueFromUser(u).isEmpty()) {
-                                IncompleteFile f = manager.getQueueFromUser(u).get(0);
+                                IncompleteFile f = manager.getQueueFromUser(u)
+                                        .get(0);
                                 switch (f.getStatus()) {
                                 case FINISHED:
                                     manager.removeFromQueue(f);

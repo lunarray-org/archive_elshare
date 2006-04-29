@@ -64,6 +64,10 @@ import javax.swing.tree.TreeModel;
 public class JTreeTable extends JTable {
     protected TreeTableCellRenderer tree;
 
+    public JTree getTree() {
+        return tree;
+    }
+    
     @SuppressWarnings("serial")
     public JTreeTable(TreeTableModel treeTableModel) {
         super();

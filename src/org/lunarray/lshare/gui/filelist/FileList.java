@@ -1,8 +1,15 @@
 package org.lunarray.lshare.gui.filelist;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTree;
+import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TreeSelectionEvent;
@@ -14,13 +21,14 @@ import org.lunarray.lshare.gui.MainGUI;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 import com.sun.swing.JTreeTable;
-import com.sun.swing.JTreeTable.TreeTableCellRenderer;
 
 /**
- * Shows a filelist of a specific user. Allows browsing throught that file list.
+ * TODO Rewrite standard TableModel. Shows a filelist of a specific user. Allows
+ * browsing throught that file list.
  * @author Pal Hargitai
  */
-public class FileList extends GUIFrame {
+public class FileList extends GUIFrame implements TreeSelectionListener,
+        ActionListener {
     /**
      * The user whose filelist is displayed.
      */
@@ -34,12 +42,15 @@ public class FileList extends GUIFrame {
     /**
      * The table used.
      */
-    private JTable table;
+    private JTreeTable table;
 
-    // TODO fix
-    private JTree tree;
+    private JButton download;
+
+    private JButton downloadto;
 
     private LShare lshare;
+
+    private ListNode selected;
 
     /**
      * Constructs a filelist window.
@@ -59,23 +70,69 @@ public class FileList extends GUIFrame {
         // Setup table
         table = new JTreeTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getTree().addTreeSelectionListener(this);
+
         JScrollPane t = new JScrollPane(table);
 
-        // TODO fix
-        tree = (TreeTableCellRenderer) table.getCellRenderer(0, 0);
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
-            public void valueChanged(TreeSelectionEvent arg0) {
-                if (arg0.getSource() != null) {
-                    ListNode n = (ListNode) arg0.getPath()
-                            .getLastPathComponent();
-                    lshare.getDownloadManager().enqueue(n.getEntry(), user);
-                }
-            }
-        });
+        // Set the toolbar
+        JToolBar bar = new JToolBar();
+        download = new JButton();
+        download.setActionCommand("download");
+        download.addActionListener(this);
+        download.setEnabled(false);
+        // download.setText("Download"); <- Use icon
+        download.setIcon(new ImageIcon("icons/document-save.png"));
+        bar.add(download);
+        downloadto = new JButton();
+        downloadto.setActionCommand("downloadto");
+        downloadto.addActionListener(this);
+        downloadto.setEnabled(false);
+        // downloadto.setText("Download To"); <- Use icon
+        downloadto.setIcon(new ImageIcon("icons/document-save-as.png"));
+        bar.add(downloadto);
+
+        // Set the main panel
+        JPanel mp = new JPanel(new BorderLayout());
+        mp.add(bar, BorderLayout.NORTH);
+        mp.add(t, BorderLayout.CENTER);
 
         // Setup frame
         frame.setTitle(getTitle());
-        frame.getContentPane().add(t);
+        frame.getContentPane().add(mp);
+    }
+
+    public void actionPerformed(ActionEvent arg0) {
+        if (arg0.getActionCommand().equals("download")) {
+            lshare.getDownloadManager().enqueue(selected.getEntry(), user);
+        } else if (arg0.getActionCommand().equals("downloadto")) {
+            JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int res = fc.showDialog(frame, "Download to directory...");
+            if (res == JFileChooser.APPROVE_OPTION) {
+                lshare.getDownloadManager().enqueue(selected.getEntry(), user,
+                        fc.getSelectedFile());
+            }
+        }
+    }
+
+    public void valueChanged(TreeSelectionEvent arg0) {
+        if (arg0.getSource() != null) {
+            if (arg0.getPath().getLastPathComponent().getClass().equals(
+                    ListNode.class)) {
+                ListNode n = (ListNode) arg0.getPath().getLastPathComponent();
+                selected = n;
+            } else {
+                selected = null;
+            }
+        } else {
+            selected = null;
+        }
+        setButtonsEnabled(selected != null);
+    }
+
+    private void setButtonsEnabled(boolean enabled) {
+        download.setEnabled(enabled);
+        downloadto.setEnabled(enabled);
     }
 
     @Override

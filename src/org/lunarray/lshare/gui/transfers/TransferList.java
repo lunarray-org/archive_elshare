@@ -16,7 +16,7 @@ public class TransferList extends GUIFrame {
     private JTable table;
     private TransferModel model;
     private Timer timer;
-    
+    // TODO icons
     public TransferList(LShare ls, MainGUI mg) {
         super(mg);
         
