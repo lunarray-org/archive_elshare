@@ -57,6 +57,7 @@ public class UploadTransfer implements RunnableTask {
     private long todo;
     private UploadRequest req;
     private User user;
+    private boolean shouldrun;
     
     /**
      * Contructs a file upload.
@@ -73,6 +74,7 @@ public class UploadTransfer implements RunnableTask {
         done = false;
         size = file.length();
         todo = size - offset;
+        shouldrun = true;
     }
 
     /**
@@ -130,15 +132,21 @@ public class UploadTransfer implements RunnableTask {
             return socket.isConnected();
         }
     }
+    
+    public void cancel() {
+        shouldrun = false;
+    }
 
     /**
      * Close the transfer.
      */
     public void close() {
         try {
+            istream.reset();
             istream.close();
             server.close();
             if (socket != null) {
+                socket.shutdownOutput();
                 socket.close();
             }
         } catch (IOException ie) {
@@ -201,6 +209,10 @@ public class UploadTransfer implements RunnableTask {
                     ostream.write(dat);
                     
                     todo -= totrans;
+                    
+                    if (!shouldrun) {
+                        break run;
+                    }
                 }
             } catch (IOException ie) {
                 // Failed..
@@ -208,6 +220,7 @@ public class UploadTransfer implements RunnableTask {
                 break run;
             }
         }
+        close();
         done = true;
         manager.removeTransfer(this);
     }

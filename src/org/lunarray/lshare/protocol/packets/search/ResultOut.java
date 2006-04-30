@@ -45,14 +45,10 @@ public class ResultOut extends PacketOut {
         data[0] = ResultIn.getType();
 
         // Enter the data
-        if (f.isFile()) {
-            PacketUtil.longToByteArray(f.getLastModified(), data, 1);
-            PacketUtil.longToByteArray(f.getSize(), data, 1 + 8);
-            PacketUtil.injectByteArrayIntoByteArray(f.getHash().getBytes(),
-                    Hash.length(), data, 1 + 16);
-        } else {
-
-        }
+        PacketUtil.longToByteArray(f.getLastModified(), data, 1);
+        PacketUtil.longToByteArray(f.getSize(), data, 1 + 8);
+        PacketUtil.injectByteArrayIntoByteArray(f.getHash().getBytes(), Hash
+                .length(), data, 1 + 16);
         PacketUtil.shortUToByteArray(pathbytes.length, data,
                 Hash.length() + 1 + 16);
         PacketUtil.injectByteArrayIntoByteArray(pathbytes, pathbytes.length,

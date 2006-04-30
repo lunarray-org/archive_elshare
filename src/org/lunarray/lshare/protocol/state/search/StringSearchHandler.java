@@ -39,6 +39,7 @@ public class StringSearchHandler implements RunnableTask {
     public void runTask(Controls c) {
         for (ShareEntry e : c.getState().getShareList().getEntriesMatching(
                 query)) {
+            System.out.println(e.getPath());
             ResultOut o = new ResultOut(to, e);
             c.getUDPTransport().send(o);
         }

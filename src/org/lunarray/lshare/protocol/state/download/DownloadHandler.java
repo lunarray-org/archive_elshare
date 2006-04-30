@@ -72,7 +72,7 @@ public class DownloadHandler {
         manager = m;
         status = DownloadHandlerStatus.INIT;
     }
-    
+
     public RemoteFile getRemoteEntry() {
         return remote;
     }
@@ -80,12 +80,9 @@ public class DownloadHandler {
     /**
      * Close down the handler and transfer.
      */
-    public void close() {
+    public synchronized void close() {
         if (transfer != null) {
             transfer.close();
-            if (chunk.isLocked()) {
-                chunk.unlock();
-            }
         }
     }
 
@@ -103,7 +100,7 @@ public class DownloadHandler {
      * @param f The file response.
      * @return True if this is a valid repsonse.
      */
-    public boolean canHandle(User u, FileResponse f) {
+    public synchronized boolean canHandle(User u, FileResponse f) {
         if (u.equals(user)) {
             if (f.getHash().equals(remote.getHash())) {
                 if (chunk.getMark() == f.getOffset()) {
@@ -129,16 +126,16 @@ public class DownloadHandler {
      * @param u The user from which the response came.
      * @param f The response to handle.
      */
-    public void handle(User u, FileResponse f) {
+    public synchronized void handle(User u, FileResponse f) {
         if (canHandle(u, f)) {
             transfer = new DownloadTransfer(chunk, u, this, f.getPort());
             try {
                 transfer.init();
                 status = DownloadHandlerStatus.RUNNING;
-                
+
                 manager.updatedFile(incomplete);
                 manager.updatedTransfer(this);
-                
+
                 controls.getTasks().backgroundTask(transfer);
             } catch (IOException ie) {
                 // Something went wrong, cleanup
@@ -152,7 +149,7 @@ public class DownloadHandler {
     /**
      * Initialise the handler.
      */
-    public void init() {
+    public synchronized void init() {
         if (incomplete.getSources().contains(user)) {
             // Is a valid source
             for (DownloadHandler d : manager.getTransfers()) {
@@ -174,9 +171,9 @@ public class DownloadHandler {
                     manager.updatedFile(incomplete);
                     break;
                 default:
-                    // let it be
+                // let it be
                 }
-                //controls.getUDPTransport().send(ro);
+                // controls.getUDPTransport().send(ro);
                 status = DownloadHandlerStatus.CONNECTING;
                 manager.updatedTransfer(this);
                 controls.getTasks().enqueueMultiTask(
@@ -208,24 +205,29 @@ public class DownloadHandler {
         return incomplete;
     }
     
+    public synchronized void cancel() {
+        transfer.cancel();
+    }
+
     /**
      * The transfer is done transferring. Clean up.
      */
-    protected void done() {
+    protected synchronized void done() {
         close();
         manager.removeDownloadHandler(this);
 
         if (manager.soleFile(incomplete)) {
             manager.updatedFile(incomplete);
         }
-        
+
         if (chunk.getFile().isFinished()) {
             incomplete.checkIntegrity();
             manager.removeFromQueue(incomplete);
             Controls.getLogger().info("Transfer done.");
         } else {
-            //init(); <- I'm guessing this state should allow this, unsure.
-            // It would be better to introduce a queuing mechanism to rerequest this again
+            // init(); <- I'm guessing this state should allow this, unsure.
+            // It would be better to introduce a queuing mechanism to rerequest
+            // this again
         }
     }
 }

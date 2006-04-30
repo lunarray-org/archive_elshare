@@ -35,7 +35,6 @@ import org.lunarray.lshare.gui.transfers.TransferList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
- * TODO transfers
  * TODO queues
  * TODO incompletes
  * The main user interface.
@@ -194,7 +193,7 @@ public class MainGUI implements ActionListener {
         bar.add(addToolButton("Share list", "icons/system-file-manager.png", "sharelist"));
         bar.add(addToolButton("Transfer list", "icons/network-transmit-receive.png", "transferlist"));
         bar.addSeparator();
-        bar.add(addToolButton("Search", "icons/edit-find.png", "search"));
+        bar.add(addToolButton("Search", "icons/system-search.png", "search"));
     }
     
     /**

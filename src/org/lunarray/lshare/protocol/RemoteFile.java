@@ -133,13 +133,13 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
      * @return Returns as specified above.
      */
     public int compareTo(RemoteFile arg0) {
-        if (isDirectory() && arg0.isFile()) {
-            return -1;
-        } else if (isFile() && arg0.isDirectory()) {
-            return 1;
-        } else if (getPath().compareTo(arg0.getPath()) < 0) {
+        if (getPath().compareTo(arg0.getPath()) < 0) {
             return -1;
         } else if (getPath().compareTo(arg0.getPath()) > 0) {
+            return 1;
+        } else if (isDirectory() && arg0.isFile()) {
+            return -1;
+        } else if (isFile() && arg0.isDirectory()) {
             return 1;
         } else {
             return getName().compareTo(arg0.getName());

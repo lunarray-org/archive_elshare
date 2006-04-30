@@ -271,7 +271,6 @@ public class ChunkedFile {
      */
     protected void close() {
         try {
-            cleanChunks();
 
             fsem.acquire();
 
@@ -295,7 +294,7 @@ public class ChunkedFile {
     /**
      * Clean all chunks. That is, merge them forwards and backwards.
      */
-    protected void cleanChunks() {
+    protected synchronized void cleanChunk(Chunk c) {
         try {
             fsem.acquire();
         } catch (InterruptedException ie) {
@@ -303,29 +302,19 @@ public class ChunkedFile {
             return;
         }
         // cleanup ahead, cleanup back
-        for (Chunk c : chunks.values()) {
+        
+        if (chunks.containsKey(c.getEnd())) {
+            Chunk next = chunks.get(c.getEnd());
+            
             if (c.isDone()) {
-                // Merge forward.
-                if (chunks.containsKey(c.getEnd())) {
-                    Chunk next = chunks.get(c.getEnd());
-
-                    chunks.remove(next.getBegin());
-                    chunks.remove(c.getBegin());
-
-                    next.setBegin(c.getBegin());
-                    chunks.put(next.getBegin(), next);
-                }
-            } else {
-                // Merge backward
-                if (chunks.containsKey(c.getEnd())) {
-                    Chunk next = chunks.get(c.getEnd());
-
-                    if (next.isEmpty()) {
-                        chunks.remove(next.getBegin());
-
-                        c.setEnd(next.getEnd());
-                    }
-                }
+                chunks.remove(next.getBegin());
+                chunks.remove(c.getBegin());
+                
+                next.setBegin(c.getBegin());
+                chunks.put(next.getBegin(), next);
+            } else if (next.isEmpty()) {
+                chunks.remove(next.getBegin());
+                c.setEnd(next.getEnd());
             }
         }
 

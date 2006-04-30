@@ -79,4 +79,8 @@ public class DownloadItem implements TransferItem {
     public User getRemoteUser() {
         return transfer.getUser();
     }
+    
+    public void cancel() {
+        transfer.cancel();
+    }
 }

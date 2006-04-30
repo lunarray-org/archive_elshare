@@ -45,6 +45,8 @@ public class DownloadTransfer implements RunnableTask {
      */
     private InputStream istream;
 
+    private boolean shouldrun;
+
     /**
      * Constructs a download transfer.
      * @param c The chunk to download to.
@@ -57,6 +59,7 @@ public class DownloadTransfer implements RunnableTask {
         user = u;
         handler = h;
         port = p;
+        shouldrun = true;
     }
 
     /**
@@ -68,16 +71,21 @@ public class DownloadTransfer implements RunnableTask {
         run: {
             while (!chunk.isDone()) {
                 // download some
-                int toread = Long.valueOf(Math.min(chunk.getTodo(), 1024))
-                        .intValue();
-
-                byte[] data = new byte[toread];
-
                 try {
+                    int toread = Long.valueOf(
+                            Math.min(Math.min(1024, chunk.getTodo()), istream
+                                    .available())).intValue();
+
+                    byte[] data = new byte[toread];
+
                     istream.read(data);
                     chunk.write(data, toread);
                 } catch (IOException ie) {
+                    ie.printStackTrace();
                     Controls.getLogger().warning("Error transferring file.");
+                    break run;
+                }
+                if (!shouldrun) {
                     break run;
                 }
             }
@@ -85,11 +93,15 @@ public class DownloadTransfer implements RunnableTask {
         handler.done();
     }
 
+    public synchronized void cancel() {
+        shouldrun = false;
+    }
+
     /**
      * Initialises the transfer.
      * @throws IOException Thrown if the socket or it's stream can't be opened.
      */
-    public void init() throws IOException {
+    public synchronized void init() throws IOException {
         socket = new Socket(user.getAddress(), port);
         istream = socket.getInputStream();
     }
@@ -97,7 +109,7 @@ public class DownloadTransfer implements RunnableTask {
     /**
      * Closes the transfer.
      */
-    public void close() {
+    public synchronized void close() {
         try {
             if (socket != null) {
                 socket.close();

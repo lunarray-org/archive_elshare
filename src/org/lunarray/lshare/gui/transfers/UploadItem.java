@@ -87,4 +87,8 @@ public class UploadItem implements TransferItem {
     public JProgressBar getProgressBar() {
         return progressbar;
     }
+    
+    public void cancel() {
+        upload.cancel();
+    }
 }

@@ -137,7 +137,7 @@ public class Chunk {
      */
     public void unlock() {
         locksem.release();
-        file.cleanChunks();
+        file.cleanChunk(this);
     }
 
     /**

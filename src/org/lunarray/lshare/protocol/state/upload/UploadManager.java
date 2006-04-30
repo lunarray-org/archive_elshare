@@ -26,14 +26,12 @@ public class UploadManager implements ExternalUploadManager {
     public final static int END_PORT = 7500;
 
     /**
-     * TODO Fix, this isn't right
      * The interval between token additions.
      */
     public int interval;
 
     /**
-     * TODO Fix, this isn't right
-     * The amount of tokens.
+     * The amount of tokens. This is: ${value};
      */
     public static final int AMOUNT = 100;
 

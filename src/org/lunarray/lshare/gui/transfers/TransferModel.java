@@ -37,7 +37,7 @@ public class TransferModel implements TableModel, UploadListener,
             return null;
         }
     }
-
+    
     public int getRowCount() {
         return transferitems.size();
     }
@@ -142,14 +142,14 @@ public class TransferModel implements TableModel, UploadListener,
             }
         }
         if (torem != null) {
-            // int i = transferitems.indexOf(torem);
-            // transferitems.remove(torem);
-            //
-            // TableModelEvent ev = new TableModelEvent(this, i, i,
-            // TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-            // for (TableModelListener l : listeners) {
-            // l.tableChanged(ev);
-            // }
+             int i = transferitems.indexOf(torem);
+             transferitems.remove(torem);
+            
+             TableModelEvent ev = new TableModelEvent(this, i, i,
+             TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+             for (TableModelListener l : listeners) {
+                 l.tableChanged(ev);
+             }
         }
     }
 
@@ -200,14 +200,14 @@ public class TransferModel implements TableModel, UploadListener,
             }
         }
         if (torem != null) {
-            // int i = transferitems.indexOf(torem);
-            // transferitems.remove(torem);
-            //
-            // TableModelEvent ev = new TableModelEvent(this, i, i,
-            // TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-            // for (TableModelListener l : listeners) {
-            // l.tableChanged(ev);
-            // }
+             int i = transferitems.indexOf(torem);
+             transferitems.remove(torem);
+            
+             TableModelEvent ev = new TableModelEvent(this, i, i,
+             TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+             for (TableModelListener l : listeners) {
+                 l.tableChanged(ev);
+             }
         }
     }
 
@@ -232,7 +232,11 @@ public class TransferModel implements TableModel, UploadListener,
             }
         }
     }
-    
+
+    protected TransferItem getRow(int i) {
+        return transferitems.get(i);
+    }
+   
     protected void updateTable() {
         for (int i = 0; i < transferitems.size(); i++ ) {
             transferitems.get(i).updateBar();

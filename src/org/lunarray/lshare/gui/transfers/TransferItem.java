@@ -28,4 +28,6 @@ public interface TransferItem {
     public String getStatus();
     
     public Object getTransfer();
+    
+    public void cancel();
 }

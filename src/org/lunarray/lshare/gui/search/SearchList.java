@@ -69,6 +69,7 @@ public class SearchList extends GUIFrame implements SearchListener,
         // Setup model
         model = new SearchModel();
         restable = new JTable(model);
+        model.setTableHeader(restable.getTableHeader());
         JScrollPane sp = new JScrollPane(restable);
         restable.getSelectionModel().addListSelectionListener(this);
 

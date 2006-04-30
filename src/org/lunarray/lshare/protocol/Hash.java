@@ -13,7 +13,7 @@ import org.lunarray.lshare.protocol.state.sharing.ShareSettings;
  * A hash class for handling all hash related functions.
  * @author Pal Hargitai
  */
-public class Hash {
+public class Hash implements Comparable<Hash> {
     /**
      * The hash if it is unset.
      */
@@ -108,6 +108,19 @@ public class Hash {
             return false;
         }
     }
+    
+    public int compareTo(Hash o) {
+        if (o.hash.length == hash.length) {
+            for (int i = 0; i < hash.length; i++) {
+                if (o.hash[i] != hash[i]) {
+                    return hash[i] - o.hash[i];
+                }
+            }
+            return 0;
+        } else {
+            return hash.length - o.hash.length;
+        }
+    }
 
     /**
      * Gets a hash of the given name.
@@ -164,7 +177,7 @@ public class Hash {
     private String hashToString(byte[] dat) {
         String ret = "";
         for (byte b : dat) {
-            ret += quadBitToString(b) + quadBitToString(b >> 4);
+            ret += quadBitToString(b >> 4) + quadBitToString(b);
         }
         return ret;
     }
