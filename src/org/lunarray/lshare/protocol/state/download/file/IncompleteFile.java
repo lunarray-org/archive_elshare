@@ -78,6 +78,10 @@ public class IncompleteFile {
         file.getFile().delete();
     }
     
+    public Hash getHash() {
+        return hash;
+    }
+    
     /**
      * Gets the status of this file.
      * @return The status of this file.

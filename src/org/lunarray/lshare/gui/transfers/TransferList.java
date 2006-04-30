@@ -81,7 +81,7 @@ public class TransferList extends GUIFrame implements ActionListener,
         if (arg0.getFirstIndex() >= 0
                 && arg0.getFirstIndex() < model.getRowCount()) {
             selected = model.getRow(arg0.getFirstIndex());
-        } else {
+        } else { 
             selected = null;
         }
         setButtonsEnabled(selected != null);

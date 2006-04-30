@@ -260,9 +260,14 @@ public class ChunkedFile {
             state = ChunkedFileState.OPEN;
             break;
         }
-        // Should be fine now start writing
-        access.seek(mark);
-        access.write(b);
+        try {
+            // Should be fine now start writing
+            access.seek(mark);
+            access.write(b);
+        } catch (IOException ie) {
+            fsem.release();
+            throw ie;
+        }
         fsem.release();
     }
 
@@ -271,7 +276,6 @@ public class ChunkedFile {
      */
     protected void close() {
         try {
-
             fsem.acquire();
 
             if (access != null) {
@@ -289,6 +293,8 @@ public class ChunkedFile {
         for (Chunk c : chunks.values()) {
             settings.setChunk(c.getMark(), c.getEnd());
         }
+        
+        fsem.release();
     }
 
     /**

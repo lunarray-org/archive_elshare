@@ -81,7 +81,6 @@ public class DownloadTransfer implements RunnableTask {
                     istream.read(data);
                     chunk.write(data, toread);
                 } catch (IOException ie) {
-                    ie.printStackTrace();
                     Controls.getLogger().warning("Error transferring file.");
                     break run;
                 }

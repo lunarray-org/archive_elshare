@@ -26,6 +26,7 @@ import javax.swing.JToolBar;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.contactlist.ContactList;
 import org.lunarray.lshare.gui.filelist.FileList;
+import org.lunarray.lshare.gui.incomplete.IncompleteList;
 import org.lunarray.lshare.gui.main.ShowFrameMenu;
 import org.lunarray.lshare.gui.search.SearchFilter;
 import org.lunarray.lshare.gui.search.SearchList;
@@ -35,9 +36,7 @@ import org.lunarray.lshare.gui.transfers.TransferList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
- * TODO queues
- * TODO incompletes
- * The main user interface.
+ * TODO queues The main user interface.
  * @author Pal Hargitai
  */
 public class MainGUI implements ActionListener {
@@ -85,9 +84,11 @@ public class MainGUI implements ActionListener {
     private ShareList sharelist;
 
     private TransferList transferlist;
-    
+
+    private IncompleteList incompletelist;
+
     private JToolBar bar;
-    
+
     /**
      * Instanciates the main user interface.
      * @param l The instance of the protocol that it may use.
@@ -113,18 +114,22 @@ public class MainGUI implements ActionListener {
         sharelist = new ShareList(lshare, this);
         sharelist.getFrame().setVisible(false);
         addFrame(sharelist);
-        
+
         transferlist = new TransferList(lshare, this);
         transferlist.getFrame().setVisible(false);
         addFrame(transferlist);
 
+        incompletelist = new IncompleteList(lshare, this);
+        incompletelist.getFrame().setVisible(false);
+        addFrame(incompletelist);
+
         // Init of the menu bar.
         initMenu();
         frame.setJMenuBar(menu);
-        
+
         // Init of the toolbar
         initToolBar();
-        
+
         // Set the panel
         JPanel mp = new JPanel(new BorderLayout());
         frame.setContentPane(mp);
@@ -179,23 +184,28 @@ public class MainGUI implements ActionListener {
 
     public JButton addToolButton(String name, String icon, String action) {
         JButton but = new JButton();
-        //but.setText(name); <- Use icon
+        // but.setText(name); <- Use icon
         but.setIcon(new ImageIcon(icon));
         but.addActionListener(this);
         but.setActionCommand(action);
         return but;
     }
-    
+
     public void initToolBar() {
         bar = new JToolBar();
         bar.setFloatable(false);
-        bar.add(addToolButton("Contact List", "icons/system-users.png", "contactlist"));
-        bar.add(addToolButton("Share list", "icons/system-file-manager.png", "sharelist"));
-        bar.add(addToolButton("Transfer list", "icons/network-transmit-receive.png", "transferlist"));
+        bar.add(addToolButton("Contact List", "icons/system-users.png",
+                "contactlist"));
+        bar.add(addToolButton("Share list", "icons/system-file-manager.png",
+                "sharelist"));
+        bar.add(addToolButton("Transfer list",
+                "icons/network-transmit-receive.png", "transferlist"));
+        bar.add(addToolButton("Incomplete file list",
+                "icons/text-x-generic.png", "incompletelist"));
         bar.addSeparator();
         bar.add(addToolButton("Search", "icons/system-search.png", "search"));
     }
-    
+
     /**
      * Initialises the menu.
      */
@@ -216,6 +226,7 @@ public class MainGUI implements ActionListener {
         windowm.add(addMenuItem("Show contactlist", "contactlist"));
         windowm.add(addMenuItem("Show sharelist", "sharelist"));
         windowm.add(addMenuItem("Show transfers", "transferlist"));
+        windowm.add(addMenuItem("Show incomplete files", "incompletelist"));
         menu.add(windowm);
         // Winlist
         winmenu = new JMenu("View");
@@ -263,6 +274,9 @@ public class MainGUI implements ActionListener {
         } else if (ac.equals("transferlist")) {
             // Show the transferlist
             addTransferList();
+        } else if (ac.equals("incompletelist")) {
+            // Show the incompletelist
+            addIncompleteList();
         }
     }
 
@@ -270,7 +284,12 @@ public class MainGUI implements ActionListener {
         transferlist.getFrame().setVisible(true);
         updateMenu();
     }
-    
+
+    public void addIncompleteList() {
+        incompletelist.getFrame().setVisible(true);
+        updateMenu();
+    }
+
     /**
      * Shows the contact list
      */
@@ -292,8 +311,7 @@ public class MainGUI implements ActionListener {
      * @param u The user to show the filelist of.
      */
     public void addFileList(User u) {
-        FileList fl = new FileList(lshare, u, this);
-        addFrame(fl);
+        addFrame(new FileList(lshare, u, this));
         updateMenu();
     }
 
@@ -302,8 +320,7 @@ public class MainGUI implements ActionListener {
      * @param f The filter to apply to the search results.
      */
     public void addSearchList(SearchFilter f) {
-        SearchList sl = new SearchList(lshare, f, this);
-        addFrame(sl);
+        addFrame(new SearchList(lshare, f, this));
         updateMenu();
     }
 

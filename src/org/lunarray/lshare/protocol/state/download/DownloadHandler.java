@@ -225,7 +225,7 @@ public class DownloadHandler {
             manager.removeFromQueue(incomplete);
             Controls.getLogger().info("Transfer done.");
         } else {
-            // init(); <- I'm guessing this state should allow this, unsure.
+            //init(); <- I'm guessing this state should allow this, unsure.
             // It would be better to introduce a queuing mechanism to rerequest
             // this again
         }

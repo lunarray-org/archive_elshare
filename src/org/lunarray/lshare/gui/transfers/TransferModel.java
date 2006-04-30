@@ -28,7 +28,6 @@ public class TransferModel implements TableModel, UploadListener,
         listeners = new ArrayList<TableModelListener>();
     }
 
-    // This is only for the
     public Component getTableCellRendererComponent(JTable arg0, Object arg1, 
             boolean arg2, boolean arg3, int arg4, int arg5) {
         if (arg5 == 3) {
@@ -240,6 +239,7 @@ public class TransferModel implements TableModel, UploadListener,
     protected void updateTable() {
         for (int i = 0; i < transferitems.size(); i++ ) {
             transferitems.get(i).updateBar();
+            
             TableModelEvent ev = new TableModelEvent(this, i, i,
                     3, TableModelEvent.UPDATE);
             for (TableModelListener l : listeners) {
