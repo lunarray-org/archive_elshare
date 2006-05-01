@@ -23,7 +23,8 @@ import org.lunarray.lshare.gui.MainGUI;
  * A standard contact list. Shows all known users in a treelike form.
  * @author Pal Hargitai
  */
-public class ContactList extends GUIFrame implements ActionListener, TreeSelectionListener {
+public class ContactList extends GUIFrame implements ActionListener,
+        TreeSelectionListener {
     /**
      * The protocol to access.
      */
@@ -33,15 +34,18 @@ public class ContactList extends GUIFrame implements ActionListener, TreeSelecti
      * The currently selected node.
      */
     private UserNode selected;
-    
+
     /**
      * The tree model holding data on the contacts.
      */
     private Model model;
-    
+
     private JButton buttonrembuddy;
+
     private JButton buttonaddbuddy;
+
     private JButton buttonfilelist;
+
     private JTree panel;
 
     /**
@@ -58,7 +62,7 @@ public class ContactList extends GUIFrame implements ActionListener, TreeSelecti
         ls.getUserList().addListener(model);
 
         JPanel mp = new JPanel(new BorderLayout());
-        
+
         // Setup tree
         panel = new JTree(model);
         JScrollPane scroller = new JScrollPane(panel);
@@ -82,21 +86,21 @@ public class ContactList extends GUIFrame implements ActionListener, TreeSelecti
         buttonrembuddy.setActionCommand("buddy");
         buttonrembuddy.addActionListener(this);
         buttonrembuddy.setEnabled(false);
-        //buttonrembuddy.setText("Remove Buddy"); <- Use icon
+        // buttonrembuddy.setText("Remove Buddy"); <- Use icon
         buttonrembuddy.setIcon(new ImageIcon("icons/list-remove.png"));
         buttonaddbuddy = new JButton();
         buttonaddbuddy.setActionCommand("buddy");
         buttonaddbuddy.addActionListener(this);
         buttonaddbuddy.setEnabled(false);
-        //buttonaddbuddy.setText("Add Buddy"); <- Use icon
+        // buttonaddbuddy.setText("Add Buddy"); <- Use icon
         buttonaddbuddy.setIcon(new ImageIcon("icons/list-add.png"));
         buttonfilelist = new JButton();
         buttonfilelist.setActionCommand("filelist");
         buttonfilelist.addActionListener(this);
         buttonfilelist.setEnabled(false);
-        //buttonfilelist.setText("Get filelist"); <- Use icon
+        // buttonfilelist.setText("Get filelist"); <- Use icon
         buttonfilelist.setIcon(new ImageIcon("icons/folder-remote.png"));
-        
+
         // Set toolbar
         JToolBar bar = new JToolBar();
         bar.setFloatable(false);
@@ -104,23 +108,21 @@ public class ContactList extends GUIFrame implements ActionListener, TreeSelecti
         bar.add(buttonrembuddy);
         bar.addSeparator();
         bar.add(buttonfilelist);
-        
-        
+
         // Set panel
         mp.add(bar, BorderLayout.NORTH);
         mp.add(scroller, BorderLayout.CENTER);
-        
+
         // The frame
         frame.setTitle(getTitle());
         frame.getContentPane().add(mp);
     }
-    
+
     public void valueChanged(TreeSelectionEvent arg0) {
         // See if anything is selected.
         if (panel.getSelectionCount() > 0) {
             // Checks if the component is a user
-            if (!arg0.getPath().getLastPathComponent().getClass().equals(
-                    UserNode.class)) {
+            if (!(arg0.getPath().getLastPathComponent() instanceof UserNode)) {
                 panel.getSelectionModel().clearSelection();
                 selected = null;
             } else {
@@ -137,7 +139,7 @@ public class ContactList extends GUIFrame implements ActionListener, TreeSelecti
             enableButtons(selected.getUser().isBuddy());
         }
     }
-    
+
     /**
      * The action triggered if an item on the menu is clicked.
      * @param arg0 The action that triggered the call of this event.
@@ -154,7 +156,7 @@ public class ContactList extends GUIFrame implements ActionListener, TreeSelecti
             }
         }
     }
-    
+
     @Override
     /**
      * The close action for the frame. Just makes the frame invisible.
@@ -170,13 +172,13 @@ public class ContactList extends GUIFrame implements ActionListener, TreeSelecti
     public String getTitle() {
         return "Contact List";
     }
-    
+
     private void disableButtons() {
         buttonaddbuddy.setEnabled(false);
         buttonrembuddy.setEnabled(false);
         buttonfilelist.setEnabled(false);
     }
-    
+
     private void enableButtons(boolean isbuddy) {
         buttonfilelist.setEnabled(true);
         buttonaddbuddy.setEnabled(!isbuddy);

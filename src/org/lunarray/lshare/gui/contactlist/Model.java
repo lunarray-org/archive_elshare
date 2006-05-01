@@ -95,7 +95,7 @@ public class Model implements TreeModel, UserListener {
      * @return True if the node is a leaf, false if not.
      */
     public boolean isLeaf(Object arg0) {
-        if (arg0.getClass().equals(UserNode.class)) {
+        if (arg0 instanceof UserNode) {
             return true;
         } else {
             return false;
@@ -117,7 +117,7 @@ public class Model implements TreeModel, UserListener {
      */
     public int getIndexOfChild(Object arg0, Object arg1) {
         if (arg0 == root) {
-            if (arg1.getClass().equals(TreeNode.class)) {
+            if (arg1 instanceof TreeNode) {
                 return root.getIndex((TreeNode) arg1);
             } else {
                 return -1;

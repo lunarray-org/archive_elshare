@@ -117,8 +117,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
 
     public void valueChanged(TreeSelectionEvent arg0) {
         if (arg0.getSource() != null) {
-            if (arg0.getPath().getLastPathComponent().getClass().equals(
-                    ListNode.class)) {
+            if (arg0.getPath().getLastPathComponent() instanceof ListNode) {
                 ListNode n = (ListNode) arg0.getPath().getLastPathComponent();
                 selected = n;
             } else {
@@ -141,7 +140,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
      */
     public void close() {
         Object o = model.getRoot();
-        if (o.getClass().equals(ListNode.class)) {
+        if (o instanceof ListNode) {
             ListNode n = (ListNode) o;
             n.getEntry().closeReceiver();
         }

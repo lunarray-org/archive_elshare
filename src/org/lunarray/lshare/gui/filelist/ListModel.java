@@ -66,7 +66,7 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
      * @return The child.
      */
     public Object getChild(Object arg0, int arg1) {
-        if (arg0.getClass().equals(ListNode.class)) {
+        if (arg0 instanceof ListNode) {
             return ((ListNode) arg0).get(arg1);
         } else {
             return null;
@@ -78,7 +78,7 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
      * @param arg0 The node to get the count of.
      */
     public int getChildCount(Object arg0) {
-        if (arg0.getClass().equals(ListNode.class)) {
+        if (arg0 instanceof ListNode) {
             return ((ListNode) arg0).size();
         } else {
             return 0;
@@ -92,8 +92,7 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
      * @return The index of the child in the parent.
      */
     public int getIndexOfChild(Object arg0, Object arg1) {
-        if (arg0.getClass().equals(ListNode.class)
-                && arg1.getClass().equals(ListNode.class)) {
+        if (arg0 instanceof ListNode && arg1 instanceof ListNode) {
             return ((ListNode) arg0).getIndex((ListNode) arg1);
         } else {
             return -1;
@@ -149,7 +148,7 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
      * @return The value at the specified node and column.
      */
     public Object getValueAt(Object node, int column) {
-        if (node.getClass().equals(ListNode.class)) {
+        if (node instanceof ListNode) {
             ListNode n = (ListNode) node;
             switch (column) {
             case 0:
@@ -182,7 +181,7 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
      * @return True if the node is a leaf, false if not.
      */
     public boolean isLeaf(Object arg0) {
-        if (arg0.getClass().equals(ListNode.class)) {
+        if (arg0 instanceof ListNode) {
             return ((ListNode) arg0).isLeaf();
         } else {
             return false;

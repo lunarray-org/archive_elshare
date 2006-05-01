@@ -176,7 +176,7 @@ public class User implements Comparable<User> {
      * @return True if this user is another user, false if not.
      */
     public boolean equals(Object arg0) {
-        if (arg0.getClass().equals(User.class)) {
+        if (arg0 instanceof User) {
             User u = (User) arg0;
             if (challengeMatches(u.challenge)) {
                 return true;

@@ -19,7 +19,7 @@ public class RawSettings {
      * The constructor, gets the settings for the package.
      */
     public RawSettings() {
-        prefs = Preferences.userNodeForPackage(this.getClass());
+        prefs = Preferences.userNodeForPackage(getClass());
     }
 
     /**
