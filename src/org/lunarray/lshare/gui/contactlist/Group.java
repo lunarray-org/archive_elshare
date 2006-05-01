@@ -82,7 +82,7 @@ public class Group {
 
             int i = Collections.binarySearch(ulist, n.getUser());
             if (i < 0) {
-                ulist.add(-(i + 1), n);
+                ulist.add(~i, n);
             } else {
                 ulist.add(i, n);
             }

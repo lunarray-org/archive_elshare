@@ -116,7 +116,7 @@ public class SearchModel implements TableModel, MouseListener,
 
             int i = Collections.binarySearch(events, e, this);
             if (i < 0) {
-                events.add(-(i + 1), e);
+                events.add(~i, e);
             } else {
                 events.add(i, e);
             }
