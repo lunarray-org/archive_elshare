@@ -21,17 +21,39 @@ import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
 
+/**
+ * Shows a list of incomplete files.
+ * @author Pal Hargitai
+ */
 public class IncompleteList extends GUIFrame implements ActionListener,
         ListSelectionListener {
 
+    /**
+     * A timer to update these files.
+     */
     private Timer timer;
 
+    /**
+     * The model in which representations of this file will be stored.
+     */
     private IncompleteModel model;
 
+    /**
+     * The selected row. This is < 0 if nothing is selected, it will be >= 0 if
+     * there is a selection.
+     */
     private int selrow;
 
+    /**
+     * A delete button.
+     */
     private JButton delete;
 
+    /**
+     * Constructs the incomplete filelist
+     * @param ls The controls of the protocol.
+     * @param mg The main user interface.
+     */
     public IncompleteList(LShare ls, MainGUI mg) {
         super(mg);
 
@@ -47,14 +69,14 @@ public class IncompleteList extends GUIFrame implements ActionListener,
         // Setup toolbar
         JToolBar bar = new JToolBar();
         bar.setFloatable(false);
-        
+
         delete = new JButton();
         delete.setActionCommand("delete");
         delete.addActionListener(this);
         delete.setEnabled(false);
         // delete.setText("Delete"); <- Use icon
         delete.setIcon(new ImageIcon("icons/edit-delete.png"));
-        
+
         bar.add(delete);
 
         // Setup main panel
@@ -76,16 +98,21 @@ public class IncompleteList extends GUIFrame implements ActionListener,
         }, 0, 1000);
     }
 
+    /**
+     * Triggered if a list selection occurs.
+     * @param arg0 The event associated with the selection.
+     */
     public void valueChanged(ListSelectionEvent arg0) {
-        if (arg0.getFirstIndex() >= 0
-                && arg0.getFirstIndex() < model.getRowCount()) {
-            selrow = arg0.getFirstIndex();
-        } else {
-            selrow = -1;
-        }
+        selrow = arg0.getFirstIndex() >= 0
+                && arg0.getFirstIndex() < model.getRowCount() ? arg0
+                .getFirstIndex() : -1;
         setButtonsEnabled(selrow >= 0);
     }
 
+    /**
+     * Triggered if an action is performed.
+     * @param arg0 The event associated with the action.
+     */
     public void actionPerformed(ActionEvent arg0) {
         if (arg0.getActionCommand().equals("delete")) {
             if (selrow >= 0) {
@@ -112,6 +139,10 @@ public class IncompleteList extends GUIFrame implements ActionListener,
         return "Incomplete";
     }
 
+    /**
+     * Enables or disabled the buttons.
+     * @param enabled The buttons will be enabled.
+     */
     private void setButtonsEnabled(boolean enabled) {
         delete.setEnabled(enabled);
     }

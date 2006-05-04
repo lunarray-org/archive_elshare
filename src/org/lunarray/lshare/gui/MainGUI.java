@@ -83,10 +83,19 @@ public class MainGUI implements ActionListener {
      */
     private ShareList sharelist;
 
+    /**
+     * The transferlist.
+     */
     private TransferList transferlist;
 
+    /**
+     * The incompete files list.
+     */
     private IncompleteList incompletelist;
 
+    /**
+     * The toolbar.
+     */
     private JToolBar bar;
 
     /**
@@ -182,6 +191,13 @@ public class MainGUI implements ActionListener {
         }
     }
 
+    /**
+     * Get a button to be put on the toolbar.
+     * @param name The name of the button.
+     * @param icon The icon of the button.
+     * @param action The actioncommand associated with it.
+     * @return The button to be put on the toolbar.
+     */
     public JButton addToolButton(String name, String icon, String action) {
         JButton but = new JButton();
         // but.setText(name); <- Use icon
@@ -191,6 +207,9 @@ public class MainGUI implements ActionListener {
         return but;
     }
 
+    /**
+     * Initialise the toolbar.
+     */
     public void initToolBar() {
         bar = new JToolBar();
         bar.setFloatable(false);
@@ -280,11 +299,18 @@ public class MainGUI implements ActionListener {
         }
     }
 
+    /**
+     * Add the transferlist. That is, make it visible.
+     */
     public void addTransferList() {
         transferlist.getFrame().setVisible(true);
         updateMenu();
     }
 
+    /**
+     * Add the incompletefile list. That is, make it visible.
+     *
+     */
     public void addIncompleteList() {
         incompletelist.getFrame().setVisible(true);
         updateMenu();

@@ -115,11 +115,7 @@ public class SearchModel implements TableModel, MouseListener,
             }
 
             int i = Collections.binarySearch(events, e, this);
-            if (i < 0) {
-                events.add(~i, e);
-            } else {
-                events.add(i, e);
-            }
+            events.add(i < 0 ? ~i : i, e);
 
             for (TableModelListener l : listeners) {
                 TableModelEvent me = new TableModelEvent(this);
@@ -202,41 +198,25 @@ public class SearchModel implements TableModel, MouseListener,
     public Object getValueAt(int arg1, int arg0) {
         switch (arg0) {
         case 0:
-            if (events.get(arg1).getEntry().isDirectory()) {
-                return MetalIconFactory.getTreeFolderIcon();
-            } else {
-                return MetalIconFactory.getTreeLeafIcon();
-            }
+            return events.get(arg1).getEntry().isDirectory() ? MetalIconFactory
+                    .getTreeFolderIcon() : MetalIconFactory.getTreeLeafIcon();
         case 1:
             return events.get(arg1).getEntry().getName();
         case 2:
-            if (events.get(arg1).getEntry().isDirectory()) {
-                return GUIUtil.stripDirPath(events.get(arg1).getEntry()
-                        .getPath());
-            } else {
-                return events.get(arg1).getEntry().getPath();
-            }
+            return events.get(arg1).getEntry().isDirectory() ? GUIUtil
+                    .stripDirPath(events.get(arg1).getEntry().getPath())
+                    : events.get(arg1).getEntry().getPath();
         case 3:
-            if (events.get(arg1).getEntry().getSize() >= 0) {
-                return GUIUtil.prettyPrint(events.get(arg1).getEntry()
-                        .getSize());
-            } else {
-                return "";
-            }
+            return events.get(arg1).getEntry().getSize() >= 0 ? GUIUtil
+                    .prettyPrint(events.get(arg1).getEntry().getSize()) : "";
         case 4:
-            if (events.get(arg1).getEntry().getLastModified() == 0) {
-                return "";
-            } else {
-                return (new Date(events.get(arg1).getEntry().getLastModified()))
-                        .toString();
-            }
-        case 5:
-            if (events.get(arg1).getEntry().hasHash()) {
-                return events.get(arg1).getEntry().getHash().toString();
-            } else {
-                return "";
-            }
+            return events.get(arg1).getEntry().getLastModified() == 0 ? ""
+                    : (new Date(events.get(arg1).getEntry().getLastModified()))
+                            .toString();
 
+        case 5:
+            return events.get(arg1).getEntry().hasHash() ? events.get(arg1)
+                    .getEntry().getHash().toString() : "";
         case 6:
             return events.get(arg1).getUser().getName();
         case 7:
@@ -302,24 +282,24 @@ public class SearchModel implements TableModel, MouseListener,
         case DESCENDING:
             switch (sortcolumn) {
             case 1:
-                return - arg0.getEntry().getName().compareTo(
+                return -arg0.getEntry().getName().compareTo(
                         arg1.getEntry().getName());
             case 2:
-                return - arg0.getEntry().getPath().compareTo(
+                return -arg0.getEntry().getPath().compareTo(
                         arg1.getEntry().getPath());
             case 3:
-                return - Long.valueOf(arg1.getEntry().getSize()).compareTo(
+                return -Long.valueOf(arg1.getEntry().getSize()).compareTo(
                         arg0.getEntry().getSize());
             case 4:
-                return - Long.valueOf(arg1.getEntry().getLastModified())
+                return -Long.valueOf(arg1.getEntry().getLastModified())
                         .compareTo(arg0.getEntry().getLastModified());
             case 5:
-                return - arg0.getEntry().getHash().compareTo(
+                return -arg0.getEntry().getHash().compareTo(
                         arg1.getEntry().getHash());
             case 6:
-                return - arg0.getUser().compareTo(arg1.getUser());
+                return -arg0.getUser().compareTo(arg1.getUser());
             case 7:
-                return - arg0.getUser().getHostname().compareTo(
+                return -arg0.getUser().getHostname().compareTo(
                         arg1.getUser().getHostname());
             default:
                 return 0;

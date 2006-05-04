@@ -95,11 +95,7 @@ public class Model implements TreeModel, UserListener {
      * @return True if the node is a leaf, false if not.
      */
     public boolean isLeaf(Object arg0) {
-        if (arg0 instanceof UserNode) {
-            return true;
-        } else {
-            return false;
-        }
+        return arg0 instanceof UserNode ? true : false;
     }
 
     /**
@@ -117,11 +113,7 @@ public class Model implements TreeModel, UserListener {
      */
     public int getIndexOfChild(Object arg0, Object arg1) {
         if (arg0 == root) {
-            if (arg1 instanceof TreeNode) {
-                return root.getIndex((TreeNode) arg1);
-            } else {
-                return -1;
-            }
+            return arg1 instanceof TreeNode ? root.getIndex((TreeNode) arg1) : -1;
         }
         for (int i = 0; i < root.getChildCount(); i++) {
             if (arg0 == root.getChildAt(i)) {
@@ -207,11 +199,7 @@ public class Model implements TreeModel, UserListener {
             int j = root.getChildAt(i).getIndex(u);
             UserNode n = root.getChildAt(i).removeUser(u.getUser());
             if (n != null) {
-                if (j > 0) {
-                    fireRemove(n, j);
-                } else {
-                    fireRemove(n, 0);
-                }
+                fireRemove(n, j > 0 ? j : 0);
             }
         }
 

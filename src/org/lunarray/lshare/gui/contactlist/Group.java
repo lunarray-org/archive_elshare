@@ -36,11 +36,7 @@ public class Group {
      * @return The child if it exists, else null.
      */
     public UserNode getChildAt(int arg0) {
-        if (0 <= arg0 && arg0 < ulist.size()) {
-            return ulist.get(arg0);
-        } else {
-            return null;
-        }
+        return 0 <= arg0 && arg0 < ulist.size() ? ulist.get(arg0) : null; 
     }
 
     /**
@@ -57,11 +53,7 @@ public class Group {
      * @return The index of the specified object.
      */
     public int getIndex(Object arg0) {
-        if (ulist.contains(arg0)) {
-            return ulist.indexOf(arg0);
-        } else {
-            return -1;
-        }
+        return ulist.contains(arg0) ? ulist.indexOf(arg0) : -1;
     }
 
     /**
@@ -81,11 +73,7 @@ public class Group {
             ulist.remove(n);
 
             int i = Collections.binarySearch(ulist, n.getUser());
-            if (i < 0) {
-                ulist.add(~i, n);
-            } else {
-                ulist.add(i, n);
-            }
+            ulist.add(i < 0 ? ~i : i, n);
         }
     }
 
@@ -125,11 +113,7 @@ public class Group {
         UserNode n = new UserNode(this, u);
         int i = Collections.binarySearch(ulist, u);
 
-        if (i < 0) {
-            ulist.add(-(i + 1), n);
-        } else {
-            ulist.add(i, n);
-        }
+        ulist.add(i < 0 ? ~i : i, n);
         return n;
     }
 }

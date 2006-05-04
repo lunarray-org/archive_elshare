@@ -32,10 +32,7 @@ public class GUIUtil {
      * @return The path with the last path element stripped.
      */
     public static String stripDirPath(String path) {
-        if (path.contains(RemoteFile.SEPARATOR)) {
-            return path.substring(0, path.lastIndexOf(RemoteFile.SEPARATOR));
-        } else {
-            return "";
-        }
+        return path.contains(RemoteFile.SEPARATOR) ? path.substring(0, path
+                .lastIndexOf(RemoteFile.SEPARATOR)) : "";
     }
 }

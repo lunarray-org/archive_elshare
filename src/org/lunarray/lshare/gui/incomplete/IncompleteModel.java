@@ -17,15 +17,32 @@ import org.lunarray.lshare.protocol.events.QueueEvent;
 import org.lunarray.lshare.protocol.events.QueueListener;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
 
+/**
+ * The model for incomplete files.
+ * @author Pal Hargitai
+ */
 public class IncompleteModel implements TableModel, TableCellRenderer,
         QueueListener {
 
+    /**
+     * The listeners of the model
+     */
     private ArrayList<TableModelListener> listeners;
 
+    /**
+     * The files in the model.
+     */
     private ArrayList<IncompleteFile> files;
 
+    /**
+     * The progressbars of the files.
+     */
     private ArrayList<JProgressBar> bars;
 
+    /**
+     * Constructs the incomplete file model.
+     * @param ls The controls of the protocol.
+     */
     public IncompleteModel(LShare ls) {
         listeners = new ArrayList<TableModelListener>();
         files = new ArrayList<IncompleteFile>();
@@ -51,23 +68,41 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
         }
     }
 
+    /**
+     * Gets the amount of rows.
+     * @return The amount of rows.
+     */
     public int getRowCount() {
         return files.size();
     }
 
+    /**
+     * Gets the amount of columns.
+     * @return The amount of columns. Generally 5.
+     */
     public int getColumnCount() {
         return 5;
     }
 
+    /**
+     * Gets the cell renderer for the progressbars.
+     * @param arg0 The table, we assume there is just one.
+     * @param arg1 The value to return.
+     * @param arg2 Wether it is selected
+     * @param arg3 Wether it has focus
+     * @param arg4 The row.
+     * @param arg5 The column.
+     */
     public Component getTableCellRendererComponent(JTable arg0, Object arg1,
             boolean arg2, boolean arg3, int arg4, int arg5) {
-        if (arg5 == 2) {
-            return bars.get(arg4);
-        } else {
-            return null;
-        }
+        return arg5 == 2 ? bars.get(arg4) : null;
     }
 
+    /**
+     * Get the name of a column.
+     * @param arg0 The column index.
+     * @return The name of the column.
+     */
     public String getColumnName(int arg0) {
         switch (arg0) {
         case 0:
@@ -86,11 +121,7 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
     }
 
     public Class<?> getColumnClass(int arg0) {
-        if (arg0 == 2) {
-            return JProgressBar.class;
-        } else {
-            return String.class;
-        }
+        return arg0 == 2 ? JProgressBar.class : String.class;
     }
 
     public Object getValueAt(int arg0, int arg1) {

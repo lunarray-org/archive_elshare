@@ -96,11 +96,7 @@ public class ListNode implements Comparable<FilelistEntry> {
             popChildren();
             return null;
         }
-        if (0 <= i && i < children.size()) {
-            return children.get(i);
-        } else {
-            return null;
-        }
+        return 0 <= i && i < children.size() ? children.get(i) : null;
     }
 
     /**
@@ -113,11 +109,7 @@ public class ListNode implements Comparable<FilelistEntry> {
             popChildren();
             return -1;
         }
-        if (children.contains(n)) {
-            return children.indexOf(n);
-        } else {
-            return -1;
-        }
+        return children.contains(n) ? children.indexOf(n) : -1;
     }
 
     /**
@@ -149,11 +141,7 @@ public class ListNode implements Comparable<FilelistEntry> {
      * @return The string representation of this entry.
      */
     public String getHash() {
-        if (entry.hasHash()) {
-            return entry.getHash().toString();
-        } else {
-            return "";
-        }
+        return entry.hasHash() ? entry.getHash().toString() : "";
     }
 
     /**
@@ -200,7 +188,7 @@ public class ListNode implements Comparable<FilelistEntry> {
     private void addChild(FilelistEntry e) {
         int i = Collections.binarySearch(children, e);
         if (i < 0) {
-            children.add(-(i + 1), new ListNode(e, this, model));
+            children.add(~i, new ListNode(e, this, model));
         }
     }
 

@@ -40,12 +40,24 @@ public class ContactList extends GUIFrame implements ActionListener,
      */
     private Model model;
 
+    /**
+     * The button to remove a buddy.
+     */
     private JButton buttonrembuddy;
 
+    /**
+     * The button to add a buddy.
+     */
     private JButton buttonaddbuddy;
 
+    /**
+     * The button to fetch a users filelist.
+     */
     private JButton buttonfilelist;
 
+    /**
+     * The tree of the buddylist.
+     */
     private JTree panel;
 
     /**
@@ -118,6 +130,10 @@ public class ContactList extends GUIFrame implements ActionListener,
         frame.getContentPane().add(mp);
     }
 
+    /**
+     * When a treeselection occurs, this is triggered.
+     * @param arg0 The event associated with the selection.
+     */
     public void valueChanged(TreeSelectionEvent arg0) {
         // See if anything is selected.
         if (panel.getSelectionCount() > 0) {
@@ -173,12 +189,19 @@ public class ContactList extends GUIFrame implements ActionListener,
         return "Contact List";
     }
 
+    /**
+     * Disable the buttons.
+     */
     private void disableButtons() {
         buttonaddbuddy.setEnabled(false);
         buttonrembuddy.setEnabled(false);
         buttonfilelist.setEnabled(false);
     }
 
+    /**
+     * Enable the buttons.
+     * @param isbuddy Wether the user is a buddy.
+     */
     private void enableButtons(boolean isbuddy) {
         buttonfilelist.setEnabled(true);
         buttonaddbuddy.setEnabled(!isbuddy);
