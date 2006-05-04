@@ -128,7 +128,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
 
     /**
      * Gets the queued users.
-     * @param The users where files are queued.
+     * @return The users where files are queued.
      */
     public Set<User> getQueuedUsers() {
         return queue.keySet();
