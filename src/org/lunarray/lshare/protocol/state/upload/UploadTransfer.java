@@ -53,19 +53,41 @@ public class UploadTransfer implements RunnableTask {
      */
     private boolean done;
 
+    /**
+     * The total size of the transfer.
+     */
     private long size;
+
+    /**
+     * The amount to be transferred.
+     */
     private long todo;
+
+    /**
+     * The request associated with the transfer.
+     */
     private UploadRequest req;
+
+    /**
+     * The user the transfer is dealing with.
+     */
     private User user;
+
+    /**
+     * Set to true if the transfer should run, false if not.
+     */
     private boolean shouldrun;
-    
+
     /**
      * Contructs a file upload.
      * @param f The file to upload.
      * @param o The offset to uplaod at.
      * @param m The manager that manages this upload.
+     * @param r The request that is associated with it.
+     * @param u The user the transfer is with.
      */
-    public UploadTransfer(File f, long o, UploadManager m, UploadRequest r, User u) {
+    public UploadTransfer(File f, long o, UploadManager m, UploadRequest r,
+            User u) {
         user = u;
         req = r;
         file = f;
@@ -132,7 +154,10 @@ public class UploadTransfer implements RunnableTask {
             return socket.isConnected();
         }
     }
-    
+
+    /**
+     * Cancels the transfer.
+     */
     public void cancel() {
         shouldrun = false;
     }
@@ -155,31 +180,55 @@ public class UploadTransfer implements RunnableTask {
 
         Controls.getLogger().fine("Closed transfer.");
     }
-    
+
+    /**
+     * Gets the file being transferred.
+     * @return The file being transferred.
+     */
     public File getFile() {
         return file;
     }
-    
+
+    /**
+     * Gets the total size of the file.
+     * @return The total size of the file.
+     */
     public long getSize() {
         return size;
     }
-    
+
+    /**
+     * Gets the amount to be transferred.
+     * @return The amount to be transferred.
+     */
     public long getTodo() {
         return todo;
     }
-    
+
+    /**
+     * Gets the transferred amount.
+     * @return The amount transferred.
+     */
     public long getDone() {
         return size - todo;
     }
 
+    /**
+     * Gets the request associated with this transfer.
+     * @return The request associated with the transfer.
+     */
     public UploadRequest getRequest() {
         return req;
     }
-    
+
+    /**
+     * Gets the user associated with this transfer.
+     * @return The user associated with this transfer.
+     */
     public User getUser() {
         return user;
     }
-    
+
     /**
      * Runs the actual transfer.
      * @param c The controls to the protocol.
@@ -193,7 +242,7 @@ public class UploadTransfer implements RunnableTask {
                 OutputStream ostream = socket.getOutputStream();
 
                 manager.statusUpdate(this);
-                
+
                 // While there is stuff to transfer, transfer.
                 int tokenamount = manager.getTokenValue();
                 while (istream.available() > 0) {
@@ -207,9 +256,9 @@ public class UploadTransfer implements RunnableTask {
                     byte[] dat = new byte[totrans];
                     istream.read(dat);
                     ostream.write(dat);
-                    
+
                     todo -= totrans;
-                    
+
                     if (!shouldrun) {
                         break run;
                     }

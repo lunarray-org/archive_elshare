@@ -77,7 +77,7 @@ public class RequestIn extends PacketIn {
             byte[] data = packet.getData();
 
             long offset = PacketUtil.byteArrayToLong(data, 1);
-            
+
             long size = PacketUtil.byteArrayToLong(data, 1 + 8);
             byte[] hash = PacketUtil.getByteArrayFromByteArray(data, Hash
                     .length(), 1 + 8 + 8);

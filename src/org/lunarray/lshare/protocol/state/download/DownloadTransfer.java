@@ -45,6 +45,9 @@ public class DownloadTransfer implements RunnableTask {
      */
     private InputStream istream;
 
+    /**
+     * Set to true if the transfer should run. False if not.
+     */
     private boolean shouldrun;
 
     /**
@@ -92,6 +95,9 @@ public class DownloadTransfer implements RunnableTask {
         handler.done();
     }
 
+    /**
+     * Cancel the transfer.
+     */
     public synchronized void cancel() {
         shouldrun = false;
     }

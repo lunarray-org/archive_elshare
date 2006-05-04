@@ -51,10 +51,14 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
         size = s;
     }
 
+    /**
+     * Gives a string representation of the entry.
+     * @return The string representation of the entry.
+     */
     public String toString() {
         return path + SEPARATOR + name;
     }
-    
+
     /**
      * The path in which the file or directory resides.
      * @return The path.
@@ -118,11 +122,7 @@ public abstract class RemoteFile implements Comparable<RemoteFile> {
      * hash or if this is a directory.
      */
     public boolean hasHash() {
-        if (hash.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !hash.isEmpty();
     }
 
     /**

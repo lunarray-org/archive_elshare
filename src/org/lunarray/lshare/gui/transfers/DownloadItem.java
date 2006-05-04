@@ -62,9 +62,9 @@ public class DownloadItem implements TransferItem {
      * Update the progressbar.
      */
     public void updateBar() {
-        progressbar.setValue(Long
-                .valueOf(getSize() > Integer.MAX_VALUE ? getDone()
-                        / Integer.MAX_VALUE : getDone()).intValue());
+        progressbar.setValue(Long.valueOf(
+                getSize() > Integer.MAX_VALUE ? getDone() / Integer.MAX_VALUE
+                        : getDone()).intValue());
     }
 
     /**

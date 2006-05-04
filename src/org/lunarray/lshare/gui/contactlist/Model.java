@@ -113,7 +113,8 @@ public class Model implements TreeModel, UserListener {
      */
     public int getIndexOfChild(Object arg0, Object arg1) {
         if (arg0 == root) {
-            return arg1 instanceof TreeNode ? root.getIndex((TreeNode) arg1) : -1;
+            return arg1 instanceof TreeNode ? root.getIndex((TreeNode) arg1)
+                    : -1;
         }
         for (int i = 0; i < root.getChildCount(); i++) {
             if (arg0 == root.getChildAt(i)) {

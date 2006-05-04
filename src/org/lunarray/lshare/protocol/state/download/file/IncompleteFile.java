@@ -41,6 +41,9 @@ public class IncompleteFile {
      */
     private TreeMap<User, RemoteFile> sources;
 
+    /**
+     * True if the file is corrupt, false if it's ok.
+     */
     private boolean corrupt;
 
     /**
@@ -57,14 +60,25 @@ public class IncompleteFile {
         corrupt = false;
     }
 
+    /**
+     * Gets the reference to the file on the filesystem.
+     * @return The file.
+     */
     public File getFile() {
         return file.getFile();
     }
 
+    /**
+     * Checks wether the file is corrupt.
+     * @return True if the file is corrupt, false if not.
+     */
     public boolean isCorrupt() {
         return corrupt;
     }
 
+    /**
+     * The the file integrity.
+     */
     public void checkIntegrity() {
         if (hash.isEmpty()) {
             Hash h = new Hash(file.getFile());
@@ -72,12 +86,19 @@ public class IncompleteFile {
         }
     }
 
+    /**
+     * Physically removes the file. Use with care!
+     */
     public void delete() {
         settings.removeFile();
         file.close();
         file.getFile().delete();
     }
 
+    /**
+     * Get the files hash.
+     * @return The hash of the file.
+     */
     public Hash getHash() {
         return hash;
     }

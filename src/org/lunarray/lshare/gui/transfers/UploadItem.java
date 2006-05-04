@@ -19,7 +19,7 @@ public class UploadItem implements TransferItem {
      * The upload to represent.
      */
     private UploadTransfer upload;
-    
+
     /**
      * The progressbar.
      */
@@ -36,7 +36,7 @@ public class UploadItem implements TransferItem {
         progressbar.setStringPainted(true);
         progressbar.setBackground(Color.RED);
         progressbar.setForeground(Color.RED.darker());
-        
+
         progressbar.setMinimum(0);
         if (getSize() > Integer.MAX_VALUE) {
             progressbar.setMaximum(Long.valueOf(getSize() / Integer.MAX_VALUE)
@@ -48,7 +48,7 @@ public class UploadItem implements TransferItem {
             progressbar.setValue(Long.valueOf(getDone()).intValue());
         }
     }
-    
+
     /**
      * Get the transfer itself.
      * @return The transfer.
@@ -56,7 +56,7 @@ public class UploadItem implements TransferItem {
     public Object getTransfer() {
         return upload;
     }
-    
+
     /**
      * Get the status of the transfer.
      * @return The status of the transfer.
@@ -68,7 +68,7 @@ public class UploadItem implements TransferItem {
             return upload.isRunning() ? "Transferring" : "Connecting";
         }
     }
-    
+
     /**
      * Get the local file.
      * @return The local file.
@@ -76,7 +76,7 @@ public class UploadItem implements TransferItem {
     public File getLocal() {
         return upload.getFile();
     }
-    
+
     /**
      * Get the amount todo.
      * @return The amount todo.
@@ -121,9 +121,9 @@ public class UploadItem implements TransferItem {
      * Update the progressbar.
      */
     public void updateBar() {
-        progressbar.setValue(Long
-                .valueOf(getSize() > Integer.MAX_VALUE ? getDone()
-                        / Integer.MAX_VALUE : getDone()).intValue());
+        progressbar.setValue(Long.valueOf(
+                getSize() > Integer.MAX_VALUE ? getDone() / Integer.MAX_VALUE
+                        : getDone()).intValue());
     }
 
     /**
@@ -133,7 +133,7 @@ public class UploadItem implements TransferItem {
     public JProgressBar getProgressBar() {
         return progressbar;
     }
-    
+
     /**
      * Cancel the transfer.
      */

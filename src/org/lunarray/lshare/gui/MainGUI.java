@@ -309,7 +309,6 @@ public class MainGUI implements ActionListener {
 
     /**
      * Add the incompletefile list. That is, make it visible.
-     *
      */
     public void addIncompleteList() {
         incompletelist.getFrame().setVisible(true);

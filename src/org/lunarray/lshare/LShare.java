@@ -77,7 +77,7 @@ public class LShare {
     public ExternalUploadManager getUploadManager() {
         return controls.getState().getUploadManager();
     }
-    
+
     /**
      * Starts the protocol and all underlying layers. That provide it's
      * functionality.

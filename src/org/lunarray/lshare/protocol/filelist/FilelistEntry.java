@@ -49,7 +49,7 @@ public class FilelistEntry extends RemoteFile {
      * @return The child entries in this entry.
      */
     public List<FilelistEntry> getEntries() {
-        return receiver.getEntries(getPath() + RemoteFile.SEPARATOR + getName(),
-                isroot);
+        return receiver.getEntries(
+                getPath() + RemoteFile.SEPARATOR + getName(), isroot);
     }
 }

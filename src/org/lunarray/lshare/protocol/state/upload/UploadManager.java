@@ -65,9 +65,12 @@ public class UploadManager implements ExternalUploadManager {
      * A synchornisation variable for controlling running of the token adder.
      */
     private boolean shouldrun;
-    
+
+    /**
+     * The listeners of this manager.
+     */
     private ArrayList<UploadListener> listeners;
-    
+
     /**
      * Constructs an upload manager.
      * @param c The controls to the protocol.
@@ -78,7 +81,7 @@ public class UploadManager implements ExternalUploadManager {
         settings = controls.getSettings().getUploadSettings();
         if (settings.getUpRate() > 1000) {
             interval = 10;
-        } else if (settings.getUpRate() > 100){
+        } else if (settings.getUpRate() > 100) {
             interval = 100;
         } else {
             interval = 1000;
@@ -89,7 +92,7 @@ public class UploadManager implements ExternalUploadManager {
         c.getTasks().backgroundTask(new TokenAdder());
         listeners = new ArrayList<UploadListener>();
     }
-    
+
     /**
      * Sets the amount of available upload slots.
      * @param s The new amount of upload slots.
@@ -97,7 +100,7 @@ public class UploadManager implements ExternalUploadManager {
     public void setSlots(int s) {
         settings.setSlots(s);
     }
-    
+
     /**
      * Gets the amount of available upload slots.
      * @return The amount of upload slots.
@@ -105,7 +108,7 @@ public class UploadManager implements ExternalUploadManager {
     public int getSlots() {
         return settings.getSlots();
     }
-    
+
     /**
      * Set the download rate.
      * @param r The new download rate.
@@ -114,7 +117,7 @@ public class UploadManager implements ExternalUploadManager {
         settings.setUpRate(r);
         rateval = settings.getUpRate() / AMOUNT;
     }
-    
+
     /**
      * Get the download rate.
      * @return The download rate.
@@ -132,7 +135,7 @@ public class UploadManager implements ExternalUploadManager {
             t.close();
         }
     }
-    
+
     /**
      * Gets a list of all uploads.
      * @return All known uploads.
@@ -154,19 +157,31 @@ public class UploadManager implements ExternalUploadManager {
             // TODO send user busy
         }
     }
-    
+
+    /**
+     * Add a listener.
+     * @param lis The listener to add.
+     */
     public void addListener(UploadListener lis) {
         listeners.add(lis);
     }
-    
+
+    /**
+     * Remove a listener.
+     * @param lis The listener to remove.
+     */
     public void removeListener(UploadListener lis) {
         listeners.remove(lis);
     }
-    
+
+    /**
+     * Updates the status of a transfer.
+     * @param t The upload that has been updated.
+     */
     protected void statusUpdate(UploadTransfer t) {
         if (uploads.contains(t)) {
             UploadEvent e = new UploadEvent(t, this);
-            for (UploadListener lis: listeners) {
+            for (UploadListener lis : listeners) {
                 lis.uploadUpdated(e);
             }
         }
@@ -181,7 +196,7 @@ public class UploadManager implements ExternalUploadManager {
             uploads.add(t);
 
             UploadEvent e = new UploadEvent(t, this);
-            for (UploadListener lis: listeners) {
+            for (UploadListener lis : listeners) {
                 lis.uploadAdded(e);
             }
         }
@@ -194,9 +209,9 @@ public class UploadManager implements ExternalUploadManager {
     protected void removeTransfer(UploadTransfer t) {
         if (uploads.contains(t)) {
             uploads.remove(t);
-            
+
             UploadEvent e = new UploadEvent(t, this);
-            for (UploadListener lis: listeners) {
+            for (UploadListener lis : listeners) {
                 lis.uploadRemoved(e);
             }
         }
@@ -212,7 +227,7 @@ public class UploadManager implements ExternalUploadManager {
             // Should not happen, but just continue.
         }
     }
-    
+
     /**
      * Get the value for a token.
      * @return The value of the token in kbytes.
@@ -220,7 +235,7 @@ public class UploadManager implements ExternalUploadManager {
     protected int getTokenValue() {
         return rateval;
     }
-    
+
     /**
      * The adder of tokens.
      * @author Pal Hargitai

@@ -121,12 +121,9 @@ public class ShareSettings {
      * @return The hash of the file.
      */
     public Hash getHash(String loc) {
-        if (hashmap.containsKey(loc)) {
-            return new Hash(rsettings.getByteArray(Settings.DEFAULT_LOC
-                    + HASH_LOC, hashmap.get(loc), Hash.UNSET));
-        } else {
-            return Hash.getUnset();
-        }
+        return hashmap.containsKey(loc) ? new Hash(rsettings.getByteArray(
+                Settings.DEFAULT_LOC + HASH_LOC, hashmap.get(loc), Hash.UNSET))
+                : Hash.getUnset();
     }
 
     /**
@@ -136,12 +133,9 @@ public class ShareSettings {
      * @return The access date of the time of hash of a specified file.
      */
     public long getAccessDate(String loc) {
-        if (hashmap.containsKey(loc)) {
-            return rsettings.getLong(Settings.DEFAULT_LOC + ACCESSDATE_LOC,
-                    hashmap.get(loc), ACCESSDATE_UNSET);
-        } else {
-            return ACCESSDATE_UNSET;
-        }
+        return hashmap.containsKey(loc) ? rsettings.getLong(
+                Settings.DEFAULT_LOC + ACCESSDATE_LOC, hashmap.get(loc),
+                ACCESSDATE_UNSET) : ACCESSDATE_UNSET;
     }
 
     /**

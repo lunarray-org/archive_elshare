@@ -70,9 +70,13 @@ public class ChunkedFile {
     public boolean isFinished() {
         return getTodo() == 0;
     }
-    
+
+    /**
+     * Checks if the file is being accessed.
+     * @return True if the file is being accessed, false if not.
+     */
     public boolean inProgress() {
-        for (Chunk c: chunks.values()) {
+        for (Chunk c : chunks.values()) {
             if (c.isLocked()) {
                 return true;
             }
@@ -80,15 +84,19 @@ public class ChunkedFile {
         return false;
     }
 
+    /**
+     * Checks if the the file is empty. That is, it hasn't been written to yet.
+     * @return Wether the file is empty.
+     */
     public boolean isEmpty() {
-        for (Chunk c: chunks.values()) {
+        for (Chunk c : chunks.values()) {
             if (!c.isEmpty()) {
                 return false;
             }
         }
         return true;
     }
-    
+
     /**
      * Initialise the file from the backend.
      */
@@ -293,12 +301,13 @@ public class ChunkedFile {
         for (Chunk c : chunks.values()) {
             settings.setChunk(c.getMark(), c.getEnd());
         }
-        
+
         fsem.release();
     }
 
     /**
      * Clean all chunks. That is, merge them forwards and backwards.
+     * @param c The the chunk to check.
      */
     protected synchronized void cleanChunk(Chunk c) {
         try {
@@ -308,14 +317,14 @@ public class ChunkedFile {
             return;
         }
         // cleanup ahead, cleanup back
-        
+
         if (chunks.containsKey(c.getEnd())) {
             Chunk next = chunks.get(c.getEnd());
-            
+
             if (c.isDone()) {
                 chunks.remove(next.getBegin());
                 chunks.remove(c.getBegin());
-                
+
                 next.setBegin(c.getBegin());
                 chunks.put(next.getBegin(), next);
             } else if (next.isEmpty()) {
@@ -326,7 +335,11 @@ public class ChunkedFile {
 
         fsem.release();
     }
-    
+
+    /**
+     * Gets the reference to the file on disk.
+     * @return The file.
+     */
     public File getFile() {
         return file;
     }

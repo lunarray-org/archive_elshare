@@ -85,11 +85,7 @@ public class User implements Comparable<User> {
      * @return The hostname.
      */
     public String getHostname() {
-        if (address != null) {
-            return address.getHostName();
-        } else {
-            return "";
-        }
+        return address != null ? address.getHostName() : "";
     }
 
     /**
@@ -97,11 +93,7 @@ public class User implements Comparable<User> {
      * @return The host address.
      */
     public String getHostaddress() {
-        if (address != null) {
-            return address.getHostAddress();
-        } else {
-            return "";
-        }
+        return address != null ? address.getHostAddress() : "";
     }
 
     /**
@@ -181,22 +173,20 @@ public class User implements Comparable<User> {
             if (challengeMatches(u.challenge)) {
                 return true;
             } else {
-                if (address != null && u.address != null) {
-                    return address.equals(u.address);
-                } else {
-                    return false;
-                }
+                return address != null && u.address != null ? address
+                        .equals(u.address) : false;
             }
         }
         return false;
     }
-    
+
+    /**
+     * Gives a string representation of the user.
+     * @return The string representation of the user.
+     */
     public String toString() {
-        if (isOnline()) {
-            return getName() + "(" + getHostname() + ")";
-        } else {
-            return getName() + "(<not logged in>)";
-        }
+        return getName()
+                + (isOnline() ? "(" + getHostname() + ")" : "(<not logged in>)");
     }
 
     /**
@@ -225,11 +215,7 @@ public class User implements Comparable<User> {
      * @return True if the challenges match, false if not.
      */
     protected boolean challengeMatches(String h) {
-        if (challenge.length() <= 0) {
-            return false;
-        } else {
-            return challenge.equals(h);
-        }
+        return challenge.length() <= 0 ? false : challenge.equals(h);
     }
 
     /**

@@ -261,12 +261,14 @@ public class FilelistReceiver {
         public void runTask(Controls c) {
             run: {
                 while (true) {
+                    // Check if the time has passed
                     if (nextstamp - System.currentTimeMillis() < 0) {
                         if (!shouldget) {
                             break run;
                         }
 
                         shouldget = false;
+                        // Time has passed and the socket should now close.
                         close();
                     } else {
                         try {

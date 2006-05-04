@@ -59,19 +59,19 @@ public interface TransferItem {
      * @return The local file.
      */
     public File getLocal();
-    
+
     /**
      * Get the status of the transfer.
      * @return The status of the transfer.
      */
     public String getStatus();
-    
+
     /**
      * Get the transfer itself.
      * @return The transfer.
      */
     public Object getTransfer();
-    
+
     /**
      * Cancel the transfer.
      */

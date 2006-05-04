@@ -81,11 +81,7 @@ public class ShareEntry {
      */
     public long getLastModified() {
         if (file.exists()) {
-            if (file.isFile()) {
-                return file.lastModified();
-            } else {
-                return -1;
-            }
+            return file.isFile() ? file.lastModified() : -1;
         } else {
             return 0;
         }
@@ -97,11 +93,7 @@ public class ShareEntry {
      */
     public long getSize() {
         if (file.exists()) {
-            if (file.isFile()) {
-                return file.length();
-            } else {
-                return -1;
-            }
+            return file.isFile() ? file.length() : -1;
         } else {
             return 0;
         }
@@ -112,11 +104,8 @@ public class ShareEntry {
      * @return The hash of the entry.
      */
     public Hash getHash() {
-        if (file.isFile()) {
-            return settings.getHash(file.getPath());
-        } else {
-            return Hash.getUnset();
-        }
+        return file.isFile() ? settings.getHash(file.getPath()) : Hash
+                .getUnset();
     }
 
     /**

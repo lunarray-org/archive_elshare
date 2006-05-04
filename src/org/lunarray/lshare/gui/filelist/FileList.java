@@ -23,8 +23,8 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import com.sun.swing.JTreeTable;
 
 /**
- * TODO Rewrite standard TableModel.
- * Shows a filelist of a specific user. Allows browsing throught that file list.
+ * TODO Rewrite standard TableModel. Shows a filelist of a specific user. Allows
+ * browsing throught that file list.
  * @author Pal Hargitai
  */
 public class FileList extends GUIFrame implements TreeSelectionListener,

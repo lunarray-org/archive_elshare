@@ -67,7 +67,7 @@ public class JTreeTable extends JTable {
     public JTree getTree() {
         return tree;
     }
-    
+
     @SuppressWarnings("serial")
     public JTreeTable(TreeTableModel treeTableModel) {
         super();

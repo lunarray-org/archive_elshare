@@ -58,7 +58,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     private SecondQueueParse secondqueue;
 
     private Thread firstqueuethread;
-    
+
     private ArrayList<DownloadListener> tlisteners;
 
     private ArrayList<QueueListener> qlisteners;
@@ -79,7 +79,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         qlisteners = new ArrayList<QueueListener>();
 
         for (IncompleteFile f : filemanager.getIncompleteFiles()) {
-            for (User u: f.getSources()) {
+            for (User u : f.getSources()) {
                 if (!queue.containsKey(u)) {
                     queue.put(u, new ArrayList<IncompleteFile>());
                 }
@@ -95,7 +95,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     public Collection<IncompleteFile> getIncompleteFiles() {
         return filemanager.getIncompleteFiles();
     }
-    
+
     /**
      * Handle a response from a user.
      * @param f The response.
@@ -126,10 +126,19 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         return transfers;
     }
 
+    /**
+     * Gets the queued users.
+     * @param The users where files are queued.
+     */
     public Set<User> getQueuedUsers() {
         return queue.keySet();
     }
-    
+
+    /**
+     * Gets the queue to get.
+     * @param u The user to get the queue from.
+     * @return The list of files from the user.
+     */
     public List<IncompleteFile> getQueueFromUser(User u) {
         if (queue.containsKey(u)) {
             return queue.get(u);
@@ -207,9 +216,10 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                             }
                             // If adding source fails, don't add to queue
                             if (!queue.containsKey(i.getUser())) {
-                                queue.put(i.getUser(), new ArrayList<IncompleteFile>());
+                                queue.put(i.getUser(),
+                                        new ArrayList<IncompleteFile>());
                             }
-                            
+
                             if (!queue.get(i.getUser()).contains(inc)) {
                                 queue.get(i.getUser()).add(inc);
 
@@ -238,34 +248,54 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      * @param f The file to remove from the queue.
      */
     public void removeFromQueue(IncompleteFile f) {
-        for (User u: queue.keySet()) {
+        for (User u : queue.keySet()) {
             if (queue.get(u).contains(f)) {
                 queue.get(u).remove(f);
             }
         }
-        
+
         QueueEvent e = new QueueEvent(f, this);
         for (QueueListener lis : qlisteners) {
             lis.queueRemoved(e);
         }
     }
 
+    /**
+     * Add a queue listener.
+     * @param lis The listener to add.
+     */
     public void addQueueListener(QueueListener lis) {
         qlisteners.add(lis);
     }
 
+    /**
+     * Remove a queue listener.
+     * @param lis The listener to remove.
+     */
     public void removeQueueListener(QueueListener lis) {
         qlisteners.remove(lis);
     }
 
+    /**
+     * Add a transfer listener.
+     * @param lis The listener to add.
+     */
     public void addTransferListener(DownloadListener lis) {
         tlisteners.add(lis);
     }
 
+    /**
+     * Remove a transfer listener.
+     * @param lis The listener to remove.
+     */
     public void removeTransferListener(DownloadListener lis) {
         tlisteners.remove(lis);
     }
 
+    /**
+     * Indicates a file has been updated.
+     * @param f The file that has been updated.
+     */
     protected void updatedFile(IncompleteFile f) {
         QueueEvent e = new QueueEvent(f, this);
         for (QueueListener lis : qlisteners) {
@@ -273,6 +303,10 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
         }
     }
 
+    /**
+     * Indicates a transfer has been updated.
+     * @param h The handler. Ie. transfer.
+     */
     protected void updatedTransfer(DownloadHandler h) {
         DownloadEvent e = new DownloadEvent(h, this);
         for (DownloadListener lis : tlisteners) {

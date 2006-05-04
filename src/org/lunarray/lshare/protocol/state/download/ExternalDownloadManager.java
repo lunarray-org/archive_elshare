@@ -27,7 +27,12 @@ public interface ExternalDownloadManager {
      * @return The queued files.
      */
     public Set<User> getQueuedUsers();
-    
+
+    /**
+     * Get all queued items at a specified user.
+     * @param u The user to get the queud items from.
+     * @return The files queued at the user.
+     */
     public List<IncompleteFile> getQueueFromUser(User u);
 
     /**
@@ -47,11 +52,34 @@ public interface ExternalDownloadManager {
      * @param u The user to download from.
      */
     public void enqueue(RemoteFile f, User u);
-    
+
+    /**
+     * Add a transfer listener.
+     * @param lis The listener to add.
+     */
     public void addTransferListener(DownloadListener lis);
+
+    /**
+     * Remove a transfer listener.
+     * @param lis The listener to remove.
+     */
     public void removeTransferListener(DownloadListener lis);
+
+    /**
+     * Add a queue listener.
+     * @param lis The listener to add.
+     */
     public void addQueueListener(QueueListener lis);
+
+    /**
+     * Remove a queue listener.
+     * @param lis The listener to remove.
+     */
     public void removeQueueListener(QueueListener lis);
-    
+
+    /**
+     * Get all incomplete files.
+     * @return The incomplete files.
+     */
     public Collection<IncompleteFile> getIncompleteFiles();
 }

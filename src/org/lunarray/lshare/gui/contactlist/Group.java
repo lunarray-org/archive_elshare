@@ -36,7 +36,7 @@ public class Group {
      * @return The child if it exists, else null.
      */
     public UserNode getChildAt(int arg0) {
-        return 0 <= arg0 && arg0 < ulist.size() ? ulist.get(arg0) : null; 
+        return 0 <= arg0 && arg0 < ulist.size() ? ulist.get(arg0) : null;
     }
 
     /**

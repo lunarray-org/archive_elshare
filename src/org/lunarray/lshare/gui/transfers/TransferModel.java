@@ -50,11 +50,11 @@ public class TransferModel implements TableModel, UploadListener,
      * @param arg4 The row.
      * @param arg5 The column.
      */
-    public Component getTableCellRendererComponent(JTable arg0, Object arg1, 
+    public Component getTableCellRendererComponent(JTable arg0, Object arg1,
             boolean arg2, boolean arg3, int arg4, int arg5) {
         return arg5 == 3 ? transferitems.get(arg4).getProgressBar() : null;
     }
-    
+
     /**
      * Get the amount of rows.
      * @return The amount of rows.
@@ -107,11 +107,7 @@ public class TransferModel implements TableModel, UploadListener,
      * @return The class of the column.
      */
     public Class<?> getColumnClass(int arg0) {
-        if (arg0 == 3) {
-            return JProgressBar.class;
-        } else {
-            return String.class;
-        }
+        return arg0 == 3 ? JProgressBar.class : String.class;
     }
 
     /**
@@ -211,14 +207,14 @@ public class TransferModel implements TableModel, UploadListener,
             }
         }
         if (torem != null) {
-             int i = transferitems.indexOf(torem);
-             transferitems.remove(torem);
-            
-             TableModelEvent ev = new TableModelEvent(this, i, i,
-             TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-             for (TableModelListener l : listeners) {
-                 l.tableChanged(ev);
-             }
+            int i = transferitems.indexOf(torem);
+            transferitems.remove(torem);
+
+            TableModelEvent ev = new TableModelEvent(this, i, i,
+                    TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+            for (TableModelListener l : listeners) {
+                l.tableChanged(ev);
+            }
         }
     }
 
@@ -281,14 +277,14 @@ public class TransferModel implements TableModel, UploadListener,
             }
         }
         if (torem != null) {
-             int i = transferitems.indexOf(torem);
-             transferitems.remove(torem);
-            
-             TableModelEvent ev = new TableModelEvent(this, i, i,
-             TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
-             for (TableModelListener l : listeners) {
-                 l.tableChanged(ev);
-             }
+            int i = transferitems.indexOf(torem);
+            transferitems.remove(torem);
+
+            TableModelEvent ev = new TableModelEvent(this, i, i,
+                    TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE);
+            for (TableModelListener l : listeners) {
+                l.tableChanged(ev);
+            }
         }
     }
 
@@ -326,16 +322,16 @@ public class TransferModel implements TableModel, UploadListener,
     protected TransferItem getRow(int i) {
         return transferitems.get(i);
     }
-   
+
     /**
      * Updates the table.
      */
     protected void updateTable() {
-        for (int i = 0; i < transferitems.size(); i++ ) {
+        for (int i = 0; i < transferitems.size(); i++) {
             transferitems.get(i).updateBar();
-            
-            TableModelEvent ev = new TableModelEvent(this, i, i,
-                    3, TableModelEvent.UPDATE);
+
+            TableModelEvent ev = new TableModelEvent(this, i, i, 3,
+                    TableModelEvent.UPDATE);
             for (TableModelListener l : listeners) {
                 l.tableChanged(ev);
             }

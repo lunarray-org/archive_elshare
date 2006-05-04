@@ -30,6 +30,9 @@ public class SecondQueueParse implements RunnableTask {
      */
     private DownloadManager manager;
 
+    /**
+     * Set to true if the parser should run.
+     */
     private boolean shouldrun;
 
     /**
@@ -134,6 +137,9 @@ public class SecondQueueParse implements RunnableTask {
         }
     }
 
+    /**
+     * Close down the thread.
+     */
     public void close() {
         shouldrun = false;
     }
@@ -142,7 +148,7 @@ public class SecondQueueParse implements RunnableTask {
      * Initiates the process for downloading a file.
      * @param f The file to download.
      * @param c The controls of the protocol.
-     * @param available The available users.
+     * @param u The user to download from.
      */
     private void download(IncompleteFile f, Controls c, User u) {
         try {

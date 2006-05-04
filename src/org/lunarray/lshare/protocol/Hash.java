@@ -108,7 +108,14 @@ public class Hash implements Comparable<Hash> {
             return false;
         }
     }
-    
+
+    /**
+     * Compare this has to another.
+     * @param o The hash to compare to.
+     * @return Returns as specified in the Compareable interface. <0 if the
+     * given hash is smaller. >0 if the given hash is larger. =0 if the hashes
+     * are equal.
+     */
     public int compareTo(Hash o) {
         if (o.hash.length == hash.length) {
             for (int i = 0; i < hash.length; i++) {

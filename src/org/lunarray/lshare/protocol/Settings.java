@@ -75,7 +75,7 @@ public class Settings implements ExternalSettings {
      * The settings for upload management.
      */
     private UploadSettings lsettings;
-    
+
     /**
      * Constructs the settings and all settings that are dependant on it.
      * @param c The protocol controls.
@@ -169,7 +169,7 @@ public class Settings implements ExternalSettings {
     public UploadSettings getUploadSettings() {
         return lsettings;
     }
-    
+
     /**
      * Initialises the standard settings.
      */

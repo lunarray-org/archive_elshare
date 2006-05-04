@@ -24,7 +24,7 @@ public enum QueueStatus {
      * Item is done.
      */
     FINISHED,
-    
+
     /**
      * Item has transferred corruptly.
      */
