@@ -27,11 +27,7 @@ public class StringFilter implements SearchFilter {
      * specified search string.
      */
     public boolean isValid(SearchEvent res) {
-        if (res.getEntry().getName().contains(filter)) {
-            return true;
-        } else {
-            return false;
-        }
+        return res.getEntry().getName().contains(filter);
     }
 
     /**

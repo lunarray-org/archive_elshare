@@ -21,19 +21,43 @@ import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
 
+/**
+ * A transfer list.
+ * @author Pal Hargitai
+ */
 public class TransferList extends GUIFrame implements ActionListener,
         ListSelectionListener {
 
+    /**
+     * The table showing the transfers.
+     */
     private JTable table;
 
+    /**
+     * The model holding representations of the transfers.
+     */
     private TransferModel model;
 
+    /**
+     * The timer that is to update the table.
+     */
     private Timer timer;
 
+    /**
+     * The selected item.
+     */
     private TransferItem selected;
 
+    /**
+     * The cancel button.
+     */
     private JButton cancel;
 
+    /**
+     * Constructs a transferlist.
+     * @param ls The controls to the protocol.
+     * @param mg The main user interface.
+     */
     public TransferList(LShare ls, MainGUI mg) {
         super(mg);
 
@@ -64,7 +88,7 @@ public class TransferList extends GUIFrame implements ActionListener,
         cancel.setEnabled(false);
         // cancel.setText("Cancel"); <- Use icon
         cancel.setIcon(new ImageIcon("icons/process-stop.png"));
-        
+
         bar.add(cancel);
 
         // Setup main panel
@@ -77,16 +101,21 @@ public class TransferList extends GUIFrame implements ActionListener,
         frame.add(mp);
     }
 
+    /**
+     * Triggered if a list selection has occured.
+     * @param arg0 The event associated with the selection.
+     */
     public void valueChanged(ListSelectionEvent arg0) {
-        if (arg0.getFirstIndex() >= 0
-                && arg0.getFirstIndex() < model.getRowCount()) {
-            selected = model.getRow(arg0.getFirstIndex());
-        } else { 
-            selected = null;
-        }
+        selected = arg0.getFirstIndex() >= 0
+                && arg0.getFirstIndex() < model.getRowCount() ? model
+                .getRow(arg0.getFirstIndex()) : null;
         setButtonsEnabled(selected != null);
     }
 
+    /**
+     * Triggered if an action has been performed.
+     * @param arg0 The event associated with the action.
+     */
     public void actionPerformed(ActionEvent arg0) {
         if (arg0.getActionCommand().equals("cancel")) {
             if (selected != null) {
@@ -112,6 +141,10 @@ public class TransferList extends GUIFrame implements ActionListener,
         return "Transfers";
     }
 
+    /**
+     * Enables or disables all the buttons.
+     * @param enabled True if they should be enabled, false if not.
+     */
     private void setButtonsEnabled(boolean enabled) {
         cancel.setEnabled(enabled);
     }

@@ -42,14 +42,29 @@ public class SearchList extends GUIFrame implements SearchListener,
      */
     private SearchModel model;
 
+    /**
+     * The download button.
+     */
     private JButton download;
 
+    /**
+     * The download to.. button.
+     */
     private JButton downloadto;
 
+    /**
+     * The selected rows.
+     */
     private ArrayList<SearchEvent> selected;
 
+    /**
+     * Wether the next select event is the new in a series.
+     */
     private boolean isnewevent;
 
+    /**
+     * The table with the results.
+     */
     private JTable restable;
 
     /**
@@ -103,15 +118,15 @@ public class SearchList extends GUIFrame implements SearchListener,
         selected = new ArrayList<SearchEvent>();
     }
 
+    /**
+     * Triggered if the selection of the list changes.
+     * @param arg0 The event associatd with the selection.
+     */
     public void valueChanged(ListSelectionEvent arg0) {
         if (isnewevent) {
             selected.clear();
         }
-        if (restable.getSelectionModel().getValueIsAdjusting()) {
-            isnewevent = false;
-        } else {
-            isnewevent = true;
-        }
+        isnewevent = !restable.getSelectionModel().getValueIsAdjusting();
         if (arg0.getFirstIndex() >= 0
                 && arg0.getLastIndex() < model.getRowCount()) {
             for (int i = arg0.getFirstIndex(); i < arg0.getLastIndex(); i++) {
@@ -121,11 +136,10 @@ public class SearchList extends GUIFrame implements SearchListener,
         setButtonsEnabled(!selected.isEmpty());
     }
 
-    private void setButtonsEnabled(boolean enabled) {
-        download.setEnabled(enabled);
-        downloadto.setEnabled(enabled);
-    }
-    
+    /**
+     * Triggered if an action is performed.
+     * @param arg0 The event assocated with the action.
+     */
     public void actionPerformed(ActionEvent arg0) {
         if (arg0.getActionCommand().equals("download")) {
             for (SearchEvent e : selected) {
@@ -170,5 +184,15 @@ public class SearchList extends GUIFrame implements SearchListener,
     public void close() {
         lshare.getSearchList().removeListener(this);
         frame.dispose();
+    }
+
+    /**
+     * Disable or enable the buttons.
+     * @param enabled Set to true if the buttons should be enabled, false if
+     * not.
+     */
+    private void setButtonsEnabled(boolean enabled) {
+        download.setEnabled(enabled);
+        downloadto.setEnabled(enabled);
     }
 }

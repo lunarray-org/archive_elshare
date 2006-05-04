@@ -48,8 +48,10 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
         files = new ArrayList<IncompleteFile>();
         bars = new ArrayList<JProgressBar>();
 
+        // Add all incomplete files
         for (IncompleteFile f : ls.getDownloadManager().getIncompleteFiles()) {
             files.add(f);
+            // Create a progressbar for the file
             JProgressBar j = new JProgressBar();
             j.setMinimum(0);
             if (f.getSize() > Integer.MAX_VALUE) {
@@ -120,16 +122,26 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
         }
     }
 
+    /**
+     * Get the class of a column.
+     * @param arg0 The column to get.
+     * @return The class of the column.
+     */
     public Class<?> getColumnClass(int arg0) {
         return arg0 == 2 ? JProgressBar.class : String.class;
     }
 
+    /**
+     * Get a spcified value of a cell.
+     * @param arg0 The row.
+     * @param arg1 The column.
+     * @return The value of the cell.
+     */
     public Object getValueAt(int arg0, int arg1) {
         switch (arg1) {
         case 0:
             return files.get(arg0).getFile().getPath();
         case 1:
-            // TODO check for corrupt
             return files.get(arg0).getStatus();
         case 2:
             return bars.get(arg0);
@@ -142,25 +154,51 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
         }
     }
 
+    /**
+     * Test if a cell is editable.
+     * @param arg0 The Row.
+     * @param arg1 The Column.
+     * @return False, cells here are not editable.
+     */
     public boolean isCellEditable(int arg0, int arg1) {
         return false;
     }
 
+    /**
+     * Set the value of a cell.
+     * @param arg0 The new value.
+     * @param arg1 The Row.
+     * @param arg2 The Column.
+     */
     public void setValueAt(Object arg0, int arg1, int arg2) {
         // Ignore
     }
 
+    /**
+     * Adds a model listener.
+     * @param arg0 The listener to add.
+     */
     public void addTableModelListener(TableModelListener arg0) {
         listeners.add(arg0);
     }
 
+    /**
+     * Removes a model listener.
+     * @param arg0 The listener to remove.
+     */
     public void removeTableModelListener(TableModelListener arg0) {
         listeners.remove(arg0);
     }
 
+    /**
+     * Adds an item to the queue.
+     * @param e The event associated with the add.
+     */
     public synchronized void queueAdded(QueueEvent e) {
+        // Check if it contains the file.
         if (!files.contains(e.getFile())) {
             files.add(e.getFile());
+            // Create the progressbar.
             JProgressBar j = new JProgressBar();
             j.setStringPainted(true);
             j.setMinimum(0);
@@ -178,6 +216,7 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
 
             bars.add(j);
 
+            // Trigger events.
             int i = files.indexOf(e.getFile());
             TableModelEvent t = new TableModelEvent(this, i, i,
                     TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT);
@@ -187,6 +226,10 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
         }
     }
 
+    /**
+     * Removes an item from the queue.
+     * @param e The event associated with the remove.
+     */
     public synchronized void queueRemoved(QueueEvent e) {
         if (files.contains(e.getFile())) {
             int i = files.indexOf(e.getFile());
@@ -203,12 +246,17 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
                 t = new TableModelEvent(this, i, i, 1, TableModelEvent.UPDATE);
             }
 
+            // Trigger listeners
             for (TableModelListener l : listeners) {
                 l.tableChanged(t);
             }
         }
     }
 
+    /**
+     * The queue item has been updated.
+     * @param e The event associated with the update.
+     */
     public synchronized void queueUpdated(QueueEvent e) {
         if (files.contains(e.getFile())) {
             int i = files.indexOf(e.getFile());
@@ -221,6 +269,10 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
         }
     }
 
+    /**
+     * Delete a row from the model.
+     * @param i The index of the row to delete.
+     */
     protected void deleteRow(int i) {
         files.remove(i);
         bars.remove(i);
@@ -233,22 +285,28 @@ public class IncompleteModel implements TableModel, TableCellRenderer,
         }
     }
 
+    /**
+     * Get an item in a row.
+     * @param i The index of the item.
+     * @return The item to get.
+     */
     protected IncompleteFile getRow(int i) {
         return files.get(i);
     }
 
+    /**
+     * Update the table.
+     */
     protected synchronized void updateTable() {
         for (int i = 0; i < files.size(); i++) {
 
+            // Update bars
             IncompleteFile f = files.get(i);
             JProgressBar j = bars.get(i);
-            if (f.getSize() > Integer.MAX_VALUE) {
-                j.setValue(Long.valueOf(f.getDone() / Integer.MAX_VALUE)
-                        .intValue());
-            } else {
-                j.setValue(Long.valueOf(f.getDone()).intValue());
-            }
-
+            j.setValue(Long.valueOf(
+                    f.getSize() > Integer.MAX_VALUE ? f.getDone()
+                            / Integer.MAX_VALUE : f.getDone()).intValue());
+            // Trigger listeners
             TableModelEvent t = new TableModelEvent(this, i, i, 1,
                     TableModelEvent.UPDATE);
             TableModelEvent u = new TableModelEvent(this, i, i, 2,

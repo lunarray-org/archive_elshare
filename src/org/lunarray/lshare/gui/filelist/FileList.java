@@ -23,8 +23,8 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 import com.sun.swing.JTreeTable;
 
 /**
- * TODO Rewrite standard TableModel. Shows a filelist of a specific user. Allows
- * browsing throught that file list.
+ * TODO Rewrite standard TableModel.
+ * Shows a filelist of a specific user. Allows browsing throught that file list.
  * @author Pal Hargitai
  */
 public class FileList extends GUIFrame implements TreeSelectionListener,
@@ -44,12 +44,24 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
      */
     private JTreeTable table;
 
+    /**
+     * The download button.
+     */
     private JButton download;
 
+    /**
+     * The download to.. button.
+     */
     private JButton downloadto;
 
+    /**
+     * The controls of the protocol.
+     */
     private LShare lshare;
 
+    /**
+     * The selected node.
+     */
     private ListNode selected;
 
     /**
@@ -101,6 +113,10 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         frame.getContentPane().add(mp);
     }
 
+    /**
+     * Triggered if an action is performed.
+     * @param arg0 The event associated with the action.
+     */
     public void actionPerformed(ActionEvent arg0) {
         if (arg0.getActionCommand().equals("download")) {
             lshare.getDownloadManager().enqueue(selected.getEntry(), user);
@@ -115,6 +131,10 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         }
     }
 
+    /**
+     * Triggered if a list selection occurs.
+     * @param arg0 The event associated with the selection.
+     */
     public void valueChanged(TreeSelectionEvent arg0) {
         if (arg0.getSource() != null) {
             if (arg0.getPath().getLastPathComponent() instanceof ListNode) {
@@ -127,11 +147,6 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
             selected = null;
         }
         setButtonsEnabled(selected != null);
-    }
-
-    private void setButtonsEnabled(boolean enabled) {
-        download.setEnabled(enabled);
-        downloadto.setEnabled(enabled);
     }
 
     @Override
@@ -160,5 +175,14 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
      */
     protected void updatedModel() {
         table.tableChanged(new TableModelEvent(table.getModel()));
+    }
+
+    /**
+     * Enable or disable the buttons.
+     * @param enabled True to enable them, false to disable them.
+     */
+    private void setButtonsEnabled(boolean enabled) {
+        download.setEnabled(enabled);
+        downloadto.setEnabled(enabled);
     }
 }

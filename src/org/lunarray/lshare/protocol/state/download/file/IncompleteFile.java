@@ -56,39 +56,39 @@ public class IncompleteFile {
         hash = Hash.getUnset();
         corrupt = false;
     }
-    
+
     public File getFile() {
         return file.getFile();
     }
-    
+
     public boolean isCorrupt() {
         return corrupt;
     }
-    
+
     public void checkIntegrity() {
         if (hash.isEmpty()) {
             Hash h = new Hash(file.getFile());
             corrupt = !hash.equals(h);
         }
     }
-    
+
     public void delete() {
         settings.removeFile();
         file.close();
         file.getFile().delete();
     }
-    
+
     public Hash getHash() {
         return hash;
     }
-    
+
     /**
      * Gets the status of this file.
      * @return The status of this file.
      */
     public QueueStatus getStatus() {
         if (file.isFinished()) {
-            return QueueStatus.FINISHED;
+            return corrupt ? QueueStatus.CORRUPT : QueueStatus.FINISHED;
         } else if (file.inProgress()) {
             return QueueStatus.RUNNING;
         } else if (file.isEmpty()) {

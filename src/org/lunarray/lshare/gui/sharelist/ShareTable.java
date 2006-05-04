@@ -156,11 +156,7 @@ public class ShareTable implements TableModel {
      * @return The name of the share.
      */
     public String getNameAtRow(int i) {
-        if (0 <= i && i < dirs.size()) {
-            return dirs.get(i).getName();
-        } else {
-            return "";
-        }
+        return 0 <= i && i < dirs.size() ? dirs.get(i).getName() : "";
     }
 
     /**

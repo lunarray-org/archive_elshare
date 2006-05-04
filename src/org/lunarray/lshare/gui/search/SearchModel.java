@@ -34,10 +34,19 @@ public class SearchModel implements TableModel, MouseListener,
      */
     private ArrayList<TableModelListener> listeners;
 
+    /**
+     * The header of the column.
+     */
     private JTableHeader header;
 
+    /**
+     * The column to sort on.
+     */
     private int sortcolumn;
 
+    /**
+     * The direction to sort in.
+     */
     private Sorting sortdirection;
 
     /**
@@ -50,6 +59,10 @@ public class SearchModel implements TableModel, MouseListener,
         sortcolumn = 0;
     }
 
+    /**
+     * Set the table hearder.
+     * @param h The header of the table.
+     */
     public void setTableHeader(JTableHeader h) {
         if (header != null) {
             header.removeMouseListener(this);
@@ -58,6 +71,10 @@ public class SearchModel implements TableModel, MouseListener,
         header.addMouseListener(this);
     }
 
+    /**
+     * A mouse click has occured on the header. Set the column to sort.
+     * @param arg0 The mouse event.
+     */
     public void mouseClicked(MouseEvent arg0) {
         TableColumnModel cm = header.getColumnModel();
         int viewcol = cm.getColumnIndexAtX(arg0.getX());
@@ -82,18 +99,34 @@ public class SearchModel implements TableModel, MouseListener,
         }
     }
 
+    /**
+     * Mouse over.
+     * @param arg0 The event.
+     */
     public void mouseEntered(MouseEvent arg0) {
         // Ignore
     }
 
+    /**
+     * Mouse off.
+     * @param arg0 The event.
+     */
     public void mouseExited(MouseEvent arg0) {
         // Ignore
     }
 
+    /**
+     * Mouse press.
+     * @param arg0 The event.
+     */
     public void mousePressed(MouseEvent arg0) {
         // Ignore
     }
 
+    /**
+     * Mouse release.
+     * @param arg0 The event.
+     */
     public void mouseReleased(MouseEvent arg0) {
         // Ignore
     }
@@ -252,6 +285,12 @@ public class SearchModel implements TableModel, MouseListener,
         listeners.remove(arg0);
     }
 
+    /**
+     * Compare two search events.
+     * @param arg0 The first event.
+     * @param arg1 The second event.
+     * @return The compared value.
+     */
     public int compare(SearchEvent arg0, SearchEvent arg1) {
         switch (sortdirection) {
         case ASCENDING:
@@ -310,10 +349,19 @@ public class SearchModel implements TableModel, MouseListener,
         }
     }
 
+    /**
+     * Get a row.
+     * @param i The row to get.
+     * @return The event in the row.
+     */
     protected SearchEvent getRow(int i) {
         return events.get(i);
     }
 
+    /**
+     * An enum for deciding how to sort.
+     * @author Pal Hargitai
+     */
     public enum Sorting {
         DESCENDING, NOT_SORTED, ASCENDING
     }
