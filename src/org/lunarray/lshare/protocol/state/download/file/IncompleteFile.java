@@ -242,10 +242,8 @@ public class IncompleteFile {
         hash = settings.getHash();
 
         for (String uc : settings.getSources()) {
-            try {
-                User u = controls.getState().getUserList().findUserByChallenge(
-                        uc);
-
+            User u = controls.getState().getUserList().findUserByChallenge(uc);
+            if (u != null) {
                 String path = settings.getSourcePath(uc);
                 String name = settings.getSourceName(uc);
 
@@ -253,8 +251,6 @@ public class IncompleteFile {
                         .getSize());
 
                 sources.put(u, r);
-            } catch (UserNotFound unf) {
-                // Ignore
             }
         }
     }
@@ -290,9 +286,7 @@ public class IncompleteFile {
         if (hash.isEmpty()) {
             hash = h;
         } else {
-            if (hash.equals(h)) {
-                // do nothing
-            } else {
+            if (!hash.equals(h)) {
                 throw new IllegalArgumentException();
             }
         }

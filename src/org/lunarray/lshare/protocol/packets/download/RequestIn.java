@@ -8,7 +8,7 @@ import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.upload.UploadRequest;
-import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
+import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
  * An incoming request for a file transfer.<br>
@@ -105,16 +105,15 @@ public class RequestIn extends PacketIn {
      * @param c The controls of the protocol.
      */
     public void runTask(Controls c) {
-        try {
-            c.getState().getUploadManager().processRequest(
-                    c.getState().getUserList().findUserByAddress(
-                            packet.getAddress()), request);
-        } catch (UserNotFound unf) {
+        User u = c.getState().getUserList().findUserByAddress(
+                packet.getAddress());
+        if (u == null) {
             Controls.getLogger().fine(
                     "Unauthorized user ("
                             + packet.getAddress().getHostAddress()
                             + ") requested file: " + request.getPath() + " "
                             + request.getName());
         }
+        c.getState().getUploadManager().processRequest(u, request);
     }
 }

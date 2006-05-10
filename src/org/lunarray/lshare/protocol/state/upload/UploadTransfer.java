@@ -148,11 +148,7 @@ public class UploadTransfer implements RunnableTask {
      * @return True if the upload is running, false if not.
      */
     public boolean isRunning() {
-        if (socket == null) {
-            return false;
-        } else {
-            return socket.isConnected();
-        }
+        return socket == null ? false : socket.isConnected();
     }
 
     /**

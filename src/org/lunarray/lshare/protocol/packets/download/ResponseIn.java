@@ -8,7 +8,7 @@ import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
 import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.download.FileResponse;
-import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
+import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
  * An incoming response for a request for a file transfer.<br>
@@ -105,13 +105,10 @@ public class ResponseIn extends PacketIn {
      * @param c The controls of the protocol.
      */
     public void runTask(Controls c) {
-        try {
-            c.getState().getDownloadManager().handleResponse(
-                    response,
-                    c.getState().getUserList().findUserByAddress(
-                            packet.getAddress()));
-        } catch (UserNotFound unf) {
-            // Ignore
+        User u = c.getState().getUserList().findUserByAddress(
+                packet.getAddress());
+        if (u != null) {
+            c.getState().getDownloadManager().handleResponse(response, u);
         }
     }
 }
