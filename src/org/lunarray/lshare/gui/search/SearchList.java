@@ -3,7 +3,6 @@ package org.lunarray.lshare.gui.search;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -53,16 +53,6 @@ public class SearchList extends GUIFrame implements SearchListener,
     private JButton downloadto;
 
     /**
-     * The selected rows.
-     */
-    private ArrayList<SearchEvent> selected;
-
-    /**
-     * Wether the next select event is the new in a series.
-     */
-    private boolean isnewevent;
-
-    /**
      * The table with the results.
      */
     private JTable restable;
@@ -87,6 +77,8 @@ public class SearchList extends GUIFrame implements SearchListener,
         model.setTableHeader(restable.getTableHeader());
         JScrollPane sp = new JScrollPane(restable);
         restable.getSelectionModel().addListSelectionListener(this);
+        restable.getSelectionModel().setSelectionMode(
+                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         // Set the toolbar
         JToolBar bar = new JToolBar();
@@ -113,9 +105,6 @@ public class SearchList extends GUIFrame implements SearchListener,
         // Setup frame
         frame.setTitle(getTitle());
         frame.getContentPane().add(mp);
-
-        isnewevent = true;
-        selected = new ArrayList<SearchEvent>();
     }
 
     /**
@@ -123,20 +112,7 @@ public class SearchList extends GUIFrame implements SearchListener,
      * @param arg0 The event associatd with the selection.
      */
     public void valueChanged(ListSelectionEvent arg0) {
-        // TODO test thoroughly and make it behave properly!
-        isnewevent = !restable.getSelectionModel().getValueIsAdjusting();
-        if (isnewevent) {
-            selected.clear();
-        }
-        if (arg0.getFirstIndex() >= 0
-                && arg0.getLastIndex() < model.getRowCount()) {
-            for (int i = arg0.getFirstIndex(); i < arg0.getLastIndex(); i++) {
-                if (!selected.contains(model.getRow(i))) {
-                    selected.add(model.getRow(i));
-                }
-            }
-        }
-        setButtonsEnabled(!selected.isEmpty());
+        setButtonsEnabled(restable.getSelectedRowCount() != 0);
     }
 
     /**
@@ -144,25 +120,30 @@ public class SearchList extends GUIFrame implements SearchListener,
      * @param arg0 The event assocated with the action.
      */
     public void actionPerformed(ActionEvent arg0) {
+        for (int i : restable.getSelectedRows()) {
+            System.out.println(model.getRow(i).getEntry());
+        }
         if (arg0.getActionCommand().equals("download")) {
-            
-            for (SearchEvent e : selected) {
-                lshare.getDownloadManager().enqueue(e.getEntry(), e.getUser());
+            for (int i : restable.getSelectedRows()) {
+                lshare.getDownloadManager().enqueue(model.getRow(i).getEntry(),
+                        model.getRow(i).getUser());
             }
         } else if (arg0.getActionCommand().equals("downloadto")) {
-            
+
             JFileChooser fc = new JFileChooser();
-            if (selected.size() == 1 && selected.get(0).getEntry().isFile()) {
+            if (restable.getSelectedRowCount() == 1
+                    && model.getRow(restable.getSelectedRow()).getEntry()
+                            .isFile()) {
                 fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             } else {
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             }
-            
+
             int res = fc.showDialog(frame, "Download to...");
             if (res == JFileChooser.APPROVE_OPTION) {
-                for (SearchEvent e : selected) {
-                    lshare.getDownloadManager().enqueue(e.getEntry(),
-                            e.getUser(), fc.getSelectedFile());
+                for (int i : restable.getSelectedRows()) {
+                    lshare.getDownloadManager().enqueue(model.getRow(i).getEntry(),
+                            model.getRow(i).getUser(), fc.getSelectedFile());
                 }
             }
         }
