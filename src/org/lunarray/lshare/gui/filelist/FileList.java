@@ -14,6 +14,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
@@ -61,11 +62,6 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
     private LShare lshare;
 
     /**
-     * The selected node.
-     */
-    private ListNode selected;
-
-    /**
      * Constructs a filelist window.
      * @param ls The instance of the protocol that is to be used.
      * @param u The user whose filelist is to be displayed.
@@ -82,7 +78,8 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
 
         // Setup table
         table = new JTreeTable(model);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.getTree().addTreeSelectionListener(this);
 
         JScrollPane t = new JScrollPane(table);
@@ -120,14 +117,44 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
      */
     public void actionPerformed(ActionEvent arg0) {
         if (arg0.getActionCommand().equals("download")) {
-            lshare.getDownloadManager().enqueue(selected.getEntry(), user);
+            for (TreePath p : table.getTree().getSelectionPaths()) {
+                Object o = p.getLastPathComponent();
+                if (o instanceof ListNode) {
+                    ListNode n = (ListNode) o;
+                    lshare.getDownloadManager().enqueue(n.getEntry(), user);
+                }
+            }
         } else if (arg0.getActionCommand().equals("downloadto")) {
             JFileChooser fc = new JFileChooser();
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int res = fc.showDialog(frame, "Download to directory...");
+            // Check if the node is proper and is a file
+            set: {
+                if (table.getTree().getSelectionCount() == 1) {
+                    Object o = table.getTree().getSelectionPath()
+                            .getLastPathComponent();
+                    if (o instanceof ListNode) {
+                        ListNode n = (ListNode) o;
+                        if (n.getEntry().isFile()) {
+                            fc.setFileSelectionMode(JFileChooser.
+                                    FILES_AND_DIRECTORIES);
+                            break set;
+                        }
+                        lshare.getDownloadManager().enqueue(n.getEntry(), user);
+                    }
+                }
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            }
+            // Ask for location
+            int res = fc.showDialog(frame, "Download to...");
             if (res == JFileChooser.APPROVE_OPTION) {
-                lshare.getDownloadManager().enqueue(selected.getEntry(), user,
-                        fc.getSelectedFile());
+                for (TreePath p : table.getTree().getSelectionPaths()) {
+                    Object o = p.getLastPathComponent();
+                    if (o instanceof ListNode) {
+                        ListNode n = (ListNode) o;
+
+                        lshare.getDownloadManager().enqueue(n.getEntry(), user,
+                                fc.getSelectedFile());
+                    }
+                }
             }
         }
     }
@@ -137,17 +164,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
      * @param arg0 The event associated with the selection.
      */
     public void valueChanged(TreeSelectionEvent arg0) {
-        if (arg0.getSource() != null) {
-            if (arg0.getPath().getLastPathComponent() instanceof ListNode) {
-                ListNode n = (ListNode) arg0.getPath().getLastPathComponent();
-                selected = n;
-            } else {
-                selected = null;
-            }
-        } else {
-            selected = null;
-        }
-        setButtonsEnabled(selected != null);
+        setButtonsEnabled(table.getTree().getSelectionCount() != 0);
     }
 
     @Override
