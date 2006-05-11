@@ -16,6 +16,7 @@ import org.lunarray.lshare.protocol.events.DownloadEvent;
 import org.lunarray.lshare.protocol.events.DownloadListener;
 import org.lunarray.lshare.protocol.events.QueueEvent;
 import org.lunarray.lshare.protocol.events.QueueListener;
+import org.lunarray.lshare.protocol.filelist.FilelistEntry;
 import org.lunarray.lshare.protocol.state.download.file.DownloadFileManager;
 import org.lunarray.lshare.protocol.state.download.file.FileExistsException;
 import org.lunarray.lshare.protocol.state.download.file.IncompleteFile;
@@ -191,7 +192,18 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                 try {
                     QueuedItem i = tempqueue.take();
                     if (i.getFile().isDirectory()) {
-                        // TODO recurse
+                        String p = i.getFile().getPath() + RemoteFile.SEPARATOR
+                                + i.getFile().getName();
+                        File f = new File(i.getTarget() + File.separator
+                                + i.getFile().getName());
+                        if (f.mkdirs()) {
+                            for (FilelistEntry e : c.getState().getUserList()
+                                    .getEntriesIn(i.getUser(), p)) {
+                                
+                                QueuedItem j = new QueuedItem(e, i.getUser(), f);
+                                tempqueue.add(j);
+                            }
+                        }
                     } else {
                         // is file
                         File f = i.getTargetFile();

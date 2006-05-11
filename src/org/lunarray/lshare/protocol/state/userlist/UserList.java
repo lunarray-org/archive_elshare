@@ -173,6 +173,17 @@ public class UserList implements ExternalUserList {
         FilelistReceiver flr = new FilelistReceiver(controls, u);
         return flr.getRoot();
     }
+    
+    /**
+     * Gets the specified users file list at the specified path.
+     * @param u The user to get the list of.
+     * @param p Path to get the list of.
+     * @return The list of entries at the specified path.
+     */
+    public List<FilelistEntry> getEntriesIn(User u, String p) {
+        FilelistReceiver flr = new FilelistReceiver(controls, u);
+        return flr.getEntries(p, false);
+    }
 
     /**
      * Unregister a user as a buddy.
