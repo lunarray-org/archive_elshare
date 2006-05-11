@@ -167,13 +167,8 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
      * @throws IllegalArgumentException Thrown if specified file is not a
      * directory.
      */
-    public void enqueue(RemoteFile f, User u, File todir)
-            throws IllegalArgumentException {
-        if (todir.isDirectory()) {
-            tempqueue.add(new QueuedItem(f, u, todir));
-        } else {
-            throw new IllegalArgumentException();
-        }
+    public void enqueue(RemoteFile f, User u, File todir) {
+        tempqueue.add(new QueuedItem(f, u, todir));
     }
 
     /**

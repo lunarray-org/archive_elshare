@@ -23,18 +23,19 @@ public class QueuedItem {
     /**
      * The directory that this file is to download to.
      */
-    private File targetdir;
+    private File target;
 
     /**
      * Constructs a queued item. Ready for preprocessing.
      * @param f The remote entry to download.
      * @param u The user to download from.
-     * @param todir The directory to download to.
+     * @param to The directory to download to. Or if file the direct file to
+     * download to.
      */
-    public QueuedItem(RemoteFile f, User u, File todir) {
+    public QueuedItem(RemoteFile f, User u, File to) {
         file = f;
         user = u;
-        targetdir = todir;
+        target = to;
     }
 
     /**
@@ -55,10 +56,10 @@ public class QueuedItem {
 
     /**
      * Gets the directory where this file is to download to.
-     * @return The directory this file is to download to.
+     * @return The target this file is to download to.
      */
-    public File getTargetDir() {
-        return targetdir;
+    public File getTarget() {
+        return target;
     }
 
     /**
@@ -66,6 +67,7 @@ public class QueuedItem {
      * @return The file that this is to download to.
      */
     public File getTargetFile() {
-        return new File(targetdir.getPath() + File.separator + file.getName());
+        return target.isDirectory() ? new File(target.getPath()
+                + File.separator + file.getName()) : target;
     }
 }

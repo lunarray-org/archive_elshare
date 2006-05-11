@@ -123,14 +123,17 @@ public class SearchList extends GUIFrame implements SearchListener,
      * @param arg0 The event associatd with the selection.
      */
     public void valueChanged(ListSelectionEvent arg0) {
+        // TODO test thoroughly and make it behave properly!
+        isnewevent = !restable.getSelectionModel().getValueIsAdjusting();
         if (isnewevent) {
             selected.clear();
         }
-        isnewevent = !restable.getSelectionModel().getValueIsAdjusting();
         if (arg0.getFirstIndex() >= 0
                 && arg0.getLastIndex() < model.getRowCount()) {
             for (int i = arg0.getFirstIndex(); i < arg0.getLastIndex(); i++) {
-                selected.add(model.getRow(i));
+                if (!selected.contains(model.getRow(i))) {
+                    selected.add(model.getRow(i));
+                }
             }
         }
         setButtonsEnabled(!selected.isEmpty());
@@ -142,13 +145,20 @@ public class SearchList extends GUIFrame implements SearchListener,
      */
     public void actionPerformed(ActionEvent arg0) {
         if (arg0.getActionCommand().equals("download")) {
+            
             for (SearchEvent e : selected) {
                 lshare.getDownloadManager().enqueue(e.getEntry(), e.getUser());
             }
         } else if (arg0.getActionCommand().equals("downloadto")) {
+            
             JFileChooser fc = new JFileChooser();
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int res = fc.showDialog(frame, "Download to directory...");
+            if (selected.size() == 1 && selected.get(0).getEntry().isFile()) {
+                fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            } else {
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            }
+            
+            int res = fc.showDialog(frame, "Download to...");
             if (res == JFileChooser.APPROVE_OPTION) {
                 for (SearchEvent e : selected) {
                     lshare.getDownloadManager().enqueue(e.getEntry(),
