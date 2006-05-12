@@ -25,7 +25,6 @@ import com.sun.swing.JTreeTable;
 
 /**
  * TODO Rewrite standard TableModel.<br>
- * TODO Extend list selection!<br>
  * Shows a filelist of a specific user. Allows browsing throught that file list.
  * @author Pal Hargitai
  */
@@ -78,7 +77,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
 
         // Setup table
         table = new JTreeTable(model);
-        // table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        model.setTable(table);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.getTree().addTreeSelectionListener(this);
 

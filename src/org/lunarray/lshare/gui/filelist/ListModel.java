@@ -1,10 +1,15 @@
 package org.lunarray.lshare.gui.filelist;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
 import org.lunarray.lshare.gui.GUIUtil;
@@ -12,13 +17,15 @@ import org.lunarray.lshare.protocol.state.userlist.ExternalUserList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 import com.sun.swing.AbstractTreeTableModel;
+import com.sun.swing.JTreeTable;
 import com.sun.swing.TreeTableModel;
 
 /**
  * A list model for showing a users file list.
  * @author Pal Hargitai
  */
-public class ListModel extends AbstractTreeTableModel implements TreeTableModel {
+public class ListModel extends AbstractTreeTableModel implements
+        TreeTableModel, MouseListener, TreeExpansionListener {
     /**
      * The model listeners.
      */
@@ -30,6 +37,16 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
     private FileList list;
 
     /**
+     * The header of the column.
+     */
+    private JTreeTable table;
+
+    /**
+     * Used for synchronisation. Certain events are ignored when sorting.
+     */
+    private boolean sorting;
+
+    /**
      * Constructs a list.
      * @param l The userlist that the filelisti s fetched from.
      * @param u The user that the filelist is to be fetched from.
@@ -38,9 +55,122 @@ public class ListModel extends AbstractTreeTableModel implements TreeTableModel 
     public ListModel(ExternalUserList l, User u, FileList f) {
         super(new ListNode(l.getFilelist(u), null, null));
         ((ListNode) getRoot()).setModel(this);
+        ((ListNode) getRoot()).setExpanded(true);
         listeners = new ArrayList<TreeModelListener>();
-
+        sorting = false;
         list = f;
+    }
+
+    /**
+     * Set the table hearder.
+     * @param h The header of the table.
+     */
+    public void setTable(JTreeTable h) {
+        if (table != null) {
+            table.getTableHeader().removeMouseListener(this);
+            table.getTree().removeTreeExpansionListener(this);
+        }
+        table = h;
+        table.getTableHeader().addMouseListener(this);
+        table.getTree().addTreeExpansionListener(this);
+    }
+
+    /**
+     * Triggered if a tree node has collapsed. Will inform the node that such
+     * has happened.
+     * @param arg0 The node that has been collapsed.
+     */
+    public void treeCollapsed(TreeExpansionEvent arg0) {
+        if (!sorting) {
+            Object o = arg0.getPath().getLastPathComponent();
+            if (o instanceof ListNode) {
+                ((ListNode) o).setExpanded(false);
+            }
+        }
+    }
+
+    /**
+     * Triggered if a tree node has expanded. Will inform the node that such has
+     * happened.
+     * @param arg0 The node that has been expanded.
+     */
+    public void treeExpanded(TreeExpansionEvent arg0) {
+        if (!sorting) {
+            Object o = arg0.getPath().getLastPathComponent();
+            if (o instanceof ListNode) {
+                ((ListNode) o).setExpanded(true);
+            }
+        }
+    }
+
+    /**
+     * A mouse click has occured on the header. Set the column to sort.
+     * @param arg0 The mouse event.
+     */
+    public void mouseClicked(MouseEvent arg0) {
+        sorting = true;
+
+        TableColumnModel cm = table.getTableHeader().getColumnModel();
+        int viewcol = cm.getColumnIndexAtX(arg0.getX());
+        int actualcol = cm.getColumn(viewcol).getModelIndex();
+        switch (actualcol) {
+        case 1:
+            ((ListNode) getRoot()).switchOnType(ListNode.SortType.SIZE);
+            break;
+        case 2:
+            ((ListNode) getRoot()).switchOnType(ListNode.SortType.DATE);
+            break;
+        case 3:
+            ((ListNode) getRoot()).switchOnType(ListNode.SortType.HASH);
+            break;
+        case 0:
+        default:
+            ((ListNode) getRoot()).switchOnType(ListNode.SortType.NAME);
+            break;
+        }
+
+        Object[] p = {
+            getRoot()
+        };
+        TreeModelEvent e = new TreeModelEvent(this, p);
+        for (TreeModelListener l : listeners) {
+            l.treeStructureChanged(e);
+        }
+
+        ((ListNode) getRoot()).checkExpansion(table.getTree(), 0);
+        sorting = false;
+    }
+
+    /**
+     * Mouse over.
+     * @param arg0 The event.
+     */
+    public void mouseEntered(MouseEvent arg0) {
+        // Ignore
+    }
+
+    /**
+     * Mouse off.
+     * @param arg0 The event.
+     */
+    public void mouseExited(MouseEvent arg0) {
+        // Ignore
+    }
+
+    /**
+     * Mouse press.
+     * @param arg0 The event.
+     */
+    public void mousePressed(MouseEvent arg0) {
+        // Ignore
+    }
+
+    /**
+     * Mouse release.
+     * @param arg0 The event.
+     */
+    public void mouseReleased(MouseEvent arg0) {
+        // Ignore
     }
 
     /**

@@ -2,6 +2,9 @@ package org.lunarray.lshare.gui.filelist;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+
+import javax.swing.JTree;
 
 import org.lunarray.lshare.protocol.filelist.FilelistEntry;
 
@@ -9,7 +12,7 @@ import org.lunarray.lshare.protocol.filelist.FilelistEntry;
  * A specific node of a users filelist.
  * @author Pal Hargitai
  */
-public class ListNode implements Comparable<FilelistEntry> {
+public class ListNode implements Comparator<ListNode>, Comparable<ListNode> {
     /**
      * The file entry that is represented in the node.
      */
@@ -36,6 +39,21 @@ public class ListNode implements Comparable<FilelistEntry> {
     private EntryAdder adder;
 
     /**
+     * The sort direction.
+     */
+    private SortDir dir;
+
+    /**
+     * The criteria to sort on. That is, name, date, size or hash.
+     */
+    private SortType type;
+
+    /**
+     * Wether this node is expanded or not.
+     */
+    private boolean expanded;
+
+    /**
      * Constructs the node with a specified entry.
      * @param e The entry to be represented by this node.
      * @param p The parent of this node.
@@ -47,6 +65,37 @@ public class ListNode implements Comparable<FilelistEntry> {
         parent = p;
         model = m;
         adder = new EntryAdder();
+        dir = SortDir.NOT_SORTED;
+        type = SortType.NAME;
+        expanded = false;
+    }
+
+    /**
+     * Set this node to be expanded.
+     * @param e Set to true if this node is expanded, false if it's collapsed.
+     */
+    public void setExpanded(boolean e) {
+        expanded = e;
+    }
+
+    /**
+     * This function expands or collapses a node and it's children depending on
+     * wether it was collapsed or expandd in the first place. This is genrerally
+     * called after the tree has been sorted.
+     * @param t The tree to expand in.
+     * @param p The row this node resides in.
+     * @return The amount of expanded rows this node has caused.
+     */
+    public int checkExpansion(JTree t, int p) {
+        if (expanded) {
+            t.expandRow(p);
+            int q = 1;
+            for (ListNode n : children) {
+                q += n.checkExpansion(t, q);
+            }
+            return q;
+        }
+        return 1;
     }
 
     /**
@@ -153,6 +202,63 @@ public class ListNode implements Comparable<FilelistEntry> {
     }
 
     /**
+     * Compare two file list nodes. Returns < 0 If the first entry is greater
+     * than the given entry. Returns > 0 If the first entry is greater than the
+     * given entry. Returns = 0 If the first entry is greater than the given
+     * entry.
+     * @param arg0 A file list node.
+     * @param arg1 The file list node to compare to.
+     * @return As specified above.
+     */
+    public int compare(ListNode arg0, ListNode arg1) {
+        switch (dir) {
+        case ASCENDING:
+            switch (type) {
+            case DATE:
+                return Long.valueOf(arg0.entry.getLastModified()).compareTo(
+                        arg1.entry.getLastModified());
+            case HASH:
+                return arg0.entry.getHash().compareTo(arg1.entry.getHash());
+            case SIZE:
+                return Long.valueOf(arg0.entry.getSize()).compareTo(
+                        arg1.entry.getSize());
+            case NAME:
+            default:
+                return arg0.entry.getName().compareTo(arg1.entry.getName());
+            }
+        case DESCENDING:
+            switch (type) {
+            case DATE:
+                return -Long.valueOf(arg0.entry.getLastModified()).compareTo(
+                        arg1.entry.getLastModified());
+            case HASH:
+                return -arg0.entry.getHash().compareTo(arg1.entry.getHash());
+            case SIZE:
+                return -Long.valueOf(arg0.entry.getSize()).compareTo(
+                        arg1.entry.getSize());
+            case NAME:
+            default:
+                return -arg0.entry.getName().compareTo(arg1.entry.getName());
+            }
+        case NOT_SORTED:
+        default:
+            if (children.contains(arg0)) {
+                if (children.contains(arg1)) {
+                    return children.indexOf(arg1) - children.indexOf(arg0);
+                } else {
+                    return 1;
+                }
+            } else {
+                if (children.contains(arg1)) {
+                    return -1;
+                } else {
+                    return arg0.compareTo(arg1);
+                }
+            }
+        }
+    }
+
+    /**
      * Compare the file list entry of another node to this filelist entry.
      * Returns < 0 If the entry in this node is less than the given entry.
      * Returns > 0 If the entry in this node is greater than the given entry.
@@ -160,8 +266,39 @@ public class ListNode implements Comparable<FilelistEntry> {
      * @param arg0 The file list entry to compare to.
      * @return As specified above.
      */
-    public int compareTo(FilelistEntry arg0) {
-        return entry.compareTo(arg0);
+    public int compareTo(ListNode arg0) {
+        return entry.compareTo(arg0.entry);
+    }
+
+    /**
+     * Switch the type of sorting.
+     * @param t The type for which sorting has been triggered.
+     */
+    public void switchOnType(SortType t) {
+        if (t.equals(type)) {
+            switch (dir) {
+            case ASCENDING:
+                dir = SortDir.DESCENDING;
+                break;
+            case DESCENDING:
+                dir = SortDir.NOT_SORTED;
+                break;
+            case NOT_SORTED:
+                dir = SortDir.ASCENDING;
+                break;
+            default:
+                dir = SortDir.ASCENDING;
+            }
+        } else {
+            type = t;
+            dir = SortDir.ASCENDING;
+        }
+        if (children != null) {
+            for (ListNode n : children) {
+                n.switchOnType(t);
+            }
+            Collections.sort(children, this);
+        }
     }
 
     /**
@@ -170,6 +307,22 @@ public class ListNode implements Comparable<FilelistEntry> {
      */
     protected FilelistEntry getEntry() {
         return entry;
+    }
+
+    /**
+     * Set the sorting type. Should be avoided, use switchtype instead.
+     * @param t The type to sort to.
+     */
+    protected void setType(SortType t) {
+        type = t;
+    }
+
+    /**
+     * Set the sort direction. Should be avoided, use switchtype instead.
+     * @param d The direction to sort to.
+     */
+    protected void setDir(SortDir d) {
+        dir = d;
     }
 
     /**
@@ -186,9 +339,12 @@ public class ListNode implements Comparable<FilelistEntry> {
      * @param e The entry to add.
      */
     private void addChild(FilelistEntry e) {
-        int i = Collections.binarySearch(children, e);
+        ListNode n = new ListNode(e, this, model);
+        n.setType(type);
+        n.setDir(dir);
+        int i = Collections.binarySearch(children, n, this);
         if (i < 0) {
-            children.add(~i, new ListNode(e, this, model));
+            children.add(~i, n);
         }
     }
 
@@ -215,4 +371,21 @@ public class ListNode implements Comparable<FilelistEntry> {
             triggerModel();
         }
     }
+
+    /**
+     * A sorttype to indicate what data to sort.
+     * @author Pal Hargitai
+     */
+    public enum SortType {
+        NAME, SIZE, DATE, HASH
+    }
+
+    /**
+     * An enum for deciding how to sort.
+     * @author Pal Hargitai
+     */
+    public enum SortDir {
+        DESCENDING, NOT_SORTED, ASCENDING
+    }
+
 }
