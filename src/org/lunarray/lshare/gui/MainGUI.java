@@ -36,7 +36,12 @@ import org.lunarray.lshare.gui.transfers.TransferList;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
- * TODO queues The main user interface.
+ * TODO queues<br>
+ * TODO upload throttle<br>
+ * TODO upload slots<br>
+ * TODO save layouts (sizes etc) on close<br>
+ * TODO set download directory<br>
+ * The main user interface.
  * @author Pal Hargitai
  */
 public class MainGUI implements ActionListener {
