@@ -91,7 +91,7 @@ public class ListNode implements Comparator<ListNode>, Comparable<ListNode> {
             t.expandRow(p);
             int q = 1;
             for (ListNode n : children) {
-                q += n.checkExpansion(t, q);
+                q += n.checkExpansion(t, q + p);
             }
             return q;
         }
