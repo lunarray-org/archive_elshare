@@ -32,7 +32,7 @@ public abstract class PacketIn implements RunnableTask {
      * Gets a single byte.
      * @return A single byte at the current index.
      */
-    public byte getByte() {
+    protected byte getByte() {
         byte b = data[index];
         index++;
         return b;
@@ -42,7 +42,7 @@ public abstract class PacketIn implements RunnableTask {
      * Gets a long.
      * @return A long at the current index.
      */
-    public long getLong() {
+    protected long getLong() {
         long l = PacketUtil.byteArrayToLong(data, index);
         index += 8;
         return l;
@@ -52,7 +52,7 @@ public abstract class PacketIn implements RunnableTask {
      * Gets a hash.
      * @return A hash at the current index.
      */
-    public Hash getHash() {
+    protected Hash getHash() {
         byte[] h = PacketUtil.getByteArrayFromByteArray(data, Hash.length(),
                 index);
         index += Hash.length();
@@ -63,7 +63,7 @@ public abstract class PacketIn implements RunnableTask {
      * Gets an unsigned short.
      * @return An unsigned short at the current index.
      */
-    public int getShortU() {
+    protected int getShortU() {
         int i = PacketUtil.byteArrayToShortU(data, index);
         index += 2;
         return i;
@@ -73,7 +73,7 @@ public abstract class PacketIn implements RunnableTask {
      * Gets a long string with a maximal length of 65536.
      * @return The string at the current index.
      */
-    public String getLongString() {
+    protected String getLongString() {
         short ssize = PacketUtil.byteArrayToShortU(data, index);
         index += 2;
         byte[] sbytes = PacketUtil.getByteArrayFromByteArray(data, ssize, index);
@@ -85,7 +85,7 @@ public abstract class PacketIn implements RunnableTask {
      * Gets a short string with a maximal length of 255.
      * @return The string at the current index.
      */
-    public String getShortString() {
+    protected String getShortString() {
         byte ssize = data[index];
         index += 1;
         byte[] sbytes = PacketUtil.getByteArrayFromByteArray(data, ssize, index);

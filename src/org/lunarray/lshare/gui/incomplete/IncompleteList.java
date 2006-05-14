@@ -22,7 +22,7 @@ import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
 
 /**
- * TODO Add Search for additional sources 
+ * TODO Add Search for additional sources<br>
  * Shows a list of incomplete files.
  * @author Pal Hargitai
  */

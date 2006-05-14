@@ -98,10 +98,7 @@ public class FilelistSender extends Thread {
                 read: {
                     // read and write data
                     try {
-                        byte[] dlenb = get(2);
-                        int dlen = PacketUtil.byteArrayToShortU(dlenb, 0);
-                        byte[] dstrb = get(dlen);
-                        path = PacketUtil.decode(dstrb).trim();
+                        path = readLongString();
                     } catch (IOException ie) {
                         Controls.getLogger().fine("Could not read!");
                         break run;
@@ -118,16 +115,12 @@ public class FilelistSender extends Thread {
                     // We can safely ignore this.
                 }
 
-                writelen: {
-                    // Write length
-                    byte[] tlen = new byte[8];
-                    PacketUtil.longToByteArray(entries.size(), tlen, 0);
-                    try {
-                        ostream.write(tlen);
-                    } catch (IOException ie) {
-                        Controls.getLogger().fine("Cannot write!");
-                        break run;
-                    }
+                // Write length
+                try {
+                    writeLong(entries.size());
+                } catch (IOException ie) {
+                    Controls.getLogger().fine("Cannot write!");
+                    break run;
                 }
                 try {
                     // Write entries
@@ -138,6 +131,7 @@ public class FilelistSender extends Thread {
                     Controls.getLogger().fine("Cannot write!");
                     break run;
                 }
+                yield();
             }
         }
         // Close socket
@@ -165,27 +159,54 @@ public class FilelistSender extends Thread {
      * @throws IOException Incase a transferring an entry fails.
      */
     private void send(ShareEntry d) throws IOException {
-        byte[] name = PacketUtil.encode(d.getName());
-        byte[] nlen = {
-            Integer.valueOf(Math.min(name.length, 255)).byteValue()
+        writeLong(d.getLastModified());
+        writeLong(d.getSize());
+        writeHash(d.getHash());
+        writeShortString(d.getName());
+    }
+
+    /**
+     * Read a long string.
+     * @return The read string.
+     * @throws IOException Thrown if the data could not be read.
+     */
+    private String readLongString() throws IOException {
+        int slen = PacketUtil.byteArrayToShortU(get(2), 0);
+        return PacketUtil.decode(get(slen)).trim();
+    }
+
+    /**
+     * Write a hash.
+     * @param h The hash to write.
+     * @throws IOException Thrown if the data could not be written.
+     */
+    private void writeHash(Hash h) throws IOException {
+        ostream.write(h.getBytes());
+    }
+
+    /**
+     * Write a short string.
+     * @param s The string to be written.
+     * @throws IOException Thrown if the data could not be written.
+     */
+    private void writeShortString(String s) throws IOException {
+        byte[] sdat = PacketUtil.encode(s);
+        byte[] slen = {
+            (byte) Math.min(sdat.length, 255)
         };
-        byte[] data = new byte[8 + 8 + Hash.length() + 1 + nlen[0]];
-        if (d.isDirectory()) {
-            PacketUtil.longToByteArray(0, data, 0);
-            PacketUtil.longToByteArray(-1, data, 8);
-            PacketUtil.injectByteArrayIntoByteArray(Hash.getUnset().getBytes(),
-                    Hash.length(), data, 16);
-        } else {
-            PacketUtil.longToByteArray(d.getLastModified(), data, 0);
-            PacketUtil.longToByteArray(d.getSize(), data, 8);
-            PacketUtil.injectByteArrayIntoByteArray(d.getHash().getBytes(),
-                    Hash.length(), data, 16);
-        }
-        PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, 16 + Hash
-                .length());
-        PacketUtil.injectByteArrayIntoByteArray(name, nlen[0], data,
-                16 + 1 + Hash.length());
-        ostream.write(data);
+        ostream.write(slen);
+        ostream.write(sdat, 0, slen[0]);
+    }
+
+    /**
+     * Write a long.
+     * @param l The long to be written.
+     * @throws IOException Thrown if the data could not be written.
+     */
+    private void writeLong(long l) throws IOException {
+        byte[] dat = new byte[8];
+        PacketUtil.longToByteArray(l, dat, 0);
+        ostream.write(dat);
     }
 
     /**
@@ -199,8 +220,7 @@ public class FilelistSender extends Thread {
         int todo = a;
         int done = 0;
         while (todo > 0) {
-            int read = 0;
-            read = istream.read(dat, done, todo);
+            int read = istream.read(dat, done, todo);
             done += read;
             todo -= read;
         }

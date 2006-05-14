@@ -38,7 +38,7 @@ public abstract class PacketOut {
      * Puts a single byte.
      * @param b The byte to be written at the current index.
      */
-    public void putByte(byte b) {
+    protected void putByte(byte b) {
         data[index] = b;
         index++;
     }
@@ -47,7 +47,7 @@ public abstract class PacketOut {
      * Puts a long.
      * @param l The long to be written at the current index.
      */
-    public void putLong(long l) {
+    protected void putLong(long l) {
         PacketUtil.longToByteArray(l, data, index);
         index += 8;
     }
@@ -56,7 +56,7 @@ public abstract class PacketOut {
      * Puts an unsigned short.
      * @param s The short to be written at the current index.
      */
-    public void putShortU(int s) {
+    protected void putShortU(int s) {
         PacketUtil.shortUToByteArray(s, data, index);
         index += 2;
     }
@@ -65,7 +65,7 @@ public abstract class PacketOut {
      * Puts a hash.
      * @param h The hash to be written at the current index.
      */
-    public void putHash(Hash h) {
+    protected void putHash(Hash h) {
         PacketUtil.injectByteArrayIntoByteArray(h.getBytes(), Hash.length(),
                 data, index);
         index += Hash.length();
@@ -75,7 +75,7 @@ public abstract class PacketOut {
      * Puts a string with a maximum length of 65536.
      * @param s The string to be written at the current index.
      */
-    public void putLongString(String s) {
+    protected void putLongString(String s) {
         byte[] bs = PacketUtil.encode(s);
 
         PacketUtil.shortUToByteArray(bs.length, data, index);
@@ -89,7 +89,7 @@ public abstract class PacketOut {
      * Puts a string with a maximum length of 255.
      * @param s The string to be written at the current index.
      */
-    public void putShortString(String s) {
+    protected void putShortString(String s) {
         byte[] bs = PacketUtil.encode(s);
         byte slen = (byte) Math.min(bs.length, 255);
 

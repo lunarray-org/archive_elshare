@@ -116,17 +116,11 @@ public class FilelistReceiver {
                 write: {
                     Controls.getLogger().finer("Requested path: " + path);
                     ostream = socket.getOutputStream();
-                    byte[] pdat = PacketUtil.encode(path);
-                    byte[] data = new byte[pdat.length + 2];
-                    PacketUtil.shortUToByteArray(pdat.length, data, 0);
-                    PacketUtil.injectByteArrayIntoByteArray(pdat, pdat.length,
-                            data, 2);
-                    ostream.write(data);
+                    writeLongString(path);
                 }
                 read: {
                     istream = socket.getInputStream();
-                    byte[] a = get(8);
-                    long amount = PacketUtil.byteArrayToLong(a, 0);
+                    long amount = getLong();
                     for (long i = 0; i < amount; i++) {
                         timeouthandler.bump();
                         ret.add(getOne(path));
@@ -180,8 +174,7 @@ public class FilelistReceiver {
         int todo = a;
         int done = 0;
         while (todo > 0) {
-            int read = 0;
-            read = istream.read(dat, done, todo);
+            int read = istream.read(dat, done, todo);
             done += read;
             todo -= read;
         }
@@ -195,15 +188,54 @@ public class FilelistReceiver {
      * @throws IOException If the socket could not be read from.
      */
     private FilelistEntry getOne(String p) throws IOException {
-        byte[] predata = get(8 + 8 + Hash.length() + 1);
-        long ad = PacketUtil.byteArrayToLong(predata, 0);
-        long size = PacketUtil.byteArrayToLong(predata, 8);
-        byte[] hash = PacketUtil.getByteArrayFromByteArray(predata, Hash
-                .length(), 16);
-        int nlen = predata[16 + Hash.length()] & 0xFF;
-        String name = PacketUtil.decode(get(nlen)).trim();
+
+        long ad = getLong();
+        long size = getLong();
+        Hash hash = getHash();
+        String name = getShortString();
+
         Controls.getLogger().finer("Data for: " + name);
-        return new FilelistEntry(this, p, name, new Hash(hash), ad, size, false);
+        return new FilelistEntry(this, p, name, hash, ad, size, false);
+    }
+
+    /**
+     * Gets a short string.
+     * @return The string with a maximum length of 255.
+     * @throws IOException Thrown if read wrong.
+     */
+    private String getShortString() throws IOException {
+        return PacketUtil.decode(get(get(1)[0])).trim();
+    }
+
+    /**
+     * Gets a long.
+     * @return The long.
+     * @throws IOException Thrown if read wrong.
+     */
+    private long getLong() throws IOException {
+        return PacketUtil.byteArrayToLong(get(8), 0);
+    }
+
+    /**
+     * Gets a hash.
+     * @return The hash.
+     * @throws IOException Thrown if read wrong.
+     */
+    private Hash getHash() throws IOException {
+        return new Hash(get(Hash.length()));
+    }
+
+    /**
+     * Writes a long string.
+     * @param s The string to write.
+     * @throws IOException Thrown if written wrong.
+     */
+    private void writeLongString(String s) throws IOException {
+        byte[] sdat = PacketUtil.encode(s);
+        byte[] slen = new byte[2];
+        PacketUtil.shortUToByteArray(sdat.length, slen, 0);
+        ostream.write(slen);
+        ostream.write(sdat);
     }
 
     /**
