@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
@@ -19,6 +20,7 @@ import javax.swing.tree.TreePath;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 import com.sun.swing.JTreeTable;
@@ -61,15 +63,20 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
     private LShare lshare;
 
     /**
+     * Usable settings.
+     */
+    private GUISettings set;
+
+    /**
      * Constructs a filelist window.
      * @param ls The instance of the protocol that is to be used.
      * @param u The user whose filelist is to be displayed.
      * @param mg The main user interface that this interface is to be shown on.
      */
     public FileList(LShare ls, User u, MainGUI mg) {
-        super(mg);
-
+        super(mg, ls);
         lshare = ls;
+        set = lshare.getSettings().getSettingsForGUI();
 
         // Setup model
         user = u;
@@ -81,6 +88,16 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.getTree().addTreeSelectionListener(this);
 
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            String k = "c" + i + "w";
+            int w = set.getInt("/" + getClass().getSimpleName(), k, -1);
+            if (w >= 0) {
+                table.getColumnModel().getColumn(i).setPreferredWidth(w);
+            }
+        }        
+        
         JScrollPane t = new JScrollPane(table);
 
         // Set the toolbar
@@ -171,6 +188,11 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
      * Closes the list and disposes the frame.
      */
     public void close() {
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            set.setInt("/" + getClass().getSimpleName(), "c" + i + "w", table
+                    .getColumnModel().getColumn(i).getWidth());
+        }
+        
         Object o = model.getRoot();
         if (o instanceof ListNode) {
             ListNode n = (ListNode) o;

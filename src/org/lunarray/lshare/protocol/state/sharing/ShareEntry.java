@@ -83,7 +83,7 @@ public class ShareEntry {
         if (file.exists()) {
             return file.isFile() ? file.lastModified() : -1;
         } else {
-            return 0;
+            return -1;
         }
     }
 
@@ -95,7 +95,7 @@ public class ShareEntry {
         if (file.exists()) {
             return file.isFile() ? file.length() : -1;
         } else {
-            return 0;
+            return -1;
         }
     }
 

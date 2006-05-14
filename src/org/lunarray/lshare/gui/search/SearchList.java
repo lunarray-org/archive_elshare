@@ -20,6 +20,7 @@ import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
 import org.lunarray.lshare.protocol.events.SearchEvent;
 import org.lunarray.lshare.protocol.events.SearchListener;
+import org.lunarray.lshare.protocol.settings.GUISettings;
 
 /**
  * A frame for showing search results in.
@@ -57,6 +58,8 @@ public class SearchList extends GUIFrame implements SearchListener,
      */
     private JTable restable;
 
+    private GUISettings set;
+
     /**
      * Constructs a search frame.
      * @param ls The instance of the protocol to assocaite with.
@@ -64,7 +67,8 @@ public class SearchList extends GUIFrame implements SearchListener,
      * @param mg The main user interface that this frame resides in.
      */
     public SearchList(LShare ls, SearchFilter f, MainGUI mg) {
-        super(mg);
+        super(mg, ls);
+        set = ls.getSettings().getSettingsForGUI();
 
         // Setup protocol
         filter = f;
@@ -79,6 +83,16 @@ public class SearchList extends GUIFrame implements SearchListener,
         restable.getSelectionModel().addListSelectionListener(this);
         restable.getSelectionModel().setSelectionMode(
                 ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        restable.getTableHeader().setReorderingAllowed(false);
+        restable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            String k = "c" + i + "w";
+            int w = set.getInt("/" + getClass().getSimpleName(), k, -1);
+            if (w >= 0) {
+                restable.getColumnModel().getColumn(i).setPreferredWidth(w);
+            }
+        }
 
         // Set the toolbar
         JToolBar bar = new JToolBar();
@@ -142,7 +156,8 @@ public class SearchList extends GUIFrame implements SearchListener,
             int res = fc.showDialog(frame, "Download to...");
             if (res == JFileChooser.APPROVE_OPTION) {
                 for (int i : restable.getSelectedRows()) {
-                    lshare.getDownloadManager().enqueue(model.getRow(i).getEntry(),
+                    lshare.getDownloadManager().enqueue(
+                            model.getRow(i).getEntry(),
                             model.getRow(i).getUser(), fc.getSelectedFile());
                 }
             }
@@ -173,6 +188,11 @@ public class SearchList extends GUIFrame implements SearchListener,
      * Closes this frame and cleans it up.
      */
     public void close() {
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            set.setInt("/" + getClass().getSimpleName(), "c" + i + "w",
+                    restable.getColumnModel().getColumn(i).getWidth());
+        }
+
         lshare.getSearchList().removeListener(this);
         frame.dispose();
     }

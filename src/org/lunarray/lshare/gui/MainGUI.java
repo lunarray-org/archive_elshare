@@ -33,13 +33,13 @@ import org.lunarray.lshare.gui.search.SearchList;
 import org.lunarray.lshare.gui.search.StringFilter;
 import org.lunarray.lshare.gui.sharelist.ShareList;
 import org.lunarray.lshare.gui.transfers.TransferList;
+import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
  * TODO queues<br>
  * TODO upload throttle<br>
  * TODO upload slots<br>
- * TODO save layouts (sizes etc) on close<br>
  * TODO set download directory<br>
  * The main user interface.
  * @author Pal Hargitai
@@ -104,6 +104,11 @@ public class MainGUI implements ActionListener {
     private JToolBar bar;
 
     /**
+     * Settings for the GUI.
+     */
+    private GUISettings set;
+    
+    /**
      * Instanciates the main user interface.
      * @param l The instance of the protocol that it may use.
      */
@@ -111,6 +116,7 @@ public class MainGUI implements ActionListener {
         frame = new JFrame();
         desktop = new JDesktopPane();
         lshare = l;
+        set = lshare.getSettings().getSettingsForGUI();
         // Close ops
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setTitle("eLShare");
@@ -358,6 +364,9 @@ public class MainGUI implements ActionListener {
      * Shows the user interface
      */
     public void start() {
+        frame.setLocation(set.getInt("/main", "x", 0), set.getInt("/main", "y", 0));
+        frame.setSize(set.getInt("/main", "w", 640), set.getInt("/main", "h", 480));
+        
         frame.setVisible(true);
     }
 
@@ -365,6 +374,15 @@ public class MainGUI implements ActionListener {
      * Stops the user interface and the underlying protocol.
      */
     public void stop() {
+        set.setInt("/main", "x", frame.getX());
+        set.setInt("/main", "y", frame.getY());
+        set.setInt("/main", "w", frame.getWidth());
+        set.setInt("/main", "h", frame.getHeight());
+        
+        for (JInternalFrame i: desktop.getAllFrames()) {
+            i.dispose();
+        }
+        
         frame.setVisible(false);
         lshare.stop();
         frame.dispose();

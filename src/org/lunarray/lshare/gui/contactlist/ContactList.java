@@ -66,7 +66,7 @@ public class ContactList extends GUIFrame implements ActionListener,
      * @param mg The main user interface.
      */
     public ContactList(LShare ls, MainGUI mg) {
-        super(mg);
+        super(mg, ls);
 
         // Set protocol
         lshare = ls;

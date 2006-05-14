@@ -290,7 +290,7 @@ public class ListModel extends AbstractTreeTableModel implements
                     return "";
                 }
             case 2:
-                if (n.getLastModified() == 0) {
+                if (n.getLastModified() < 0) {
                     return "";
                 } else {
                     return new Date(n.getLastModified());

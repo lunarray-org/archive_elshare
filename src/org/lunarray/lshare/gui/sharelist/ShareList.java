@@ -19,6 +19,7 @@ import javax.swing.ListSelectionModel;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.protocol.settings.GUISettings;
 
 /**
  * Shows a list of currently shared directories.
@@ -51,12 +52,24 @@ public class ShareList extends GUIFrame implements ActionListener {
     private ShareListener slis;
 
     /**
+     * The table.
+     */
+    private JTable shares;    
+
+    /**
+     * Usable settings.
+     */
+    private GUISettings set;
+    
+    /**
      * Constructs a sharelist frame.
      * @param ls The instance of the protocol to assocate with.
      * @param mg The window this frame resides in.
      */
     public ShareList(LShare ls, MainGUI mg) {
-        super(mg);
+        super(mg, ls);
+        set = ls.getSettings().getSettingsForGUI();
+        
         // Setup Panel
         lshare = ls;
         JPanel panel = new JPanel();
@@ -119,7 +132,7 @@ public class ShareList extends GUIFrame implements ActionListener {
 
         // Setup model and table
         model = new ShareTable(lshare);
-        JTable shares = new JTable();
+        shares = new JTable();
         slis = new ShareListener(model, lshare);
         shares.setModel(model);
         shares.getSelectionModel().addListSelectionListener(slis);
@@ -134,7 +147,17 @@ public class ShareList extends GUIFrame implements ActionListener {
         rem.addActionListener(this);
 
         panel.add(rem, BorderLayout.SOUTH);
-
+        
+        shares.getTableHeader().setReorderingAllowed(false);
+        shares.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            String k = "c" + i + "w";
+            int w = set.getInt("/" + getClass().getSimpleName(), k, -1);
+            if (w >= 0) {
+                shares.getColumnModel().getColumn(i).setPreferredWidth(w);
+            }
+        }
+        
         // Setup the frame
         frame.add(panel);
         frame.setTitle(getTitle());
@@ -171,6 +194,11 @@ public class ShareList extends GUIFrame implements ActionListener {
      * Hides the frame.
      */
     public void close() {
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            set.setInt("/" + getClass().getSimpleName(), "c" + i + "w", shares
+                    .getColumnModel().getColumn(i).getWidth());
+        }
+        
         frame.setVisible(false);
     }
 

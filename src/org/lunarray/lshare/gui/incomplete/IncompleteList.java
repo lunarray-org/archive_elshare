@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.protocol.settings.GUISettings;
 
 /**
  * TODO Add Search for additional sources<br>
@@ -51,22 +52,43 @@ public class IncompleteList extends GUIFrame implements ActionListener,
     private JButton delete;
 
     /**
+     * Usable settings.
+     */
+    private GUISettings set;
+
+    /**
+     * The table
+     */
+    private JTable table;
+    
+    /**
      * Constructs the incomplete filelist
      * @param ls The controls of the protocol.
      * @param mg The main user interface.
      */
     public IncompleteList(LShare ls, MainGUI mg) {
-        super(mg);
-
+        super(mg, ls);
+        set = ls.getSettings().getSettingsForGUI();
+        
         // Setup table
         model = new IncompleteModel(ls);
         ls.getDownloadManager().addQueueListener(model);
-        JTable t = new JTable(model);
-        JScrollPane sp = new JScrollPane(t);
-        t.setDefaultRenderer(JProgressBar.class, model);
-        t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        t.getSelectionModel().addListSelectionListener(this);
+        table = new JTable(model);
+        JScrollPane sp = new JScrollPane(table);
+        table.setDefaultRenderer(JProgressBar.class, model);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(this);
 
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            String k = "c" + i + "w";
+            int w = set.getInt("/" + getClass().getSimpleName(), k, -1);
+            if (w >= 0) {
+                table.getColumnModel().getColumn(i).setPreferredWidth(w);
+            }
+        }
+        
         // Setup toolbar
         JToolBar bar = new JToolBar();
         bar.setFloatable(false);
@@ -128,6 +150,11 @@ public class IncompleteList extends GUIFrame implements ActionListener,
      * Hides the frame.
      */
     public void close() {
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            set.setInt("/" + getClass().getSimpleName(), "c" + i + "w", table
+                    .getColumnModel().getColumn(i).getWidth());
+        }
+
         frame.setVisible(false);
         timer.cancel();
     }

@@ -159,7 +159,7 @@ public class FilelistReceiver {
      * @return The root entry.
      */
     public FilelistEntry getRoot() {
-        return new FilelistEntry(this, ".", user.getName(), Hash.getUnset(), 0,
+        return new FilelistEntry(this, ".", user.getName(), Hash.getUnset(), -1,
                 -1, true);
     }
 

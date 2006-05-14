@@ -81,7 +81,7 @@ public class GUISettings {
      * @return The value associated with the key, or default.
      */
     public int getInt(String loc, String key, int def) {
-        return rs.getInt(DEFAULT_LOC, key, def);
+        return rs.getInt(DEFAULT_LOC + loc, key, def);
     }
 
     /**
@@ -154,6 +154,6 @@ public class GUISettings {
      * @param val The value.
      */
     public void setLong(String loc, String key, long val) {
-        rs.setLong(DEFAULT_LOC, key, val);
+        rs.setLong(DEFAULT_LOC + loc, key, val);
     }
 }
