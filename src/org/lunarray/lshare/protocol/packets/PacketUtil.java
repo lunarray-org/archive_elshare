@@ -11,7 +11,6 @@ import java.nio.charset.CodingErrorAction;
 import org.lunarray.lshare.protocol.Controls;
 
 /**
- * TODO write util for reading a packet like a stream.<br>
  * Standard utilities for packet data.
  * @author Pal Hargitai
  */

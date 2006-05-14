@@ -2,10 +2,8 @@ package org.lunarray.lshare.protocol.packets.download;
 
 import java.net.InetAddress;
 
-import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.RemoteFile;
 import org.lunarray.lshare.protocol.packets.PacketOut;
-import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.userlist.User;
 import org.lunarray.lshare.protocol.state.userlist.UserNotFound;
 
@@ -48,24 +46,12 @@ public class RequestOut extends PacketOut {
         }
         user = u;
 
-        byte[] path = PacketUtil.encode(f.getPath());
-        byte[] name = PacketUtil.encode(f.getName());
-        byte nlen = (byte) Math.min(name.length, 255);
-
-        data = new byte[1 + 8 + 8 + Hash.length() + 2 + path.length + 1 + nlen];
-
-        data[0] = RequestIn.getType();
-
-        PacketUtil.longToByteArray(offset, data, 1);
-        PacketUtil.longToByteArray(f.getSize(), data, 9);
-        PacketUtil.injectByteArrayIntoByteArray(f.getHash().getBytes(), Hash
-                .length(), data, 17);
-        PacketUtil.shortUToByteArray(path.length, data, 17 + Hash.length());
-        PacketUtil.injectByteArrayIntoByteArray(path, path.length, data,
-                19 + Hash.length());
-        data[19 + Hash.length() + path.length] = nlen;
-        PacketUtil.injectByteArrayIntoByteArray(name, nlen, data, 20
-                + Hash.length() + path.length);
+        putByte(RequestIn.getType());
+        putLong(offset);
+        putLong(f.getSize());
+        putHash(f.getHash());
+        putLongString(f.getPath());
+        putShortString(f.getName());
     }
 
     @Override

@@ -20,8 +20,7 @@ public class SignOffOut extends PacketOut {
      * Constructs a signoff packet.
      */
     public SignOffOut() {
-        data = new byte[1];
-        data[0] = SignOffIn.getType();
+        putByte(SignOffIn.getType());
     }
 
     @Override

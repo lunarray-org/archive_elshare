@@ -5,7 +5,6 @@ import java.net.UnknownHostException;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.PacketOut;
-import org.lunarray.lshare.protocol.packets.PacketUtil;
 
 /**
  * An outgoing signon packet.<br>
@@ -29,24 +28,9 @@ public class SignOnOut extends PacketOut {
      * @param c The controls to the rest of the protocol.
      */
     public SignOnOut(Controls c) {
-        String username = c.getSettings().getUsername();
-        byte[] un = PacketUtil.encode(username);
-        int unlen = Math.min(un.length, 255);
-
-        String challenge = c.getSettings().getChallenge();
-        byte[] uc = PacketUtil.encode(challenge);
-        int uclen = Math.min(uc.length, 255);
-
-        int len = 1 + 1 + unlen + 1 + uclen;
-
-        data = new byte[len];
-        data[0] = SignOnIn.getType();
-
-        data[1] = Integer.valueOf(unlen).byteValue();
-        PacketUtil.injectByteArrayIntoByteArray(un, unlen, data, 2);
-
-        data[2 + unlen] = Integer.valueOf(uclen).byteValue();
-        PacketUtil.injectByteArrayIntoByteArray(uc, uclen, data, 3 + unlen);
+        putByte(SignOnIn.getType());
+        putShortString(c.getSettings().getUsername());
+        putShortString(c.getSettings().getChallenge());
     }
 
     @Override

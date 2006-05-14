@@ -2,9 +2,7 @@ package org.lunarray.lshare.protocol.packets.search;
 
 import java.net.InetAddress;
 
-import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.PacketOut;
-import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.sharing.ShareEntry;
 
 /**
@@ -33,31 +31,12 @@ public class ResultOut extends PacketOut {
     public ResultOut(InetAddress t, ShareEntry f) {
         to = t;
 
-        // Construct data to send
-        byte[] pathbytes = PacketUtil.encode(f.getPath());
-        byte[] namebytes = PacketUtil.encode(f.getName());
-        byte[] nlen = {
-            Integer.valueOf(Math.min(namebytes.length, 255)).byteValue()
-        };
-
-        data = new byte[1 + 8 + 8 + Hash.length() + 2 + 1 + pathbytes.length
-                + nlen[0]];
-        data[0] = ResultIn.getType();
-
-        // Enter the data
-        PacketUtil.longToByteArray(f.getLastModified(), data, 1);
-        PacketUtil.longToByteArray(f.getSize(), data, 1 + 8);
-        PacketUtil.injectByteArrayIntoByteArray(f.getHash().getBytes(), Hash
-                .length(), data, 1 + 16);
-        PacketUtil.shortUToByteArray(pathbytes.length, data,
-                Hash.length() + 1 + 16);
-        PacketUtil.injectByteArrayIntoByteArray(pathbytes, pathbytes.length,
-                data, Hash.length() + 1 + 16 + 2);
-        PacketUtil.injectByteArrayIntoByteArray(nlen, 1, data, Hash.length()
-                + 1 + 16 + 2 + pathbytes.length);
-        PacketUtil.injectByteArrayIntoByteArray(namebytes, nlen[0], data, Hash
-                .length()
-                + 1 + 16 + 2 + pathbytes.length + 1);
+        putByte(ResultIn.getType());
+        putLong(f.getLastModified());
+        putLong(f.getSize());
+        putHash(f.getHash());
+        putLongString(f.getPath());
+        putShortString(f.getName());
     }
 
     @Override

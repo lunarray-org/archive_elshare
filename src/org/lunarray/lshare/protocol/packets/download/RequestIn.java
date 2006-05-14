@@ -6,7 +6,6 @@ import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
-import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.upload.UploadRequest;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -74,26 +73,16 @@ public class RequestIn extends PacketIn {
      */
     public void parse() throws MalformedPacketException {
         try {
-            byte[] data = packet.getData();
+            if (getByte() != getType()) {
+                throw new MalformedPacketException();
+            }
+            long offset = getLong();
+            long size = getLong();
+            Hash hash = getHash();
+            String path = getLongString();
+            String name = getShortString();
 
-            long offset = PacketUtil.byteArrayToLong(data, 1);
-
-            long size = PacketUtil.byteArrayToLong(data, 1 + 8);
-            byte[] hash = PacketUtil.getByteArrayFromByteArray(data, Hash
-                    .length(), 1 + 8 + 8);
-
-            short psize = PacketUtil.byteArrayToShortU(data,
-                    Hash.length() + 1 + 8 + 8);
-            byte[] pbytes = PacketUtil.getByteArrayFromByteArray(data, psize,
-                    Hash.length() + 1 + 8 + 8 + 2);
-            String path = PacketUtil.decode(pbytes).trim();
-
-            short nsize = data[Hash.length() + 1 + 8 + 8 + 2 + psize];
-            byte[] nbytes = PacketUtil.getByteArrayFromByteArray(data, nsize,
-                    Hash.length() + 1 + 8 + 8 + 2 + psize + 1);
-            String name = PacketUtil.decode(nbytes).trim();
-
-            request = new UploadRequest(path, name, new Hash(hash), size,
+            request = new UploadRequest(path, name, hash, size,
                     offset);
         } catch (Exception e) {
             throw new MalformedPacketException();

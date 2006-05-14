@@ -129,6 +129,7 @@ public class UDPTransport extends Thread {
                                 type = "";
                                 inpack = new InvalidPacket();
                             }
+                            inpack.setData(packet.getData());
                             Controls.getLogger().fine(
                                     type
                                             + " "

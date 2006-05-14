@@ -6,7 +6,6 @@ import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
-import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.download.FileResponse;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
@@ -72,29 +71,18 @@ public class ResponseIn extends PacketIn {
      */
     public void parse() throws MalformedPacketException {
         try {
-            byte[] data = packet.getData();
+            if (getByte() != getType()) {
+                throw new MalformedPacketException();
+            }
 
-            long offset = PacketUtil.byteArrayToLong(data, 1);
+            long offset = getLong();
+            long size = getLong();
+            int port = getShortU();
+            Hash hash = getHash();
+            String path = getLongString();
+            String name = getShortString();
 
-            long size = PacketUtil.byteArrayToLong(data, 9);
-
-            int port = PacketUtil.byteArrayToShortU(data, 17);
-
-            byte[] hash = PacketUtil.getByteArrayFromByteArray(data, Hash
-                    .length(), 19);
-
-            short psize = PacketUtil
-                    .byteArrayToShortU(data, Hash.length() + 19);
-            byte[] pbytes = PacketUtil.getByteArrayFromByteArray(data, psize,
-                    Hash.length() + 21);
-            String path = PacketUtil.decode(pbytes).trim();
-
-            short nsize = data[Hash.length() + 21 + psize];
-            byte[] nbytes = PacketUtil.getByteArrayFromByteArray(data, nsize,
-                    Hash.length() + 22 + psize);
-            String name = PacketUtil.decode(nbytes).trim();
-            response = new FileResponse(path, name, new Hash(hash), size,
-                    offset, port);
+            response = new FileResponse(path, name, hash, size, offset, port);
         } catch (Exception e) {
             throw new MalformedPacketException();
         }

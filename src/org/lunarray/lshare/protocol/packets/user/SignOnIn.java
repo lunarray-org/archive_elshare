@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
-import org.lunarray.lshare.protocol.packets.PacketUtil;
 
 /**
  * An incoming signon packet.<br>
@@ -77,19 +76,13 @@ public class SignOnIn extends PacketIn {
      */
     public void parse() throws MalformedPacketException {
         try {
-            byte[] data = packet.getData();
+            if (getByte() != getType()) {
+                throw new MalformedPacketException();
+            }
+            username = getShortString();
+            challenge = getShortString();
+            
             source = packet.getAddress();
-
-            int unlen = data[1];
-            byte[] unb = PacketUtil.getByteArrayFromByteArray(data, unlen, 2);
-            String uns = PacketUtil.decode(unb);
-            username = uns.trim();
-
-            int uclen = data[unlen + 2];
-            byte[] ucb = PacketUtil.getByteArrayFromByteArray(data, uclen,
-                    unlen + 3);
-            String ucs = PacketUtil.decode(ucb);
-            challenge = ucs.trim();
 
             Controls.getLogger().finer(
                     "SignOn from: " + source.getHostName() + " ("

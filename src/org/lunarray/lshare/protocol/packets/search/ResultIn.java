@@ -6,7 +6,6 @@ import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.Hash;
 import org.lunarray.lshare.protocol.packets.MalformedPacketException;
 import org.lunarray.lshare.protocol.packets.PacketIn;
-import org.lunarray.lshare.protocol.packets.PacketUtil;
 import org.lunarray.lshare.protocol.state.search.ResultHandler;
 import org.lunarray.lshare.protocol.state.search.SearchResult;
 
@@ -65,26 +64,17 @@ public class ResultIn extends PacketIn {
      */
     public void parse() throws MalformedPacketException {
         try {
-            byte[] data = packet.getData();
+            if (getByte() != getType()) {
+                throw new MalformedPacketException();
+            }
+            long ad = getLong();
+            long size = getLong();
+            Hash hash = getHash();
+            String path = getLongString();
+            String name = getShortString();
 
-            long ad = PacketUtil.byteArrayToLong(data, 1);
-            long size = PacketUtil.byteArrayToLong(data, 1 + 8);
-            byte[] hash = PacketUtil.getByteArrayFromByteArray(data, Hash
-                    .length(), 1 + 8 + 8);
-
-            short psize = PacketUtil.byteArrayToShortU(data,
-                    Hash.length() + 1 + 8 + 8);
-            byte[] pbytes = PacketUtil.getByteArrayFromByteArray(data, psize,
-                    Hash.length() + 1 + 8 + 8 + 2);
-            String path = PacketUtil.decode(pbytes).trim();
-
-            short nsize = data[Hash.length() + 1 + 8 + 8 + 2 + psize];
-            byte[] nbytes = PacketUtil.getByteArrayFromByteArray(data, nsize,
-                    Hash.length() + 1 + 8 + 8 + 2 + psize + 1);
-            String name = PacketUtil.decode(nbytes).trim();
-
-            result = new SearchResult(packet.getAddress(), path, name,
-                    new Hash(hash), ad, size);
+            result = new SearchResult(packet.getAddress(), path, name, hash,
+                    ad, size);
         } catch (Exception e) {
             throw new MalformedPacketException();
         }
