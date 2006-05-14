@@ -60,7 +60,7 @@ public class IncompleteList extends GUIFrame implements ActionListener,
      * The table
      */
     private JTable table;
-    
+
     /**
      * Constructs the incomplete filelist
      * @param ls The controls of the protocol.
@@ -69,7 +69,7 @@ public class IncompleteList extends GUIFrame implements ActionListener,
     public IncompleteList(LShare ls, MainGUI mg) {
         super(mg, ls);
         set = ls.getSettings().getSettingsForGUI();
-        
+
         // Setup table
         model = new IncompleteModel(ls);
         ls.getDownloadManager().addQueueListener(model);
@@ -88,7 +88,7 @@ public class IncompleteList extends GUIFrame implements ActionListener,
                 table.getColumnModel().getColumn(i).setPreferredWidth(w);
             }
         }
-        
+
         // Setup toolbar
         JToolBar bar = new JToolBar();
         bar.setFloatable(false);
@@ -98,7 +98,8 @@ public class IncompleteList extends GUIFrame implements ActionListener,
         delete.addActionListener(this);
         delete.setEnabled(false);
         // delete.setText("Delete"); <- Use icon
-        delete.setIcon(new ImageIcon("icons/edit-delete.png"));
+        delete.setIcon(new ImageIcon(ClassLoader
+                .getSystemResource("icons/edit-delete.png")));
 
         bar.add(delete);
 

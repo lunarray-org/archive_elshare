@@ -96,8 +96,8 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
             if (w >= 0) {
                 table.getColumnModel().getColumn(i).setPreferredWidth(w);
             }
-        }        
-        
+        }
+
         JScrollPane t = new JScrollPane(table);
 
         // Set the toolbar
@@ -107,14 +107,16 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         download.addActionListener(this);
         download.setEnabled(false);
         // download.setText("Download"); <- Use icon
-        download.setIcon(new ImageIcon("icons/document-save.png"));
+        download.setIcon(new ImageIcon(ClassLoader
+                .getSystemResource("icons/document-save.png")));
         bar.add(download);
         downloadto = new JButton();
         downloadto.setActionCommand("downloadto");
         downloadto.addActionListener(this);
         downloadto.setEnabled(false);
         // downloadto.setText("Download To"); <- Use icon
-        downloadto.setIcon(new ImageIcon("icons/document-save-as.png"));
+        downloadto.setIcon(new ImageIcon(ClassLoader
+                .getSystemResource("icons/document-save-as.png")));
         bar.add(downloadto);
 
         // Set the main panel
@@ -150,8 +152,8 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
                     if (o instanceof ListNode) {
                         ListNode n = (ListNode) o;
                         if (n.getEntry().isFile()) {
-                            fc.setFileSelectionMode(JFileChooser.
-                                    FILES_AND_DIRECTORIES);
+                            fc
+                                    .setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                             break set;
                         }
                         lshare.getDownloadManager().enqueue(n.getEntry(), user);
@@ -192,7 +194,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
             set.setInt("/" + getClass().getSimpleName(), "c" + i + "w", table
                     .getColumnModel().getColumn(i).getWidth());
         }
-        
+
         Object o = model.getRoot();
         if (o instanceof ListNode) {
             ListNode n = (ListNode) o;

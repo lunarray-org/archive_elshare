@@ -101,14 +101,16 @@ public class SearchList extends GUIFrame implements SearchListener,
         download.addActionListener(this);
         download.setEnabled(false);
         // download.setText("Download"); <- Use icon
-        download.setIcon(new ImageIcon("icons/document-save.png"));
+        download.setIcon(new ImageIcon(ClassLoader
+                .getSystemResource("icons/document-save.png")));
         bar.add(download);
         downloadto = new JButton();
         downloadto.setActionCommand("downloadto");
         downloadto.addActionListener(this);
         downloadto.setEnabled(false);
         // downloadto.setText("Download To"); <- Use icon
-        downloadto.setIcon(new ImageIcon("icons/document-save-as.png"));
+        downloadto.setIcon(new ImageIcon(ClassLoader
+                .getSystemResource("icons/document-save-as.png")));
         bar.add(downloadto);
 
         // Set the main panel

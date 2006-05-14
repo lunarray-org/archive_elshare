@@ -106,7 +106,8 @@ public class TransferList extends GUIFrame implements ActionListener,
         cancel.addActionListener(this);
         cancel.setEnabled(false);
         // cancel.setText("Cancel"); <- Use icon
-        cancel.setIcon(new ImageIcon("icons/process-stop.png"));
+        cancel.setIcon(new ImageIcon(ClassLoader
+                .getSystemResource("icons/process-stop.png")));
 
         bar.add(cancel);
 

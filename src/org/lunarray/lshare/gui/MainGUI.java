@@ -107,7 +107,7 @@ public class MainGUI implements ActionListener {
      * Settings for the GUI.
      */
     private GUISettings set;
-    
+
     /**
      * Instanciates the main user interface.
      * @param l The instance of the protocol that it may use.
@@ -212,7 +212,8 @@ public class MainGUI implements ActionListener {
     public JButton addToolButton(String name, String icon, String action) {
         JButton but = new JButton();
         // but.setText(name); <- Use icon
-        but.setIcon(new ImageIcon(icon));
+        // but.setIcon(new ImageIcon(icon));
+        but.setIcon(new ImageIcon(ClassLoader.getSystemResource(icon)));
         but.addActionListener(this);
         but.setActionCommand(action);
         return but;
@@ -364,9 +365,11 @@ public class MainGUI implements ActionListener {
      * Shows the user interface
      */
     public void start() {
-        frame.setLocation(set.getInt("/main", "x", 0), set.getInt("/main", "y", 0));
-        frame.setSize(set.getInt("/main", "w", 640), set.getInt("/main", "h", 480));
-        
+        frame.setLocation(set.getInt("/main", "x", 0), set.getInt("/main", "y",
+                0));
+        frame.setSize(set.getInt("/main", "w", 640), set.getInt("/main", "h",
+                480));
+
         frame.setVisible(true);
     }
 
@@ -378,11 +381,11 @@ public class MainGUI implements ActionListener {
         set.setInt("/main", "y", frame.getY());
         set.setInt("/main", "w", frame.getWidth());
         set.setInt("/main", "h", frame.getHeight());
-        
-        for (JInternalFrame i: desktop.getAllFrames()) {
+
+        for (JInternalFrame i : desktop.getAllFrames()) {
             i.dispose();
         }
-        
+
         frame.setVisible(false);
         lshare.stop();
         frame.dispose();
