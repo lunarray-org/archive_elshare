@@ -1,5 +1,7 @@
 package org.lunarray.lshare.protocol;
 
+import java.io.File;
+
 import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.settings.RawSettings;
 import org.lunarray.lshare.protocol.state.download.DownloadSettings;
@@ -152,6 +154,22 @@ public class Settings implements ExternalSettings {
      */
     public GUISettings getSettingsForGUI() {
         return new GUISettings(rsettings);
+    }
+    
+    /**
+     * Gets the directory where files are downloaded to.
+     * @return The download directory.
+     */
+    public File getDownloadDir() {
+        return dsettings.getDownloadDirectory();
+    }
+    
+    /**
+     * Sets the directory where files are downloaded to.
+     * @param f The new download directory.
+     */
+    public void setDownloadDir(File f) {
+        dsettings.setDownloadDirectory(f);
     }
 
     /**

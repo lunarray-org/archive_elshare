@@ -14,6 +14,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -40,7 +41,6 @@ import org.lunarray.lshare.protocol.state.userlist.User;
  * TODO queues<br>
  * TODO upload throttle<br>
  * TODO upload slots<br>
- * TODO set download directory<br>
  * The main user interface.
  * @author Pal Hargitai
  */
@@ -188,13 +188,14 @@ public class MainGUI implements ActionListener {
                 super.componentResized(arg0);
             }
         });
-        
+
         // Check challenge
         if (lshare.getSettings().getChallenge().equals("")) {
             // Prompt for unput
             String nc = "";
             while (nc.equals("")) {
-                nc = JOptionPane.showInputDialog(frame, "Input (unique) e-Mail address");
+                nc = JOptionPane.showInputDialog(frame,
+                        "Input (unique) e-Mail address");
             }
             lshare.getSettings().setChallenge(nc);
         }
@@ -261,6 +262,7 @@ public class MainGUI implements ActionListener {
         JMenu settingsm = new JMenu("Settings");
         settingsm.add(addMenuItem("Change Nickname", "nick"));
         settingsm.add(addMenuItem("Change e-Mail address", "challenge"));
+        settingsm.add(addMenuItem("Set download directory", "downdir"));
         menu.add(settingsm);
         // Window
         JMenu windowm = new JMenu("Window");
@@ -318,6 +320,17 @@ public class MainGUI implements ActionListener {
         } else if (ac.equals("incompletelist")) {
             // Show the incompletelist
             addIncompleteList();
+        } else if (ac.equals("downdir")) {
+            // Set a new download directory
+            JFileChooser f = new JFileChooser(lshare.getSettings()
+                    .getDownloadDir());
+            f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int res = f.showOpenDialog(frame);
+            if (res == JFileChooser.APPROVE_OPTION) {
+                if (f.getSelectedFile().isDirectory()) {
+                    lshare.getSettings().setDownloadDir(f.getSelectedFile());
+                }
+            }
         }
     }
 

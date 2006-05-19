@@ -217,8 +217,8 @@ public class DownloadSettings {
      * Set the download directory.
      * @param l The download directory.
      */
-    public void setDownloadDirectory(String l) {
-        settings.setString(DEFAULT_LOC + DOWNLOAD_LOC, DOWNLOAD_KEY, l);
+    public void setDownloadDirectory(File l) {
+        settings.setString(DEFAULT_LOC + DOWNLOAD_LOC, DOWNLOAD_KEY, l.getPath());
     }
 
     /**
