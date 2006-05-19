@@ -188,6 +188,16 @@ public class MainGUI implements ActionListener {
                 super.componentResized(arg0);
             }
         });
+        
+        // Check challenge
+        if (lshare.getSettings().getChallenge().equals("")) {
+            // Prompt for unput
+            String nc = "";
+            while (nc.equals("")) {
+                nc = JOptionPane.showInputDialog(frame, "Input (unique) e-Mail address");
+            }
+            lshare.getSettings().setChallenge(nc);
+        }
     }
 
     /**
