@@ -81,23 +81,21 @@ public abstract class GUIFrame extends InternalFrameAdapter {
      * Gives some functionality required for closing this frame.
      * @param arg0 The frame event that triggered this call.
      */
-    public void internalFrameDeactivated(InternalFrameEvent arg0) {
-        internalFrameClosing(arg0);
+    public void internalFrameClosing(InternalFrameEvent arg0) {
+        close();
+        main.updateMenu();
     }
-
+    
     @Override
     /**
      * Gives some functionality required for closing this frame.
      * @param arg0 The frame event that triggered this call.
      */
-    public void internalFrameClosing(InternalFrameEvent arg0) {
+    public void internalFrameClosed(InternalFrameEvent arg0) {
         String l = "/" + getClass().getSimpleName();
         set.setInt(l, "x", frame.getX());
         set.setInt(l, "y", frame.getY());
         set.setInt(l, "w", frame.getWidth());
         set.setInt(l, "h", frame.getHeight());
-
-        close();
-        main.updateMenu();
     }
 }

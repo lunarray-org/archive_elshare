@@ -22,7 +22,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JToolBar;
+import javax.swing.SpinnerNumberModel;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.contactlist.ContactList;
@@ -39,8 +41,6 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
  * TODO queues<br>
- * TODO upload throttle<br>
- * TODO upload slots<br>
  * The main user interface.
  * @author Pal Hargitai
  */
@@ -263,6 +263,9 @@ public class MainGUI implements ActionListener {
         settingsm.add(addMenuItem("Change Nickname", "nick"));
         settingsm.add(addMenuItem("Change e-Mail address", "challenge"));
         settingsm.add(addMenuItem("Set download directory", "downdir"));
+        settingsm.addSeparator();
+        settingsm.add(addMenuItem("Set upload slots", "upslots"));
+        settingsm.add(addMenuItem("Set upload rate", "uprate"));
         menu.add(settingsm);
         // Window
         JMenu windowm = new JMenu("Window");
@@ -329,6 +332,33 @@ public class MainGUI implements ActionListener {
             if (res == JFileChooser.APPROVE_OPTION) {
                 if (f.getSelectedFile().isDirectory()) {
                     lshare.getSettings().setDownloadDir(f.getSelectedFile());
+                }
+            }
+        } else if (ac.equals("upslots")) {
+            // Create a spinner
+            int slots = lshare.getUploadManager().getSlots();
+            JSpinner spin = new JSpinner(new SpinnerNumberModel(slots, 1, 10, 1));
+            int ret = JOptionPane.showInternalConfirmDialog(desktop, spin,
+                    "Set amount of slots", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (ret == JOptionPane.OK_OPTION) {
+                Object o = spin.getValue();
+                if (o instanceof Integer) {
+                    Integer val = (Integer)o;
+                    lshare.getUploadManager().setSlots(val);
+                }
+            }
+        } else if (ac.equals("uprate")) {
+            int rate = lshare.getUploadManager().getRate();
+            JSpinner spin = new JSpinner(new SpinnerNumberModel(rate, 100, 100000, 1));
+            int ret = JOptionPane.showInternalConfirmDialog(desktop, spin,
+                    "Set amount of slots", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (ret == JOptionPane.OK_OPTION) {
+                Object o = spin.getValue();
+                if (o instanceof Integer) {
+                    Integer val = (Integer)o;
+                    lshare.getUploadManager().setRate(val);
                 }
             }
         }

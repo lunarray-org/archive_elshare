@@ -79,14 +79,8 @@ public class UploadManager implements ExternalUploadManager {
         uploads = new ArrayList<UploadTransfer>();
         controls = c;
         settings = controls.getSettings().getUploadSettings();
-        if (settings.getUpRate() > 1000) {
-            interval = 10;
-        } else if (settings.getUpRate() > 100) {
-            interval = 100;
-        } else {
-            interval = 1000;
-        }
-        rateval = settings.getUpRate() / (1000 / interval);
+        interval = 1000 / AMOUNT;
+        rateval = settings.getUpRate() / AMOUNT;
         ratesem = new Semaphore(AMOUNT);
         shouldrun = true;
         c.getTasks().backgroundTask(new TokenAdder());
