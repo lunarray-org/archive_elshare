@@ -128,7 +128,7 @@ public class SecondQueueParse implements RunnableTask {
                     break run;
                 }
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ie) {
                     // Acknowledge that it's been interrupted
                     Thread.interrupted();
