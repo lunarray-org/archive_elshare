@@ -2,6 +2,19 @@
     <echo message="Please run: $ ant -v -projecthelp"/>
 </target>
 
+<target name="doc">
+	<javadoc destdir="docs/"
+		author="true"
+		use="true"
+		windowtitle="eLShare API">
+		<fileset dir="org" defaultexcludes="yes">
+			<include name="lunarray/**" />
+		</fileset>
+		<doctitle><![CDATA[<h1>Lunarray eLShare</h1>]]></doctitle>
+		<bottom><![CDATA[<i>Copyright &#169; 2006 Pal Hargitai.</i>]]></bottom>
+	</javadoc>
+</target>
+
 <target name="jar">
 	<jar destfile="./lshare.jar"
 		basedir="./"
