@@ -1,3 +1,22 @@
+/*
+ * eLShare allows you to share.
+ * Copyright (C) 2006 Pal Hargitai
+ * E-Mail: pal@lunarray.org
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 package org.lunarray.lshare.gui;
 
 import java.awt.BorderLayout;
@@ -30,6 +49,7 @@ import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.contactlist.ContactList;
 import org.lunarray.lshare.gui.filelist.FileList;
 import org.lunarray.lshare.gui.incomplete.IncompleteList;
+import org.lunarray.lshare.gui.main.About;
 import org.lunarray.lshare.gui.main.ShowFrameMenu;
 import org.lunarray.lshare.gui.search.SearchFilter;
 import org.lunarray.lshare.gui.search.SearchList;
@@ -277,10 +297,15 @@ public class MainGUI implements ActionListener {
         // Winlist
         winmenu = new JMenu("View");
         menu.add(winmenu);
+        // Add copyright notice bytton
+        JMenu helpm = new JMenu("Help");
+        helpm.add(addMenuItem("About", "about"));
+        menu.add(helpm);
     }
 
     /**
      * The main action handler for menu actions.
+     * @param arg0 The event associated with the menu action.
      */
     public void actionPerformed(ActionEvent arg0) {
         String ac = arg0.getActionCommand();
@@ -361,6 +386,9 @@ public class MainGUI implements ActionListener {
                     lshare.getUploadManager().setRate(val);
                 }
             }
+        } else if (ac.equals("about")) {
+            addFrame(new About(this, lshare));
+            updateMenu();
         }
     }
 
