@@ -127,7 +127,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         download.setEnabled(false);
         // download.setText("Download"); <- Use icon
         download.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("icons/document-save.png")));
+                .getSystemResource("content/icons/document-save.png")));
         bar.add(download);
         downloadto = new JButton();
         downloadto.setActionCommand("downloadto");
@@ -135,7 +135,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         downloadto.setEnabled(false);
         // downloadto.setText("Download To"); <- Use icon
         downloadto.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("icons/document-save-as.png")));
+                .getSystemResource("content/icons/document-save-as.png")));
         bar.add(downloadto);
 
         // Set the main panel

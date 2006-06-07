@@ -118,7 +118,7 @@ public class IncompleteList extends GUIFrame implements ActionListener,
         delete.setEnabled(false);
         // delete.setText("Delete"); <- Use icon
         delete.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("icons/edit-delete.png")));
+                .getSystemResource("content/icons/edit-delete.png")));
 
         bar.add(delete);
 

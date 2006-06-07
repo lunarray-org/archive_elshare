@@ -119,21 +119,21 @@ public class ContactList extends GUIFrame implements ActionListener,
         buttonrembuddy.setEnabled(false);
         // buttonrembuddy.setText("Remove Buddy"); <- Use icon
         buttonrembuddy.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("icons/list-remove.png")));
+                .getSystemResource("content/icons/list-remove.png")));
         buttonaddbuddy = new JButton();
         buttonaddbuddy.setActionCommand("buddy");
         buttonaddbuddy.addActionListener(this);
         buttonaddbuddy.setEnabled(false);
         // buttonaddbuddy.setText("Add Buddy"); <- Use icon
         buttonaddbuddy.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("icons/list-add.png")));
+                .getSystemResource("content/icons/list-add.png")));
         buttonfilelist = new JButton();
         buttonfilelist.setActionCommand("filelist");
         buttonfilelist.addActionListener(this);
         buttonfilelist.setEnabled(false);
         // buttonfilelist.setText("Get filelist"); <- Use icon
         buttonfilelist.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("icons/folder-remote.png")));
+                .getSystemResource("content/icons/folder-remote.png")));
 
         // Set toolbar
         JToolBar bar = new JToolBar();

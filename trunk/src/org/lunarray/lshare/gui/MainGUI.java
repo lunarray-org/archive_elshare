@@ -61,6 +61,7 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
  * TODO queues<br>
+ * TODO icon factory<br>
  * The main user interface.
  * @author Pal Hargitai
  */
@@ -256,16 +257,16 @@ public class MainGUI implements ActionListener {
     public void initToolBar() {
         bar = new JToolBar();
         bar.setFloatable(false);
-        bar.add(addToolButton("Contact List", "icons/system-users.png",
+        bar.add(addToolButton("Contact List", "content/icons/system-users.png",
                 "contactlist"));
-        bar.add(addToolButton("Share list", "icons/system-file-manager.png",
+        bar.add(addToolButton("Share list", "content/icons/system-file-manager.png",
                 "sharelist"));
         bar.add(addToolButton("Transfer list",
-                "icons/network-transmit-receive.png", "transferlist"));
+                "content/icons/network-transmit-receive.png", "transferlist"));
         bar.add(addToolButton("Incomplete file list",
-                "icons/text-x-generic.png", "incompletelist"));
+                "content/icons/text-x-generic.png", "incompletelist"));
         bar.addSeparator();
-        bar.add(addToolButton("Search", "icons/system-search.png", "search"));
+        bar.add(addToolButton("Search", "content/icons/system-search.png", "search"));
     }
 
     /**
