@@ -23,7 +23,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -34,18 +33,19 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.gui.TangoFactory;
 import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
 
 import com.sun.swing.JTreeTable;
 
 /**
- * TODO Rewrite standard TableModel.<br>
  * Shows a filelist of a specific user. Allows browsing throught that file list.
  * @author Pal Hargitai
  */
@@ -119,6 +119,13 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
 
         JScrollPane t = new JScrollPane(table);
 
+        DefaultTreeCellRenderer ren = new DefaultTreeCellRenderer();
+        ren.setClosedIcon(TangoFactory.getIcon("folder"));
+        ren.setOpenIcon(TangoFactory.getIcon("folder-open"));
+        ren.setLeafIcon(TangoFactory.getIcon("text-x-generic"));
+        table.getTree().setCellRenderer(ren);
+
+        
         // Set the toolbar
         JToolBar bar = new JToolBar();
         download = new JButton();
@@ -126,16 +133,14 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         download.addActionListener(this);
         download.setEnabled(false);
         // download.setText("Download"); <- Use icon
-        download.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/document-save.png")));
+        download.setIcon(TangoFactory.getIcon("document-save"));
         bar.add(download);
         downloadto = new JButton();
         downloadto.setActionCommand("downloadto");
         downloadto.addActionListener(this);
         downloadto.setEnabled(false);
         // downloadto.setText("Download To"); <- Use icon
-        downloadto.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/document-save-as.png")));
+        downloadto.setIcon(TangoFactory.getIcon("document-save-as"));
         bar.add(downloadto);
 
         // Set the main panel
@@ -146,6 +151,7 @@ public class FileList extends GUIFrame implements TreeSelectionListener,
         // Setup frame
         frame.setTitle(getTitle());
         frame.getContentPane().add(mp);
+        frame.setFrameIcon(TangoFactory.getIcon("folder-remote"));
     }
 
     /**

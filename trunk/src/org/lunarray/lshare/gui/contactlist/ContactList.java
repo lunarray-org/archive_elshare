@@ -23,7 +23,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,12 +30,14 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.gui.TangoFactory;
 
 /**
  * A standard contact list. Shows all known users in a treelike form.
@@ -96,6 +97,13 @@ public class ContactList extends GUIFrame implements ActionListener,
 
         // Setup tree
         panel = new JTree(model);
+        
+        DefaultTreeCellRenderer ren = new DefaultTreeCellRenderer();
+        ren.setClosedIcon(TangoFactory.getIcon("list-remove"));
+        ren.setOpenIcon(TangoFactory.getIcon("list-add"));
+        ren.setLeafIcon(TangoFactory.getIcon("system-users"));
+        panel.setCellRenderer(ren);
+        
         JScrollPane scroller = new JScrollPane(panel);
         scroller
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -118,22 +126,19 @@ public class ContactList extends GUIFrame implements ActionListener,
         buttonrembuddy.addActionListener(this);
         buttonrembuddy.setEnabled(false);
         // buttonrembuddy.setText("Remove Buddy"); <- Use icon
-        buttonrembuddy.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/list-remove.png")));
+        buttonrembuddy.setIcon(TangoFactory.getIcon("list-remove"));
         buttonaddbuddy = new JButton();
         buttonaddbuddy.setActionCommand("buddy");
         buttonaddbuddy.addActionListener(this);
         buttonaddbuddy.setEnabled(false);
         // buttonaddbuddy.setText("Add Buddy"); <- Use icon
-        buttonaddbuddy.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/list-add.png")));
+        buttonaddbuddy.setIcon(TangoFactory.getIcon("list-add"));
         buttonfilelist = new JButton();
         buttonfilelist.setActionCommand("filelist");
         buttonfilelist.addActionListener(this);
         buttonfilelist.setEnabled(false);
         // buttonfilelist.setText("Get filelist"); <- Use icon
-        buttonfilelist.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/folder-remote.png")));
+        buttonfilelist.setIcon(TangoFactory.getIcon("folder-remote"));
 
         // Set toolbar
         JToolBar bar = new JToolBar();
@@ -150,6 +155,7 @@ public class ContactList extends GUIFrame implements ActionListener,
         // The frame
         frame.setTitle(getTitle());
         frame.getContentPane().add(mp);
+        frame.setFrameIcon(TangoFactory.getIcon("system-users"));
     }
 
     /**

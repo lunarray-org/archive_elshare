@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -39,6 +38,7 @@ import javax.swing.event.ListSelectionListener;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.gui.TangoFactory;
 import org.lunarray.lshare.protocol.settings.GUISettings;
 
 /**
@@ -117,8 +117,7 @@ public class IncompleteList extends GUIFrame implements ActionListener,
         delete.addActionListener(this);
         delete.setEnabled(false);
         // delete.setText("Delete"); <- Use icon
-        delete.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/edit-delete.png")));
+        delete.setIcon(TangoFactory.getIcon("edit-delete"));
 
         bar.add(delete);
 
@@ -130,6 +129,7 @@ public class IncompleteList extends GUIFrame implements ActionListener,
         // Set frame
         frame.setTitle(getTitle());
         frame.setContentPane(mp);
+        frame.setFrameIcon(TangoFactory.getIcon("text-x-generic"));
 
         // Setup update timer
         timer = new Timer();

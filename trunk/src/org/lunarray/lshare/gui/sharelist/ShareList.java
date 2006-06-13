@@ -38,6 +38,7 @@ import javax.swing.ListSelectionModel;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.gui.TangoFactory;
 import org.lunarray.lshare.protocol.settings.GUISettings;
 
 /**
@@ -180,6 +181,7 @@ public class ShareList extends GUIFrame implements ActionListener {
         // Setup the frame
         frame.add(panel);
         frame.setTitle(getTitle());
+        frame.setFrameIcon(TangoFactory.getIcon("system-file-manager"));
     }
 
     /**

@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -39,6 +38,7 @@ import javax.swing.event.ListSelectionListener;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.gui.TangoFactory;
 import org.lunarray.lshare.protocol.settings.GUISettings;
 
 /**
@@ -125,8 +125,7 @@ public class TransferList extends GUIFrame implements ActionListener,
         cancel.addActionListener(this);
         cancel.setEnabled(false);
         // cancel.setText("Cancel"); <- Use icon
-        cancel.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/process-stop.png")));
+        cancel.setIcon(TangoFactory.getIcon("process-stop"));
 
         bar.add(cancel);
 
@@ -138,6 +137,7 @@ public class TransferList extends GUIFrame implements ActionListener,
         // The frame
         frame.setTitle(getTitle());
         frame.add(mp);
+        frame.setFrameIcon(TangoFactory.getIcon("network-transmit-receive"));
     }
 
     /**

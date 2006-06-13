@@ -25,6 +25,7 @@ import javax.swing.JTextArea;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.gui.TangoFactory;
 
 public class About extends GUIFrame {
 
@@ -99,11 +100,14 @@ public class About extends GUIFrame {
 " intended for use in the design, construction, operation or\n" +
 " maintenance of any nuclear facility. ");
         frame.add(js);
+        frame.setTitle("About");
         frame.setVisible(true);
+        frame.setFrameIcon(TangoFactory.getIcon("help-browser"));
     }
     
     @Override
     public void close() {
         // Nothing
+        frame.setVisible(false);
     }
 }

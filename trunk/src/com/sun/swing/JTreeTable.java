@@ -41,7 +41,6 @@ package com.sun.swing;
  */
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.JTable;
@@ -71,7 +70,7 @@ public class JTreeTable extends JTable {
     @SuppressWarnings("serial")
     public JTreeTable(TreeTableModel treeTableModel) {
         super();
-
+        
         // Create the tree. It will be used as a renderer and editor.
         tree = new TreeTableCellRenderer(treeTableModel);
 
@@ -92,8 +91,8 @@ public class JTreeTable extends JTable {
         setDefaultRenderer(TreeTableModel.class, tree);
         setDefaultEditor(TreeTableModel.class, new TreeTableCellEditor());
 
-        setShowGrid(false);
-        setIntercellSpacing(new Dimension(0, 0));
+        //setShowGrid(false);
+        //setIntercellSpacing(new Dimension(0, 0));
     }
 
     /*

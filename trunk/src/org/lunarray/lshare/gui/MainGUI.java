@@ -30,7 +30,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
@@ -61,7 +60,6 @@ import org.lunarray.lshare.protocol.state.userlist.User;
 
 /**
  * TODO queues<br>
- * TODO icon factory<br>
  * The main user interface.
  * @author Pal Hargitai
  */
@@ -245,7 +243,7 @@ public class MainGUI implements ActionListener {
         JButton but = new JButton();
         // but.setText(name); <- Use icon
         // but.setIcon(new ImageIcon(icon));
-        but.setIcon(new ImageIcon(ClassLoader.getSystemResource(icon)));
+        but.setIcon(TangoFactory.getIcon(icon));
         but.addActionListener(this);
         but.setActionCommand(action);
         return but;
@@ -257,16 +255,16 @@ public class MainGUI implements ActionListener {
     public void initToolBar() {
         bar = new JToolBar();
         bar.setFloatable(false);
-        bar.add(addToolButton("Contact List", "content/icons/system-users.png",
-                "contactlist"));
-        bar.add(addToolButton("Share list", "content/icons/system-file-manager.png",
-                "sharelist"));
-        bar.add(addToolButton("Transfer list",
-                "content/icons/network-transmit-receive.png", "transferlist"));
-        bar.add(addToolButton("Incomplete file list",
-                "content/icons/text-x-generic.png", "incompletelist"));
+        bar.add(addToolButton("Contact List", "system-users", "contactlist"));
+        bar
+                .add(addToolButton("Share list", "system-file-manager",
+                        "sharelist"));
+        bar.add(addToolButton("Transfer list", "network-transmit-receive",
+                "transferlist"));
+        bar.add(addToolButton("Incomplete file list", "text-x-generic",
+                "incompletelist"));
         bar.addSeparator();
-        bar.add(addToolButton("Search", "content/icons/system-search.png", "search"));
+        bar.add(addToolButton("Search", "system-search", "search"));
     }
 
     /**
@@ -318,30 +316,34 @@ public class MainGUI implements ActionListener {
             addContactList();
         } else if (ac.equals("challenge")) {
             // Allow the user to enter a new challenge.
-            String nn = JOptionPane.showInputDialog(desktop, "Please "
+            Object nn = JOptionPane.showInputDialog(desktop, "Please "
                     + "enter a new e-Mail address: ", lshare.getSettings()
-                    .getUsername(), JOptionPane.QUESTION_MESSAGE);
-            if (nn != null) {
-                lshare.getSettings().setChallenge(nn);
+                    .getUsername(), JOptionPane.QUESTION_MESSAGE, TangoFactory
+                    .getIcon("help-browser-large"), null, "");
+            if (nn instanceof String && nn != null) {
+                lshare.getSettings().setChallenge((String) nn);
             }
         } else if (ac.equals("nick")) {
             // Allow a user to enter a new nickname.
-            String nn = JOptionPane.showInternalInputDialog(desktop,
+            Object nn = JOptionPane.showInternalInputDialog(desktop,
                     "Please enter a new nickname: ", lshare.getSettings()
-                            .getUsername(), JOptionPane.QUESTION_MESSAGE);
-            if (nn != null) {
-                lshare.getSettings().setUsername(nn);
+                            .getUsername(), JOptionPane.QUESTION_MESSAGE,
+                    TangoFactory.getIcon("help-browser-large"), null, "");
+            if (nn instanceof String && nn != null) {
+                lshare.getSettings().setUsername((String) nn);
             }
         } else if (ac.equals("quit")) {
             // Stop the application
             stop();
         } else if (ac.equals("search")) {
             // Search for something
-            String nn = JOptionPane.showInternalInputDialog(desktop,
-                    "Enter search query: ", "", JOptionPane.QUESTION_MESSAGE);
-            if (nn != null) {
-                addSearchList(new StringFilter(nn));
-                lshare.getSearchList().searchForString(nn);
+            Object nn = JOptionPane.showInternalInputDialog(desktop,
+                    "Enter search query: ", "Search",
+                    JOptionPane.QUESTION_MESSAGE, TangoFactory
+                            .getIcon("help-browser-large"), null, "");
+            if (nn instanceof String && nn != null) {
+                addSearchList(new StringFilter((String) nn));
+                lshare.getSearchList().searchForString((String) nn);
             }
         } else if (ac.equals("transferlist")) {
             // Show the transferlist
@@ -363,27 +365,31 @@ public class MainGUI implements ActionListener {
         } else if (ac.equals("upslots")) {
             // Create a spinner
             int slots = lshare.getUploadManager().getSlots();
-            JSpinner spin = new JSpinner(new SpinnerNumberModel(slots, 1, 10, 1));
+            JSpinner spin = new JSpinner(
+                    new SpinnerNumberModel(slots, 1, 10, 1));
             int ret = JOptionPane.showInternalConfirmDialog(desktop, spin,
                     "Set amount of slots", JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+                    JOptionPane.QUESTION_MESSAGE, TangoFactory
+                            .getIcon("help-browser-large"));
             if (ret == JOptionPane.OK_OPTION) {
                 Object o = spin.getValue();
                 if (o instanceof Integer) {
-                    Integer val = (Integer)o;
+                    Integer val = (Integer) o;
                     lshare.getUploadManager().setSlots(val);
                 }
             }
         } else if (ac.equals("uprate")) {
             int rate = lshare.getUploadManager().getRate();
-            JSpinner spin = new JSpinner(new SpinnerNumberModel(rate, 100, 100000, 1));
+            JSpinner spin = new JSpinner(new SpinnerNumberModel(rate, 1,
+                    100000, 1));
             int ret = JOptionPane.showInternalConfirmDialog(desktop, spin,
                     "Set amount of slots", JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+                    JOptionPane.QUESTION_MESSAGE, TangoFactory
+                            .getIcon("help-browser-large"));
             if (ret == JOptionPane.OK_OPTION) {
                 Object o = spin.getValue();
                 if (o instanceof Integer) {
-                    Integer val = (Integer)o;
+                    Integer val = (Integer) o;
                     lshare.getUploadManager().setRate(val);
                 }
             }

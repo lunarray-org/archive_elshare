@@ -58,6 +58,7 @@ public class ShowFrameMenu extends JMenuItem implements ActionListener {
     public ShowFrameMenu(JInternalFrame f, JDesktopPane fr) {
         super(f.getTitle());
         frame = f;
+        setIcon(frame.getFrameIcon());
         parent = fr;
         addActionListener(this);
     }

@@ -23,7 +23,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -37,6 +36,7 @@ import javax.swing.event.ListSelectionListener;
 import org.lunarray.lshare.LShare;
 import org.lunarray.lshare.gui.GUIFrame;
 import org.lunarray.lshare.gui.MainGUI;
+import org.lunarray.lshare.gui.TangoFactory;
 import org.lunarray.lshare.protocol.events.SearchEvent;
 import org.lunarray.lshare.protocol.events.SearchListener;
 import org.lunarray.lshare.protocol.settings.GUISettings;
@@ -120,16 +120,14 @@ public class SearchList extends GUIFrame implements SearchListener,
         download.addActionListener(this);
         download.setEnabled(false);
         // download.setText("Download"); <- Use icon
-        download.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/document-save.png")));
+        download.setIcon(TangoFactory.getIcon("document-save"));
         bar.add(download);
         downloadto = new JButton();
         downloadto.setActionCommand("downloadto");
         downloadto.addActionListener(this);
         downloadto.setEnabled(false);
         // downloadto.setText("Download To"); <- Use icon
-        downloadto.setIcon(new ImageIcon(ClassLoader
-                .getSystemResource("content/icons/document-save-as.png")));
+        downloadto.setIcon(TangoFactory.getIcon("document-save-as"));
         bar.add(downloadto);
 
         // Set the main panel
@@ -140,6 +138,7 @@ public class SearchList extends GUIFrame implements SearchListener,
         // Setup frame
         frame.setTitle(getTitle());
         frame.getContentPane().add(mp);
+        frame.setFrameIcon(TangoFactory.getIcon("system-search"));
     }
 
     /**
