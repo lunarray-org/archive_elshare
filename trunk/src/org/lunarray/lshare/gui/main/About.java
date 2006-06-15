@@ -61,44 +61,7 @@ public class About extends GUIFrame {
 "utilities are licensed under the GPL.\n" +
 "\n" +
 "The full version of the license may be found here:\n" +
-"http://creativecommons.org/licenses/by-sa/2.5/\n" +
-"-----------------------------------------------------------------------------\n" +
-"Part of this software is subject to the following license:\n" +
-"\n" +
-"Copyright 1997, 1998 Sun Microsystems, Inc. All Rights Reserved.\n" +
-" Redistribution and use in source and binary forms, with or\n" +
-" without modification, are permitted provided that the following\n" +
-" conditions are met:\n" +
-"\n" + 
-" - Redistributions of source code must retain the above copyright\n" +
-"   notice, this list of conditions and the following disclaimer.\n" + 
-"\n" + 
-" - Redistribution in binary form must reproduce the above\n" +
-"   copyright notice, this list of conditions and the following\n" +
-"   disclaimer in the documentation and/or other materials\n" +
-"   provided with the distribution.\n" + 
-"\n" + 
-" Neither the name of Sun Microsystems, Inc. or the names of\n" +
-" contributors may be used to endorse or promote products derived\n" +
-" from this software without specific prior written permission.\n" +  
-"\n" + 
-" This software is provided \"AS IS,\" without a warranty of any\n" +
-" kind. ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND\n" +
-" WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY,\n" +
-" FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY\n" +
-" EXCLUDED. SUN AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY\n" +
-" DAMAGES OR LIABILITIES SUFFERED BY LICENSEE AS A RESULT OF OR\n" +
-" RELATING TO USE, MODIFICATION OR DISTRIBUTION OF THIS SOFTWARE OR\n" +
-" ITS DERIVATIVES. IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE\n" +
-" FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT,\n" +
-" SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER\n" +
-" CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF\n" +
-" THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF SUN HAS\n" +
-" BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.\n" +
-"\n" +
-" You acknowledge that this software is not designed, licensed or\n" +
-" intended for use in the design, construction, operation or\n" +
-" maintenance of any nuclear facility. ");
+"http://creativecommons.org/licenses/by-sa/2.5/");
         frame.add(js);
         frame.setTitle("About");
         frame.setVisible(true);

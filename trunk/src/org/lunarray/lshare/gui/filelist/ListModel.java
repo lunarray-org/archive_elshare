@@ -34,16 +34,20 @@ import javax.swing.tree.TreePath;
 import org.lunarray.lshare.gui.GUIUtil;
 import org.lunarray.lshare.protocol.state.userlist.ExternalUserList;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.treetable.JTreeTable;
+import org.lunarray.treetable.TreeTableModel;
 
-import com.sun.swing.AbstractTreeTableModel;
+/*import com.sun.swing.AbstractTreeTableModel;
 import com.sun.swing.JTreeTable;
-import com.sun.swing.TreeTableModel;
+import com.sun.swing.TreeTableModel;*/
+
 
 /**
  * A list model for showing a users file list.
  * @author Pal Hargitai
  */
-public class ListModel extends AbstractTreeTableModel implements
+public class ListModel //extends AbstractTreeTableModel
+    implements
         TreeTableModel, MouseListener, TreeExpansionListener {
     /**
      * The model listeners.
@@ -65,6 +69,8 @@ public class ListModel extends AbstractTreeTableModel implements
      */
     private boolean sorting;
 
+    private ListNode root;
+    
     /**
      * Constructs a list.
      * @param l The userlist that the filelisti s fetched from.
@@ -72,9 +78,15 @@ public class ListModel extends AbstractTreeTableModel implements
      * @param f The file list that this model is used in.
      */
     public ListModel(ExternalUserList l, User u, FileList f) {
-        super(new ListNode(l.getFilelist(u), null, null));
+        /*super(new ListNode(l.getFilelist(u), null, null));
         ((ListNode) getRoot()).setModel(this);
-        ((ListNode) getRoot()).setExpanded(true);
+        ((ListNode) getRoot()).setExpanded(true);*/
+        
+        root = new ListNode(l.getFilelist(u), null, null);
+        root.setModel(this);
+        root.setExpanded(true);
+
+        
         listeners = new ArrayList<TreeModelListener>();
         sorting = false;
         list = f;
@@ -369,5 +381,16 @@ public class ListModel extends AbstractTreeTableModel implements
         ListNode[] path = getPathToRoot(node.getParent(), depth + 1);
         path[path.length - depth - 1] = node;
         return path;
+    }
+    
+    public Object getRoot() {
+        return root;
+    }
+    
+    public boolean isEditable(Object node, int column) {
+        return false;
+    }
+    
+    public void setValueAt(Object node, Object val, int column) {
     }
 }

@@ -42,8 +42,9 @@ import org.lunarray.lshare.gui.MainGUI;
 import org.lunarray.lshare.gui.TangoFactory;
 import org.lunarray.lshare.protocol.settings.GUISettings;
 import org.lunarray.lshare.protocol.state.userlist.User;
+import org.lunarray.treetable.JTreeTable;
 
-import com.sun.swing.JTreeTable;
+//import com.sun.swing.JTreeTable;
 
 /**
  * Shows a filelist of a specific user. Allows browsing throught that file list.
