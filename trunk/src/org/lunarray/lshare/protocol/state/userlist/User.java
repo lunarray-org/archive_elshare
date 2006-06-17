@@ -66,7 +66,7 @@ public class User implements Comparable<User> {
      * @param b True if the user is a buddy, false if not.
      * @param l The user list.
      */
-    public User(String h, InetAddress a, String n, boolean b, UserList l) {
+    protected User(String h, InetAddress a, String n, boolean b, UserList l) {
         challenge = h;
         address = a;
         name = n;
@@ -89,14 +89,6 @@ public class User implements Comparable<User> {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Set the users name.
-     * @param nu The new name of the user.
-     */
-    public void setName(String nu) {
-        name = nu;
     }
 
     /**
@@ -132,23 +124,35 @@ public class User implements Comparable<User> {
     }
 
     /**
-     * Set this user to be a buddy.
+     * Change this users buddy state.
+     * @param isbud Set to true if the user should become a buddy, else false.
      */
-    public void setBuddy() {
+    public void setBuddy(boolean isbud) {
         if (ulist != null) {
-            ulist.addBuddy(this);
-            isbuddy = true;
+            if (isbud) {
+                ulist.addBuddy(this);
+            } else {
+                ulist.removeBuddy(this);
+            }
+
         }
+        isbuddy = isbud;
     }
 
     /**
-     * Unset this user to be a buddy.
+     * Makes this user a buddy.
      */
+    @Deprecated
+    public void setBuddy() {
+        setBuddy(true);
+    }
+
+    /**
+     * Unmakes this user a buddy.
+     */
+    @Deprecated
     public void unsetBuddy() {
-        if (ulist != null) {
-            ulist.removeBuddy(this);
-            isbuddy = false;
-        }
+        setBuddy(false);
     }
 
     /**
@@ -205,7 +209,15 @@ public class User implements Comparable<User> {
      */
     public String toString() {
         return getName()
-                + (isOnline() ? "(" + getHostname() + ")" : "(<not logged in>)");
+                + (isOnline() ? "(" + getHostname() + ")" : "(<offline>)");
+    }
+
+    /**
+     * Set the users name.
+     * @param nu The new name of the user.
+     */
+    protected void setName(String nu) {
+        name = nu;
     }
 
     /**
@@ -230,11 +242,12 @@ public class User implements Comparable<User> {
 
     /**
      * Checks wether the given challenge matches
-     * @param h The challenge to compare to.
+     * @param h The challenge to compare to. (We assume a challenge isn't
+     * empty.)
      * @return True if the challenges match, false if not.
      */
     protected boolean challengeMatches(String h) {
-        return challenge.length() <= 0 ? false : challenge.equals(h);
+        return challenge.equals(h);
     }
 
     /**

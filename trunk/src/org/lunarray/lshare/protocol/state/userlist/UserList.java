@@ -203,6 +203,12 @@ public class UserList implements ExternalUserList {
         return flr.getEntries(p, false);
     }
 
+    public User makeUser(InetAddress a) {
+        User u = new User("", a, "<not logged on>", false, null);
+        userlist.add(u);
+        return u;
+    }
+    
     /**
      * Unregister a user as a buddy.
      * @param u The user to unbuddy.

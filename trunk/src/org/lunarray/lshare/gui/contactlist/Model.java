@@ -226,13 +226,13 @@ public class Model implements TreeModel, UserListener {
         }
 
         if (u.getUser().isBuddy()) {
-            u.getUser().unsetBuddy();
+            u.getUser().setBuddy(false);
 
             if (u.getUser().isOnline()) {
                 fireInsert(root.getOnlineMisc().addUser(u.getUser()));
             }
         } else {
-            u.getUser().setBuddy();
+            u.getUser().setBuddy(true);
 
             fireInsert(root.getOnlineBuddies().addUser(u.getUser()));
         }

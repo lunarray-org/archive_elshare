@@ -96,6 +96,7 @@ public class UploadManager implements ExternalUploadManager {
      */
     public UploadManager(Controls c) {
         controls = c;
+        uploads = new LinkedList<UploadTransfer>();
         settings = controls.getSettings().getUploadSettings();
         interval = 1000 / AMOUNT;
         rateval = settings.getUpRate() / AMOUNT;

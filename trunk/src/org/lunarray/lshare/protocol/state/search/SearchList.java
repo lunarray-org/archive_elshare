@@ -80,7 +80,7 @@ public class SearchList implements ExternalSearchList {
         User u = controls.getState().getUserList().findUserByAddress(
                 e.getAddress());
         if (u == null) {
-            u = new User("", e.getAddress(), "<not logged on>", false, null);
+            u = controls.getState().getUserList().makeUser(e.getAddress());
         }
 
         SearchEvent ev = new SearchEvent(e, this, u);
