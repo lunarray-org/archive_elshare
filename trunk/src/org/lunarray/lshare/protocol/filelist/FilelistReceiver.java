@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
@@ -129,7 +129,7 @@ public class FilelistReceiver {
 
         controls.getTasks().backgroundTask(timeouthandler);
 
-        ArrayList<FilelistEntry> ret = new ArrayList<FilelistEntry>();
+        LinkedList<FilelistEntry> ret = new LinkedList<FilelistEntry>();
         run: {
             try {
                 write: {

@@ -19,7 +19,7 @@
  */
 package org.lunarray.lshare.protocol.state.upload;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -68,7 +68,7 @@ public class UploadManager implements ExternalUploadManager {
     /**
      * All registered uploads.
      */
-    private ArrayList<UploadTransfer> uploads;
+    private List<UploadTransfer> uploads;
 
     /**
      * The controls to the protocol.
@@ -88,14 +88,13 @@ public class UploadManager implements ExternalUploadManager {
     /**
      * The listeners of this manager.
      */
-    private ArrayList<UploadListener> listeners;
+    private List<UploadListener> listeners;
 
     /**
      * Constructs an upload manager.
      * @param c The controls to the protocol.
      */
     public UploadManager(Controls c) {
-        uploads = new ArrayList<UploadTransfer>();
         controls = c;
         settings = controls.getSettings().getUploadSettings();
         interval = 1000 / AMOUNT;
@@ -103,7 +102,7 @@ public class UploadManager implements ExternalUploadManager {
         ratesem = new Semaphore(AMOUNT);
         shouldrun = true;
         c.getTasks().backgroundTask(new TokenAdder());
-        listeners = new ArrayList<UploadListener>();
+        listeners = new LinkedList<UploadListener>();
     }
 
     /**

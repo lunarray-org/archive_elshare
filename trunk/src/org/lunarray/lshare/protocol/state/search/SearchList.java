@@ -19,7 +19,8 @@
  */
 package org.lunarray.lshare.protocol.state.search;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.Hash;
@@ -36,7 +37,7 @@ public class SearchList implements ExternalSearchList {
     /**
      * The registered listeners.
      */
-    private ArrayList<SearchListener> listeners;
+    private List<SearchListener> listeners;
 
     /**
      * The controls for the rest of the protocol.
@@ -48,7 +49,7 @@ public class SearchList implements ExternalSearchList {
      * @param c The controls to the protocol.
      */
     public SearchList(Controls c) {
-        listeners = new ArrayList<SearchListener>();
+        listeners = new LinkedList<SearchListener>();
         controls = c;
     }
 

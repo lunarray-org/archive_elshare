@@ -21,9 +21,9 @@ package org.lunarray.lshare.protocol.state.download;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -55,7 +55,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     /**
      * The queue that may be directly processed.
      */
-    private TreeMap<User, ArrayList<IncompleteFile>> queue;
+    private TreeMap<User, List<IncompleteFile>> queue;
 
     /**
      * The controls of the protocol.
@@ -70,7 +70,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     /**
      * The known transfers.
      */
-    private ArrayList<DownloadHandler> transfers;
+    private List<DownloadHandler> transfers;
 
     /**
      * The parser of the queue that initialises the downloads.
@@ -79,9 +79,9 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
 
     private Thread firstqueuethread;
 
-    private ArrayList<DownloadListener> tlisteners;
+    private List<DownloadListener> tlisteners;
 
-    private ArrayList<QueueListener> qlisteners;
+    private List<QueueListener> qlisteners;
 
     /**
      * Constructs the download manager.
@@ -90,18 +90,18 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
     public DownloadManager(Controls c) {
         controls = c;
 
-        transfers = new ArrayList<DownloadHandler>();
+        transfers = new LinkedList<DownloadHandler>();
         tempqueue = new LinkedBlockingQueue<QueuedItem>();
-        queue = new TreeMap<User, ArrayList<IncompleteFile>>();
+        queue = new TreeMap<User, List<IncompleteFile>>();
         filemanager = new DownloadFileManager(c);
         secondqueue = new SecondQueueParse(this);
-        tlisteners = new ArrayList<DownloadListener>();
-        qlisteners = new ArrayList<QueueListener>();
+        tlisteners = new LinkedList<DownloadListener>();
+        qlisteners = new LinkedList<QueueListener>();
 
         for (IncompleteFile f : filemanager.getIncompleteFiles()) {
             for (User u : f.getSources()) {
                 if (!queue.containsKey(u)) {
-                    queue.put(u, new ArrayList<IncompleteFile>());
+                    queue.put(u, new LinkedList<IncompleteFile>());
                 }
                 queue.get(u).add(f);
             }
@@ -243,7 +243,7 @@ public class DownloadManager implements RunnableTask, ExternalDownloadManager {
                             // If adding source fails, don't add to queue
                             if (!queue.containsKey(i.getUser())) {
                                 queue.put(i.getUser(),
-                                        new ArrayList<IncompleteFile>());
+                                        new LinkedList<IncompleteFile>());
                             }
 
                             if (!queue.get(i.getUser()).contains(inc)) {

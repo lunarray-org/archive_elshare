@@ -20,7 +20,6 @@
 package org.lunarray.lshare.protocol.state.userlist;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,12 +37,12 @@ public class UserList implements ExternalUserList {
     /**
      * The current list of users.
      */
-    private LinkedList<User> userlist;
-
+    private List<User> userlist;
+    
     /**
      * The listeners for user events.
      */
-    private ArrayList<UserListener> listeners;
+    private List<UserListener> listeners;
 
     /**
      * The controls to the protocol.
@@ -56,7 +55,7 @@ public class UserList implements ExternalUserList {
      */
     public UserList(Controls c) {
         userlist = new LinkedList<User>();
-        listeners = new ArrayList<UserListener>();
+        listeners = new LinkedList<UserListener>();
         controls = c;
         initList();
     }

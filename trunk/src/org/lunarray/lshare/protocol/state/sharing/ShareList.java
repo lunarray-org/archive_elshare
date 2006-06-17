@@ -21,7 +21,7 @@ package org.lunarray.lshare.protocol.state.sharing;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -113,7 +113,7 @@ public class ShareList implements ExternalShareList {
      * @return The entries matching the specified search string.
      */
     public List<ShareEntry> getEntriesMatching(String s) {
-        ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+        LinkedList<ShareEntry> entries = new LinkedList<ShareEntry>();
         for (String skey : shares.keySet()) {
             entries.addAll(getEntriesMatching(s, shares.get(skey), "."
                     + RemoteFile.SEPARATOR + skey));
@@ -129,7 +129,7 @@ public class ShareList implements ExternalShareList {
      */
     public List<ShareEntry> getChildrenIn(String path)
             throws FileNotFoundException {
-        ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+        LinkedList<ShareEntry> entries = new LinkedList<ShareEntry>();
         String[] split = path.split(RemoteFile.SEPARATOR);
 
         if (split.length > 0) {
@@ -158,7 +158,7 @@ public class ShareList implements ExternalShareList {
      * @return The entries representing the root entries.
      */
     public List<ShareEntry> getBaseEntries() {
-        ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+        LinkedList<ShareEntry> entries = new LinkedList<ShareEntry>();
         for (String n : shares.keySet()) {
             entries.add(new ShareEntry(shares.get(n), n, ".", settings));
         }
@@ -197,7 +197,7 @@ public class ShareList implements ExternalShareList {
         }
         ishashing = true;
         // Cleanup
-        ArrayList<String> torem = new ArrayList<String>();
+        LinkedList<String> torem = new LinkedList<String>();
         for (String s : sset.getFilesInPath()) {
             File n = new File(s);
             if (!n.exists() || !isInShares(n)) {
@@ -226,7 +226,7 @@ public class ShareList implements ExternalShareList {
     private List<ShareEntry> fetchDirEntries(String[] path, int depth, File f,
             String sp) throws FileNotFoundException {
         if (path.length <= depth) {
-            ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+            LinkedList<ShareEntry> entries = new LinkedList<ShareEntry>();
             // Last element, get children
             for (File e : f.listFiles()) {
                 if (!e.isHidden()) {
@@ -282,7 +282,7 @@ public class ShareList implements ExternalShareList {
      * @return The entries in this directory that matches the search string.
      */
     private List<ShareEntry> getEntriesMatching(String s, File f, String path) {
-        ArrayList<ShareEntry> entries = new ArrayList<ShareEntry>();
+        LinkedList<ShareEntry> entries = new LinkedList<ShareEntry>();
         for (File e : f.listFiles()) {
             if (!e.isHidden() && e.getName().contains(s)) {
                 entries.add(new ShareEntry(e, e.getName(), path, settings));

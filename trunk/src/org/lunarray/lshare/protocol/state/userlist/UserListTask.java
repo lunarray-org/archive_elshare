@@ -19,7 +19,8 @@
  */
 package org.lunarray.lshare.protocol.state.userlist;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.tasks.TimedRunnableTask;
@@ -64,7 +65,7 @@ public class UserListTask extends TimedRunnableTask {
         long curtime = System.currentTimeMillis();
         long diff = curtime - lasttime;
         lasttime = curtime;
-        ArrayList<User> timedout = new ArrayList<User>();
+        List<User> timedout = new LinkedList<User>();
         for (User u : c.getState().getUserList().getUserList()) {
             if (u.isOnline()) {
                 long ud = u.addDiff(diff);

@@ -19,7 +19,8 @@
  */
 package org.lunarray.lshare.protocol.state.download;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.lunarray.lshare.protocol.Controls;
 import org.lunarray.lshare.protocol.RemoteFile;
@@ -42,7 +43,7 @@ public class SecondQueueParse implements RunnableTask {
     /**
      * Directly requested files for immediate transfer.
      */
-    private ArrayList<IncompleteFile> requests;
+    private List<IncompleteFile> requests;
 
     /**
      * The download manager.
@@ -61,7 +62,7 @@ public class SecondQueueParse implements RunnableTask {
     public SecondQueueParse(DownloadManager m) {
         ischecking = false;
         manager = m;
-        requests = new ArrayList<IncompleteFile>();
+        requests = new LinkedList<IncompleteFile>();
         shouldrun = true;
     }
 
@@ -90,7 +91,7 @@ public class SecondQueueParse implements RunnableTask {
                     // Check if there are requests, and request files if there
                     // are not already transfers with the user going on.
                     if (!requests.isEmpty()) {
-                        ArrayList<IncompleteFile> toremove = new ArrayList<IncompleteFile>();
+                        LinkedList<IncompleteFile> toremove = new LinkedList<IncompleteFile>();
                         for (IncompleteFile f : requests) {
                             for (User u : f.getSources()) {
                                 request: {

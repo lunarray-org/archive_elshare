@@ -22,7 +22,8 @@ package org.lunarray.lshare.protocol;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.lunarray.lshare.protocol.filelist.FilelistSender;
 
@@ -49,7 +50,7 @@ public class TCPSharesTransport extends Thread {
     /**
      * The client threads.
      */
-    private ArrayList<FilelistSender> senders;
+    private List<FilelistSender> senders;
 
     /**
      * Access to the protocol.
@@ -64,7 +65,7 @@ public class TCPSharesTransport extends Thread {
         super(c.getThreadGroup(), "tcptransport");
         run = true;
         controls = c;
-        senders = new ArrayList<FilelistSender>();
+        senders = new LinkedList<FilelistSender>();
         tgroup = new ThreadGroup(c.getThreadGroup(), "filelisters");
     }
 
